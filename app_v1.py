@@ -53,11 +53,42 @@ match_time = st.time_input(
 )
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+stadium_coordinates = {
+    'FC Sion': {'stadium': 'Stade de Tourbillon', 'latitude': 46.233333, 'longitude': 7.376389},
+    'FC St. Gallen': {'stadium': 'Kybunpark', 'latitude': 47.408333, 'longitude': 9.310278},
+    'FC Winterthur': {'stadium': 'Stadion Schützenwiese', 'latitude': 47.505278, 'longitude': 8.724167},
+    'FC Zürich': {'stadium': 'Letzigrund', 'latitude': 47.382778, 'longitude': 8.504167},
+    'BSC Young Boys': {'stadium': 'Stade de Suisse', 'latitude': 46.963056, 'longitude': 7.464722},
+    'FC Luzern': {'stadium': 'Swissporarena', 'latitude': 47.035833, 'longitude': 8.310833},
+    'Lausanne-Sport': {'stadium': 'Stade de la Tuilière', 'latitude': 46.537778, 'longitude': 6.614444},
+    'Servette FC': {'stadium': 'Stade de Genève', 'latitude': 46.1875, 'longitude': 6.128333},
+    'FC Basel': {'stadium': 'St. Jakob-Park', 'latitude': 47.541389, 'longitude': 7.620833},
+    'FC Lugano': {'stadium': 'Stadio di Cornaredo', 'latitude': 46.0225, 'longitude': 8.960278},
+    'Grasshoppers': {'stadium': 'Letzigrund', 'latitude': 47.382778, 'longitude': 8.504167},
+    'Yverdon Sport': {'stadium': 'Stade Municipal', 'latitude': 46.778056, 'longitude': 6.641111}
+}
+
+
+
 def get_weather_data(latitude, longitude):
     # Open-Meteo API-URL
     api_url = (
         f"https://api.open-meteo.com/v1/forecast?"
-        f"latitude={latitude}&longitude={longitude}&current_weather=true"
+        f"latitude={latitude}&longitude={longitude}&start_date={match_date}&end_date={match_date}"
         f"&hourly=temperature_2m,relative_humidity_2m,wind_speed_10m"
     )
 
@@ -72,8 +103,26 @@ def get_weather_data(latitude, longitude):
     except requests.exceptions.RequestException as e:
         st.error("Failed to fetch weather data. Please try again.")
 
-
+st.write(match_date)
 get_weather_data("52,52", "13,41")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 # Vorhersage nur starten, wenn Button geklickt wird
 if st.button("Predict Attendance"):
