@@ -45,12 +45,19 @@ else:
     matchday = st.radio("Matchday Type:", options=["Group", "Knockout"])
 
 match_date = st.date_input("Match Date:", min_value=datetime.date.today())
-time_input = st.text_input("Match Time (e.g., 15:30):")
-try:
-    match_time = datetime.datetime.strptime(time_input, "%H:%M").hour if time_input else None
-except ValueError:
-    st.error("Please enter a valid time in HH:MM format.")
-    match_time = None
+# Uhrzeit auswählen
+match_time = st.time_input(
+    "Match Time:",
+    value=datetime.time(00, 00),  # Standardwert auf 15:30 setzen
+    help="Select the match time in HH:MM format"
+)
+
+# match_time liefert direkt ein datetime.time-Objekt
+if match_time:
+    st.success(f"Selected match time: {match_time.strftime('%H:%M')}")
+else:
+    st.error("Please select a valid match time.")
+
 
 # Vorhersage nur starten, wenn Button geklickt wird
 if st.button("Predict Attendance"):
