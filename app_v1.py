@@ -73,6 +73,7 @@ match_time = st.time_input(
 import requests
 import streamlit as st
 
+
 # Wetterdaten abrufen
 def get_weather_data(latitude, longitude, match_date, match_time):
     # Open-Meteo API-URL mit nur den relevanten Parametern
@@ -99,13 +100,17 @@ def get_weather_data(latitude, longitude, match_date, match_time):
         temperature_at_match = hourly_data['temperature_2m'][match_hour]
         weather_code_at_match = hourly_data['weathercode'][match_hour]
 
+        # Wetterdetails interpretieren
+        weather_condition = interpret_weather_code(weather_code_at_match)
+
         # Wetterdetails anzeigen
         st.write(f"Temperature at {match_time}: {temperature_at_match}°C")
-        st.write(f"Weather code at {match_time}: {weather_code_at_match}")
-        return temperature_at_match, weather_code_at_match
+        st.write(f"Weather condition at {match_time}: {weather_condition}")
+        return temperature_at_match, weather_condition
     except requests.exceptions.RequestException as e:
         st.error(f"Failed to fetch weather data: {e}")
         return None, None
+
 
 
 # Koordinaten der Stadien
