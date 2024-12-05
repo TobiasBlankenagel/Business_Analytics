@@ -52,9 +52,8 @@ match_time = st.time_input(
     help="Select the match time in HH:MM format"
 )
 
-
-
-
+# Erste Zahl der Uhrzeit als Index verwenden
+match_hour = match_time.hour  # Holt nur die Stunde aus der Zeit
 
 
 
@@ -74,7 +73,7 @@ import requests
 import streamlit as st
 
 # Wetterdaten abrufen
-def get_weather_data(latitude, longitude, match_date, match_time):
+def get_weather_data(latitude, longitude, match_date, match_hour):
     # Open-Meteo API-URL mit nur den relevanten Parametern
     api_url = (
         f"https://api.open-meteo.com/v1/forecast?"
@@ -91,8 +90,6 @@ def get_weather_data(latitude, longitude, match_date, match_time):
         # JSON-Antwort parsen
         weather_data = response.json()
 
-        # Erste Zahl der Uhrzeit als Index verwenden
-        match_hour = match_time.hour  # Holt nur die Stunde aus der Zeit
 
         # Temperatur und Wettercode zum Match-Zeitpunkt abrufen
         hourly_data = weather_data['hourly']
@@ -143,7 +140,7 @@ if home_team and match_date and match_time:
     longitude = coordinates['longitude']
 
     st.write(f"Fetching weather data for {home_team}...")
-    temperature_at_match, weather_condition = get_weather_data(latitude, longitude, match_date, match_time)
+    temperature_at_match, weather_condition = get_weather_data(latitude, longitude, match_date, match_hour)
 
     if temperature_at_match is not None:
         st.success(f"Temperature at match time ({match_time}): {temperature_at_match}°C")
@@ -154,13 +151,40 @@ else:
 
 
 ####### SAMMELN DER DATEN #############
-##
+## Competition -- Userangabe
+## Matchday -- Userangabe
+## Time -- Userangabe
+## Home Team -- Userangabe
+## Ranking Home Team
+## Away Team -- Userangabe
+## Ranking Away Team
+## Weather -- API Abfrage
+## Temperature (°C) -- API Abfrage
+## Weekday -- Userangabe
+## Month -- Userangabe
+## Holiday
+## Day -- Userangabe
+## Goals Scored in Last 5 Games
+## Goals Conceded in Last 5 Games
+## Number of Wins in Last 5 Games
 
+competition = competition # bereits initialisiert
+matchday = matchday # bereits initialisiert
+match_hour = match_hour # bereits initialisiert
+home_team = home_team # bereits initialisiert
+away_team = away_team # bereits initialisiert
+weather_condition = weather_condition # bereits initialisiert
+temperature_at_match = temperature_at_match # bereits initialisiert
+Weekday = match_date.strftime('%A')  # Gibt den Wochentag als vollständigen Namen zurück (z. B. "Monday")
+Month = match_date.month  # Extrahiert den Monat (1-12)
+Day = match_date.day  # Extrahiert den Tag des Monats (1-31)
 
-
-
-
-
+# Holiday
+# Ranking Home Team
+# Ranking Away Team
+# Goals_Scored_in_Last_5_Games
+# Goals_Conceded_in_Last_5_Games
+# Number_of_Wins_in_Last_5_Games
 
 
 
@@ -190,7 +214,7 @@ if st.button("Predict Attendance"):
             temperature = 20.0  # Standardwert
 
         # Beispiel-Eingabedaten
-        input_data = np.array([[competition, matchday, match_time, home_team, away_team, 
+        input_data = np.array([[competition, matchday, match_hour, home_team, away_team, 
                                 weather, temperature, weekday, month, holiday, day]])
         
         # Wähle das richtige Modell
