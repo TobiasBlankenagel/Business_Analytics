@@ -77,7 +77,8 @@ def get_weather_data(latitude, longitude, match_date, match_time):
     api_url = (
         f"https://api.open-meteo.com/v1/forecast?"
         f"latitude={latitude}&longitude={longitude}&start_date={match_date}&end_date={match_date}"
-        f"&hourly=temperature_2m,relative_humidity_2m,wind_speed_10m"
+        f"&hourly=temperature_2m,weathercode"
+        f"&models=gem_seamless"
     )
 
     try:
