@@ -68,10 +68,9 @@ def get_weather_data(latitude, longitude):
         
         # JSON-Antwort parsen
         weather_data = response.json()
-        return weather_data
+        st.json(weather_data)
     except requests.exceptions.RequestException as e:
-        print(f"Error fetching weather data: {e}")
-        return None
+        st.error("Failed to fetch weather data. Please try again.")
 
 
 get_weather_data("52,52", "13,41")
