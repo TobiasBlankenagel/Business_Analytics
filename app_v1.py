@@ -70,15 +70,17 @@ match_time = st.time_input(
 
 # home_team
 
+import requests
+import streamlit as st
 
 # Wetterdaten abrufen
 def get_weather_data(latitude, longitude, match_date, match_time):
-    # Open-Meteo API-URL
+    # Open-Meteo API-URL mit nur den relevanten Parametern
     api_url = (
         f"https://api.open-meteo.com/v1/forecast?"
         f"latitude={latitude}&longitude={longitude}&start_date={match_date}&end_date={match_date}"
         f"&hourly=temperature_2m,weathercode"
-        f"&models=gem_seamless"
+        f"&timezone=auto"  # Automatische Zeitzone
     )
 
     try:
@@ -92,20 +94,21 @@ def get_weather_data(latitude, longitude, match_date, match_time):
         # Erste Zahl der Uhrzeit als Index verwenden
         match_hour = match_time.hour  # Holt nur die Stunde aus der Zeit
 
-        # Temperatur zum Match-Zeitpunkt abrufen
+        # Temperatur und Wettercode zum Match-Zeitpunkt abrufen
         hourly_data = weather_data['hourly']
         temperature_at_match = hourly_data['temperature_2m'][match_hour]
+        weather_code_at_match = hourly_data['weathercode'][match_hour]
 
         # Wetterdetails anzeigen
         st.write(f"Temperature at {match_time}: {temperature_at_match}°C")
-        st.json(weather_data)
-
-        return temperature_at_match
+        st.write(f"Weather code at {match_time}: {weather_code_at_match}")
+        return temperature_at_match, weather_code_at_match
     except requests.exceptions.RequestException as e:
         st.error(f"Failed to fetch weather data: {e}")
-        return None
+        return None, None
 
 
+# Koordinaten der Stadien
 stadium_coordinates = {
     'FC Sion': {'stadium': 'Stade de Tourbillon', 'latitude': 46.233333, 'longitude': 7.376389},
     'FC St. Gallen': {'stadium': 'Kybunpark', 'latitude': 47.408333, 'longitude': 9.310278},
@@ -121,20 +124,20 @@ stadium_coordinates = {
     'Yverdon Sport': {'stadium': 'Stade Municipal', 'latitude': 46.778056, 'longitude': 6.641111}
 }
 
-# Überprüfung und Wetterdaten abrufen
+# Beispiel für die Benutzung
 if home_team and match_date and match_time:
     coordinates = stadium_coordinates[home_team]
     latitude = coordinates['latitude']
     longitude = coordinates['longitude']
 
     st.write(f"Fetching weather data for {home_team} ({coordinates['stadium']})...")
-    temperature_at_match = get_weather_data(latitude, longitude, match_date, match_time)
+    temperature_at_match, weather_code_at_match = get_weather_data(latitude, longitude, match_date, match_time)
 
     if temperature_at_match is not None:
-        st.success(f"The temperature at match time ({match_time}) is {temperature_at_match}°C")
+        st.success(f"Temperature at match time ({match_time}): {temperature_at_match}°C")
+        st.success(f"Weather code at match time ({match_time}): {weather_code_at_match}")
 else:
     st.error("Please fill in all fields.")
-
 
 
 
