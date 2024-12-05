@@ -48,7 +48,7 @@ match_date = st.date_input("Match Date:", min_value=datetime.date.today())
 # Uhrzeit auswählen
 match_time = st.time_input(
     "Match Time:",
-    value=datetime.time(00, 00),  # Standardwert auf 15:30 setzen
+    value=datetime.time(15, 30),  # Standardwert auf 15:30 setzen
     help="Select the match time in HH:MM format"
 )
 
