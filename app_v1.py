@@ -6,12 +6,6 @@ import os
 import subprocess
 import sys
 
-# Überprüfen und Installieren von CatBoost
-try:
-    import catboost
-except ImportError:
-    subprocess.check_call([sys.executable, "-m", "pip", "install", "catboost"])
-
 
 # Streamlit-Seitenkonfiguration
 st.set_page_config(
