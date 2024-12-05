@@ -9,8 +9,8 @@ def load_model(model_path):
     with open(model_path, 'rb') as file:
         return pickle.load(file)
 
-model_with_weather = load_model("finalized_model_with_weather.sav")
-model_without_weather = load_model("finalized_model_without_weather.sav")
+model_with_weather = load_model("./finalized_model_with_weather.sav")
+model_without_weather = load_model("./finalized_model_without_weather.sav")
 
 st.set_page_config(
     page_title="Stadium Capacity Prediction",
