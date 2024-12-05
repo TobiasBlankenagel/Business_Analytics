@@ -3,5 +3,3 @@ pandas
 numpy
 scikit-learn
 xgboost
-lightgbm
-pickle5  # Falls benötigt
