@@ -13,6 +13,7 @@ st.set_page_config(
 
 
 
+
 # Titel und Beschreibung der App
 st.title("🏟️ Stadium Capacity Prediction App")
 st.markdown(
