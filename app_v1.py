@@ -3,6 +3,7 @@ import datetime
 import pickle
 import numpy as np
 import requests
+import sklearn
 
 # Modelle laden
 def load_model(model_path):
