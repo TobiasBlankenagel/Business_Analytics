@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import datetime
 import pickle
+import catboost
 
 # Streamlit-Seitenkonfiguration
 st.set_page_config(
