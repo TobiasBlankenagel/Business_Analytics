@@ -52,11 +52,6 @@ match_time = st.time_input(
     help="Select the match time in HH:MM format"
 )
 
-# match_time liefert direkt ein datetime.time-Objekt
-if match_time:
-    st.success(f"Selected match time: {match_time.strftime('%H:%M')}")
-else:
-    st.error("Please select a valid match time.")
 
 
 # Vorhersage nur starten, wenn Button geklickt wird
