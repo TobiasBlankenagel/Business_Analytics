@@ -67,6 +67,26 @@ match_time = st.time_input(
 
 
 
+
+# home_team
+
+
+# Wetterdaten abrufen
+def get_weather_data(latitude, longitude, match_date):
+    api_url = (
+        f"https://api.open-meteo.com/v1/forecast?"
+        f"latitude={latitude}&longitude={longitude}&start_date={match_date}&end_date={match_date}"
+        f"&hourly=temperature_2m,relative_humidity_2m,wind_speed_10m"
+    )
+
+    try:
+        response = requests.get(api_url)
+        response.raise_for_status()
+        weather_data = response.json()
+        st.json(weather_data)
+    except requests.exceptions.RequestException as e:
+        st.error(f"Failed to fetch weather data: {e}")
+
 stadium_coordinates = {
     'FC Sion': {'stadium': 'Stade de Tourbillon', 'latitude': 46.233333, 'longitude': 7.376389},
     'FC St. Gallen': {'stadium': 'Kybunpark', 'latitude': 47.408333, 'longitude': 9.310278},
@@ -82,29 +102,20 @@ stadium_coordinates = {
     'Yverdon Sport': {'stadium': 'Stade Municipal', 'latitude': 46.778056, 'longitude': 6.641111}
 }
 
+# Überprüfung und Wetterdaten abrufen
+if home_team:
+    coordinates = stadium_coordinates[home_team]
+    latitude = coordinates['latitude']
+    longitude = coordinates['longitude']
 
+    st.write(f"Fetching weather data for {home_team} ({coordinates['stadium']})...")
+    st.write(f"Latitude: {latitude}, Longitude: {longitude}")
+    
+    if match_date:
+        get_weather_data(latitude, longitude, match_date)
+    else:
+        st.error("Please select a valid match date.")
 
-def get_weather_data(latitude, longitude):
-    # Open-Meteo API-URL
-    api_url = (
-        f"https://api.open-meteo.com/v1/forecast?"
-        f"latitude={latitude}&longitude={longitude}&start_date={match_date}&end_date={match_date}"
-        f"&hourly=temperature_2m,relative_humidity_2m,wind_speed_10m"
-    )
-
-    try:
-        # API-Anfrage senden
-        response = requests.get(api_url)
-        response.raise_for_status()  # Fehler prüfen
-        
-        # JSON-Antwort parsen
-        weather_data = response.json()
-        st.json(weather_data)
-    except requests.exceptions.RequestException as e:
-        st.error("Failed to fetch weather data. Please try again.")
-
-st.write(match_date)
-get_weather_data("52,52", "13,41")
 
 
 
