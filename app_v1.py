@@ -146,7 +146,7 @@ if home_team and match_date and match_time:
     temperature_at_match, weather_condition = get_weather_data(latitude, longitude, match_date, match_time)
 
     if temperature_at_match is not None:
-        st.success(f"Temperature at match time ({match_time}): {weather_condition}°C")
+        st.success(f"Temperature at match time ({match_time}): {temperature_at_match}°C")
         st.success(f"Weather at match time ({match_time}): {weather_condition}")
 else:
     st.error("Please fill in all fields.")
