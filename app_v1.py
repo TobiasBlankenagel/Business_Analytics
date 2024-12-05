@@ -19,7 +19,7 @@ st.set_page_config(
 
 
 # Titel und Beschreibung der App
-st.title("🏟️  Capacity Prediction App")
+st.title("🏟️ Stadium Capacity Prediction App")
 st.markdown(
     "🎉⚽ This application predicts the stadium capacity utilization based on the home team, away team, and match date. "
     "Predictions include weather factors if the match is within 2 weeks."
