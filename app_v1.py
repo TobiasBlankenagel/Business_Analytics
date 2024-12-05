@@ -12,24 +12,7 @@ st.set_page_config(
 )
 
 
-# Modelle laden
-@st.cache_resource
-def load_model_with_weather():
-    """Lädt das Modell mit Wetterdaten."""
-    with open("finalized_model_with_weather.sav", "rb") as file:
-        model = pickle.load(file)
-    return model
 
-@st.cache_resource
-def load_model_without_weather():
-    """Lädt das Modell ohne Wetterdaten."""
-    with open("finalized_model_without_weather.sav", "rb") as file:
-        model = pickle.load(file)
-    return model
-
-# Modelle initialisieren
-model_with_weather = load_model_with_weather()
-model_without_weather = load_model_without_weather()
 
 # Titel und Beschreibung der App
 st.title("🏟️ Stadium Capacity Prediction App")
