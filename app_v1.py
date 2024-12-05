@@ -53,6 +53,28 @@ match_time = st.time_input(
 )
 
 
+def get_weather_data(latitude, longitude):
+    # Open-Meteo API-URL
+    api_url = (
+        f"https://api.open-meteo.com/v1/forecast?"
+        f"latitude={latitude}&longitude={longitude}&current_weather=true"
+        f"&hourly=temperature_2m,relative_humidity_2m,wind_speed_10m"
+    )
+
+    try:
+        # API-Anfrage senden
+        response = requests.get(api_url)
+        response.raise_for_status()  # Fehler prüfen
+        
+        # JSON-Antwort parsen
+        weather_data = response.json()
+        return weather_data
+    except requests.exceptions.RequestException as e:
+        print(f"Error fetching weather data: {e}")
+        return None
+
+
+get_weather_data("52,52", "13,41")
 
 # Vorhersage nur starten, wenn Button geklickt wird
 if st.button("Predict Attendance"):
