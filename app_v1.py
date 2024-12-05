@@ -72,7 +72,8 @@ match_time = st.time_input(
 
 
 # Wetterdaten abrufen
-def get_weather_data(latitude, longitude, match_date):
+def get_weather_data(latitude, longitude, match_date, match_time):
+    # Open-Meteo API-URL
     api_url = (
         f"https://api.open-meteo.com/v1/forecast?"
         f"latitude={latitude}&longitude={longitude}&start_date={match_date}&end_date={match_date}"
@@ -80,12 +81,29 @@ def get_weather_data(latitude, longitude, match_date):
     )
 
     try:
+        # API-Anfrage senden
         response = requests.get(api_url)
         response.raise_for_status()
+        
+        # JSON-Antwort parsen
         weather_data = response.json()
+
+        # Erste Zahl der Uhrzeit als Index verwenden
+        match_hour = match_time.hour  # Holt nur die Stunde aus der Zeit
+
+        # Temperatur zum Match-Zeitpunkt abrufen
+        hourly_data = weather_data['hourly']
+        temperature_at_match = hourly_data['temperature_2m'][match_hour]
+
+        # Wetterdetails anzeigen
+        st.write(f"Temperature at {match_time}: {temperature_at_match}°C")
         st.json(weather_data)
+
+        return temperature_at_match
     except requests.exceptions.RequestException as e:
         st.error(f"Failed to fetch weather data: {e}")
+        return None
+
 
 stadium_coordinates = {
     'FC Sion': {'stadium': 'Stade de Tourbillon', 'latitude': 46.233333, 'longitude': 7.376389},
@@ -103,19 +121,18 @@ stadium_coordinates = {
 }
 
 # Überprüfung und Wetterdaten abrufen
-if home_team:
+if home_team and match_date and match_time:
     coordinates = stadium_coordinates[home_team]
     latitude = coordinates['latitude']
     longitude = coordinates['longitude']
 
     st.write(f"Fetching weather data for {home_team} ({coordinates['stadium']})...")
-    st.write(f"Latitude: {latitude}, Longitude: {longitude}")
-    
-    if match_date:
-        get_weather_data(latitude, longitude, match_date)
-    else:
-        st.error("Please select a valid match date.")
+    temperature_at_match = get_weather_data(latitude, longitude, match_date, match_time)
 
+    if temperature_at_match is not None:
+        st.success(f"The temperature at match time ({match_time}) is {temperature_at_match}°C")
+else:
+    st.error("Please fill in all fields.")
 
 
 
