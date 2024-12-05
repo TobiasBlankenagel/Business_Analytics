@@ -114,7 +114,7 @@ def get_weather_data(latitude, longitude, match_date, match_time):
         # Wetterdetails anzeigen
         st.write(f"Temperature at {match_time}: {temperature_at_match}°C")
         st.write(f"Weather at {match_time}: {weather_condition}")
-        return temperature_at_match, weather_condition
+        return temperature_at_match, weather_code_at_match
     except requests.exceptions.RequestException as e:
         st.error(f"Failed to fetch weather data: {e}")
         return None, None
@@ -143,11 +143,11 @@ if home_team and match_date and match_time:
     longitude = coordinates['longitude']
 
     st.write(f"Fetching weather data for {home_team} ({coordinates['stadium']})...")
-    temperature_at_match, weather_condition = get_weather_data(latitude, longitude, match_date, match_time)
+    temperature_at_match, weather_code_at_match = get_weather_data(latitude, longitude, match_date, match_time)
 
     if temperature_at_match is not None:
         st.success(f"Temperature at match time ({match_time}): {temperature_at_match}°C")
-        st.success(f"Weather code at match time ({match_time}): {weather_condition}")
+        st.success(f"Weather code at match time ({match_time}): {weather_code_at_match}")
 else:
     st.error("Please fill in all fields.")
 
