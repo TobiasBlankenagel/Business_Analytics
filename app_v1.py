@@ -122,18 +122,18 @@ def get_weather_data(latitude, longitude, match_date, match_time):
 
 # Koordinaten der Stadien
 stadium_coordinates = {
-    'FC Sion': {'stadium': 'Stade de Tourbillon', 'latitude': 46.233333, 'longitude': 7.376389},
-    'FC St. Gallen': {'stadium': 'Kybunpark', 'latitude': 47.408333, 'longitude': 9.310278},
+    'FC Sion': {'latitude': 46.233333, 'longitude': 7.376389},
+    'FC St. Gallen': {'latitude': 47.408333, 'longitude': 9.310278},
     'FC Winterthur': {'stadium': 'Stadion Schützenwiese', 'latitude': 47.505278, 'longitude': 8.724167},
-    'FC Zürich': {'stadium': 'Letzigrund', 'latitude': 47.382778, 'longitude': 8.504167},
-    'BSC Young Boys': {'stadium': 'Stade de Suisse', 'latitude': 46.963056, 'longitude': 7.464722},
-    'FC Luzern': {'stadium': 'Swissporarena', 'latitude': 47.035833, 'longitude': 8.310833},
-    'Lausanne-Sport': {'stadium': 'Stade de la Tuilière', 'latitude': 46.537778, 'longitude': 6.614444},
-    'Servette FC': {'stadium': 'Stade de Genève', 'latitude': 46.1875, 'longitude': 6.128333},
-    'FC Basel': {'stadium': 'St. Jakob-Park', 'latitude': 47.541389, 'longitude': 7.620833},
-    'FC Lugano': {'stadium': 'Stadio di Cornaredo', 'latitude': 46.0225, 'longitude': 8.960278},
-    'Grasshoppers': {'stadium': 'Letzigrund', 'latitude': 47.382778, 'longitude': 8.504167},
-    'Yverdon Sport': {'stadium': 'Stade Municipal', 'latitude': 46.778056, 'longitude': 6.641111}
+    'FC Zürich': {'latitude': 47.382778, 'longitude': 8.504167},
+    'BSC Young Boys': {'latitude': 46.963056, 'longitude': 7.464722},
+    'FC Luzern': {'latitude': 47.035833, 'longitude': 8.310833},
+    'Lausanne-Sport': {'latitude': 46.537778, 'longitude': 6.614444},
+    'Servette FC': {'latitude': 46.1875, 'longitude': 6.128333},
+    'FC Basel': {'latitude': 47.541389, 'longitude': 7.620833},
+    'FC Lugano': {'latitude': 46.0225, 'longitude': 8.960278},
+    'Grasshoppers': {'latitude': 47.382778, 'longitude': 8.504167},
+    'Yverdon Sport': {'latitude': 46.778056, 'longitude': 6.641111}
 }
 
 # Beispiel für die Benutzung
@@ -142,7 +142,7 @@ if home_team and match_date and match_time:
     latitude = coordinates['latitude']
     longitude = coordinates['longitude']
 
-    st.write(f"Fetching weather data for {home_team} ({coordinates['stadium']})...")
+    st.write(f"Fetching weather data for {home_team}...")
     temperature_at_match, weather_condition = get_weather_data(latitude, longitude, match_date, match_time)
 
     if temperature_at_match is not None:
@@ -153,7 +153,8 @@ else:
 
 
 
-
+####### SAMMELN DER DATEN #############
+##
 
 
 
