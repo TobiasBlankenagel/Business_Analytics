@@ -513,18 +513,30 @@ def game_result_icons(row):
 league_data["Last_5_Games_Icons"] = league_data.apply(game_result_icons, axis=1)
 
 
-# Tabelle sortieren
-league_data = league_data.sort_values(by="Ranking")
+# Ligatabelle basierend auf Rankings erstellen
+league_table = league_data[[
+    "Team", "Ranking", "Goals_Scored_in_Last_5_Games", 
+    "Goals_Conceded_in_Last_5_Games", "Number_of_Wins_in_Last_5_Games", 
+    "Last_5_Games_Icons"
+]]
+
+# Sortiere die Tabelle nach Ranking
+league_table = league_table.sort_values(by="Ranking", ascending=True)
 
 # Tabelle in Streamlit anzeigen
 st.markdown("### 🏆 League Table")
 
-# Spalten auswählen und anzeigen
-styled_league_table = league_data[[
-    "Ranking", "Team", "Goals_Scored_in_Last_5_Games", 
-    "Goals_Conceded_in_Last_5_Games", "Number_of_Wins_in_Last_5_Games", "Last_5_Games_Icons"
-]]
+# Bedingtes Styling für das Home- und Away-Team
+def highlight_teams(row):
+    if row["Team"] == home_team:
+        return ['background-color: #28a745; color: white'] * len(row)  # Heimteam grün
+    elif row["Team"] == away_team:
+        return ['background-color: #007bff; color: white'] * len(row)  # Auswärtsteam blau
+    return [''] * len(row)
 
+# Tabelle mit Styling anzeigen
+styled_table = league_table.style.apply(highlight_teams, axis=1)
+st.dataframe(styled_table, use_container_width=True)
 # In Streamlit DataFrame anzeigen
 st.markdown("""
 <style>
