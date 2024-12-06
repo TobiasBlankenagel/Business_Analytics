@@ -531,7 +531,7 @@ league_table = league_table.rename(columns={
 # Funktion zum Hervorheben der Teams
 def highlight_teams_html(row):
     if row["🏟️ Team"] == home_team:
-        return f'<tr style="background-color: rgba(0, 123, 255, 0.4); color: white;">'
+        return f'<tr style="background-color: rgba(0, 123, 255, 0.7); color: white;">'
     elif row["🏟️ Team"] == away_team:
         return f'<tr style="background-color: rgba(0, 123, 255, 0.1); color: black;">'
     return "<tr>"
