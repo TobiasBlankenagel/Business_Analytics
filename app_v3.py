@@ -496,9 +496,9 @@ if st.button("🎯 Predict Attendance"):
     # Ligatabelle basierend auf Rankings erstellen
     league_table = league_data.groupby('Unnamed: 0').agg(
         Ranking=('Ranking', 'first'),
-        Goals_Scored=('Goals Scored in Last 5 Games', 'mean'),
-        Goals_Conceded=('Goals Conceded in Last 5 Games', 'mean'),
-        Wins=('Number of Wins in Last 5 Games', 'mean')
+        Goals_Scored=('Goals_Scored_in_Last_5_Games', 'mean'),
+        Goals_Conceded=('Goals_Conceded_in_Last_5_Games', 'mean'),
+        Wins=('Number_of_Wins_in_Last_5_Games', 'mean')
     ).reset_index().rename(columns={'Unnamed: 0': 'Team'})
 
     # Sortiere die Tabelle nach dem Ranking
