@@ -31,18 +31,7 @@ st.markdown("""
 
 
 
-    /* Styling der Buttons */
-    .stButton>button {
-        background-color: #003366;
-        color: white; /* Schriftfarbe wird auf weiß gesetzt */
-        font-size: 18px;
-        font-weight: bold;
-        padding: 12px 30px;
-        border-radius: 25px;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        border: none;
-        cursor: pointer;
-    }
+
 
     /* Hover-Effekt für den Button */
     .stButton>button:hover {
