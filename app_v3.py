@@ -571,7 +571,7 @@ table_css = """
     }
     .highlight-away {
         background-color: rgba(0, 123, 255, 0.2) !important;
-        color: black !important;
+        color: white !important;
     }
 </style>
 """
