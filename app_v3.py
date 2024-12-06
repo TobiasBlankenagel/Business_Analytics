@@ -31,7 +31,18 @@ st.markdown("""
 
 
 
-
+    /* Styling der Buttons */
+    .stButton>button {
+        background-color: #003366;
+        color: white; /* Schriftfarbe wird auf weiß gesetzt */
+        font-size: 18px;
+        font-weight: bold;
+        padding: 12px 30px;
+        border-radius: 25px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        border: none;
+        cursor: pointer;
+    }
 
     /* Hover-Effekt für den Button */
     .stButton>button:hover {
@@ -41,14 +52,10 @@ st.markdown("""
     }
 
 
-    .stSelectbox, .stSlider, .stRadio, .stButton {
-        margin-bottom: 25px;
-        border-radius: 12px;
-        background-color: #ffffff;
-        padding: 14px 22px;
-        font-size: 16px;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    }
+
+
+
+
 
 
     .stSelectbox, .stSlider, .stRadio, .stButton, .stDateInput, .stTimeInput {
