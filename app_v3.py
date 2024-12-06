@@ -329,7 +329,6 @@ input_df = input_df[expected_columns]
 # Typkonvertierung sicherstellen
 input_df = input_df.astype(float)
 
-st.write(input_df)
 
 # Überprüfung auf fehlende Spalten
 missing_columns = [col for col in expected_columns if col not in input_df.columns]
