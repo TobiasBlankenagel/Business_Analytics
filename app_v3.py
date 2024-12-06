@@ -7,7 +7,7 @@ import datetime
 
 
 
-# Modelle laden
+################### Vorbereitung -- Modelle laden und Streamlit-Konfiguration #################################
 def load_model(model_path):
     with open(model_path, 'rb') as file:
         return pickle.load(file)
@@ -15,12 +15,15 @@ def load_model(model_path):
 model_with_weather = load_model("./finalized_model_with_weather.sav")
 model_without_weather = load_model("./finalized_model_without_weather.sav")
 
-# Streamlit-Konfiguration
 st.set_page_config(
     page_title="Stadium Attendance Prediction",
     page_icon="🏟️",
     layout="wide"
 )
+
+
+
+################### CSS Allgmeien #################################
 
 st.markdown("""
     <style>
@@ -136,6 +139,10 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
+
+################### Eingabefelder #################################
+
+
 st.title("🏟️ Stadium Attendance Prediction App")
 st.markdown("🎉⚽ This app predicts stadium attendance.")
 
@@ -147,30 +154,45 @@ available_away_teams = available_home_teams
 available_competitions = ['Super League', 'UEFA Conference League', 'Swiss Cup', 
                           'UEFA Europa League', 'UEFA Champions League']
 
-# Eingabefelder
-home_team = st.selectbox("Home Team:", available_home_teams)
-competition = st.selectbox("Competition:", available_competitions)
+# Erstellen von 2 Spalten für Eingabefelder
+col1, col2 = st.columns([2, 2])
 
-if competition == "Super League":
-    away_team = st.selectbox("Away Team:", available_home_teams)
-elif competition == "Swiss Cup":
-    away_team = st.selectbox("Away Team:", available_away_teams)
-else:
-    away_team = "Unknown"
+with col1:
+    home_team = st.selectbox("Home Team:", available_home_teams)
+    competition = st.selectbox("Competition:", available_competitions)
 
-if competition == "Super League":
-    matchday = st.slider("Matchday:", min_value=1, max_value=36, step=1)
-else:
-    matchday = st.radio("Matchday Type:", options=["Group", "Knockout"])
+with col2:
+    if competition == "Super League":
+        away_team = st.selectbox("Away Team:", available_home_teams)
+    elif competition == "Swiss Cup":
+        away_team = st.selectbox("Away Team:", available_away_teams)
+    else:
+        away_team = "Unknown"
+    
+    if competition == "Super League":
+        matchday = st.slider("Matchday:", min_value=1, max_value=36, step=1)
+    else:
+        matchday = st.radio("Matchday Type:", options=["Group", "Knockout"])
 
-match_date = st.date_input("Match Date:", min_value=datetime.date.today())
-match_time = st.time_input(
-    "Match Time:", value=datetime.time(15, 30), help="Select the match time in HH:MM format"
-)
+# Zeilen mit weiteren Eingabefeldern für Datum und Uhrzeit
+col3, col4 = st.columns([2, 2])
+
+with col3:
+    match_date = st.date_input("Match Date:", min_value=datetime.date.today())
+
+with col4:
+    match_time = st.time_input(
+        "Match Time:", value=datetime.time(15, 30), help="Select the match time in HH:MM format"
+    )
+
+# Berechne die Stunde aus dem Zeit-Input
 match_hour = match_time.hour  # Holt nur die Stunde aus der Zeit
 weekday = match_date.strftime("%A")
 
-# Wetterdaten abrufen
+
+
+################### Wetterdaten laden #################################
+
 def get_weather_data(latitude, longitude, match_date, match_hour):
     api_url = (
         f"https://api.open-meteo.com/v1/forecast?"
@@ -204,7 +226,6 @@ def get_weather_data(latitude, longitude, match_date, match_hour):
     except:
         return None, None
 
-# Koordinaten der Stadien
 stadium_coordinates = {
     'FC Sion': {'latitude': 46.233333, 'longitude': 7.376389},
     'FC St. Gallen': {'latitude': 47.408333, 'longitude': 9.310278},
@@ -227,10 +248,11 @@ if home_team and match_date and match_time:
     temperature_at_match, weather_condition = get_weather_data(latitude, longitude, match_date, match_hour)
 
 
-# Matchdaten abrufen
+
+################### Rankings usw. mittels Heimteam abrufen #################################
+
 league_data = pd.read_csv('new_league_data.csv')
 
-# Matchdaten abrufen
 home_team_data = league_data[league_data['Unnamed: 0'] == home_team]
 
 if home_team_data.empty:
@@ -240,10 +262,7 @@ else:
 
 # Wenn Away Team "Unknown" ist, Standardwerte verwenden
 if away_team == "Unknown":
-    ranking_away_team = 999  # Beispiel: 999 als Platzhalter für unbekanntes Ranking
-    goals_scored_away_team = 0
-    goals_conceded_away_team = 0
-    wins_away_team = 0
+    ranking_away_team = 0 
 else:
     away_team_data = league_data[league_data['Unnamed: 0'] == away_team]
     if away_team_data.empty:
@@ -263,7 +282,10 @@ if not home_team_data.empty:
     goals_conceded_home_team = home_team_data['Goals_Conceded_in_Last_5_Games']
     wins_home_team = home_team_data['Number_of_Wins_in_Last_5_Games']
 
-# Beispiel-Features erstellen
+
+
+################### Input Daten vorbereiten fürs Modell #################################
+
 input_features = {
     'Competition': competition,
     'Matchday': matchday,
@@ -323,7 +345,7 @@ for col in expected_columns:
     if col not in input_df.columns:
         input_df[col] = 0
 
-# Zusätzliche Spalten entfernen
+# Aufbau abgleichen
 input_df = input_df[expected_columns]
 
 # Typkonvertierung sicherstellen
@@ -338,8 +360,8 @@ if missing_columns:
 
 
 
+################### Vorhersage durchführen #################################
 
-# Vorhersage ausführen
 if st.button("Predict Attendance"):
     if temperature_at_match is not None:
         prediction = model_with_weather.predict(input_df)[0]
@@ -366,9 +388,7 @@ if st.button("Predict Attendance"):
 
 
 
-
-
-
+################### zusätzliche Infos #################################
 
 
 
