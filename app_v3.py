@@ -535,8 +535,7 @@ def highlight_teams(row):
     return [''] * len(row)
 
 # Tabelle mit Styling anzeigen
-styled_table = league_table.style.apply(highlight_teams, axis=1)
-st.dataframe(styled_table, use_container_width=True)
+styled_league_table = league_table.style.apply(highlight_teams, axis=1)
 # In Streamlit DataFrame anzeigen
 st.markdown("""
 <style>
