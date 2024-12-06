@@ -518,10 +518,16 @@ def highlight_teams(row):
     else:
         return [''] * len(row)  # Keine Hervorhebung
 
-# Tabelle anzeigen
+# Entferne die Highlight-Spalte und den Index
+league_table_display = league_table.drop(columns=['Highlight']).reset_index(drop=True)
+
+# Tabelle anzeigen mit verbessertem Layout
 st.markdown("### League Table")
-styled_table = league_table.style.apply(highlight_teams, axis=1).hide(axis='columns', subset=['Highlight'])
-st.dataframe(styled_table)
+styled_table = league_table_display.style.apply(highlight_teams, axis=1)
+
+# Verwende Streamlit DataFrame mit Styling ohne Index
+st.dataframe(styled_table, use_container_width=True)
+
 
 
 
