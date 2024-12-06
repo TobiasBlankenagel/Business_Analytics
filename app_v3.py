@@ -509,7 +509,7 @@ league_data["Last_5_Games_Icons"] = league_data.apply(game_result_icons, axis=1)
 
 # Ligatabelle erstellen
 league_table = league_data[[
-    "Team", "Ranking", "Points", "Games_Played", 
+    "Ranking", "Team", "Points", "Games_Played", 
     "Total_Goals_Scored", "Total_Goals_Conceded", 
     "Last_5_Games_Icons"
 ]]
