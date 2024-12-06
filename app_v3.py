@@ -142,8 +142,8 @@ st.markdown("""
 st.markdown("""
     <h1 style="color: #003366; text-align: center; font-size: 48px; font-weight: bold; margin-top: -40px;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);">🏟️ Stadium Attendance Prediction App</h1>
-    <div style="display: flex; justify-content: center; align-items: center; height: 100vh; text-align: center; 
-        padding: 20px; background-color: #f9f9f9; border-radius: 15px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+    <div style="text-align: center; padding: 20px; background-color: #f9f9f9; border-radius: 15px; 
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
         <p style="font-size: 20px; color: #555555;">🎉⚽ This app predicts stadium attendance based on various factors 
         such as the teams playing, weather conditions, and matchday info. Use the inputs below to get the prediction!</p>
     </div>
