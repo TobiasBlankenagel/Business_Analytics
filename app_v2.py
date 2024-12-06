@@ -65,9 +65,6 @@ match_hour = match_time.hour
 # Wetterdaten abrufen
 st.markdown("### 🌤️ Weather Information")
 
-# Wetterdaten abrufen
-st.markdown("### 🌤️ Weather Information")
-
 def get_weather_data(latitude, longitude, match_date, match_hour):
     api_url = (
         f"https://api.open-meteo.com/v1/forecast?"
@@ -77,7 +74,7 @@ def get_weather_data(latitude, longitude, match_date, match_hour):
     )
     try:
         response = requests.get(api_url)
-        response.raise_for_status()  # Prüft, ob die Anfrage erfolgreich war
+        response.raise_for_status()
         weather_data = response.json()
         hourly_data = weather_data['hourly']
 
@@ -102,26 +99,9 @@ def get_weather_data(latitude, longitude, match_date, match_hour):
 
             return temperature_at_match, weather_condition
         else:
-            st.warning("Weather data for the specified hour is unavailable.")
             return None, None
     except Exception:
-        st.error("Error retrieving weather data. Using default values.")
         return None, None
-
-# Wetterdaten abrufen, falls verfügbar
-if home_team and match_date and match_time:
-    coordinates = stadium_coordinates[home_team]
-    latitude = coordinates['latitude']
-    longitude = coordinates['longitude']
-    temperature_at_match, weather_condition = get_weather_data(latitude, longitude, match_date, match_hour)
-else:
-    temperature_at_match, weather_condition = None, None
-
-# Wetteranzeige in der App
-if temperature_at_match is not None:
-    st.info(f"**Temperature**: {temperature_at_match}°C, **Condition**: {weather_condition}")
-else:
-    st.warning("Weather data unavailable. Default model will be used.")
 
 # Koordinaten des Heimstadions
 stadium_coordinates = {
@@ -139,7 +119,20 @@ stadium_coordinates = {
     'Yverdon Sport': {'latitude': 46.778056, 'longitude': 6.641111}
 }
 
+# Wetterdaten abrufen, falls verfügbar
+if home_team and match_date and match_time:
+    coordinates = stadium_coordinates[home_team]
+    latitude = coordinates['latitude']
+    longitude = coordinates['longitude']
+    temperature_at_match, weather_condition = get_weather_data(latitude, longitude, match_date, match_hour)
+else:
+    temperature_at_match, weather_condition = None, None
 
+# Wetteranzeige in der App
+if temperature_at_match is not None:
+    st.info(f"**Temperature**: {temperature_at_match}°C, **Condition**: {weather_condition}")
+else:
+    st.warning("Weather data unavailable. Default model will be used.")
 
 # Teamdaten laden
 league_data = pd.read_csv('new_league_data.csv')
@@ -159,12 +152,12 @@ if away_team != "Unknown":
     goals_conceded_away_team = away_team_data['Goals_Conceded_in_Last_5_Games']
     wins_away_team = away_team_data['Number_of_Wins_in_Last_5_Games']
 else:
-    ranking_away_team = 999  # Platzhalter für unbekanntes Team
+    ranking_away_team = 999
     goals_scored_away_team = 0
     goals_conceded_away_team = 0
     wins_away_team = 0
 
-# Stadionkapazitäten der Teams
+# Stadionkapazitäten
 stadium_capacity = {
     'FC Sion': 16232,
     'FC St. Gallen': 20029,
@@ -180,12 +173,12 @@ stadium_capacity = {
     'Yverdon Sport': 6600
 }
 
-# Features für das Modell vorbereiten
+# Features vorbereiten
 input_features = {
     'Time': match_hour,
     'Ranking Home Team': ranking_home_team,
     'Ranking Away Team': ranking_away_team,
-    'Temperature (°C)': temperature_at_match,
+    'Temperature (°C)': temperature_at_match if temperature_at_match is not None else 20,
     'Month': match_date.month,
     'Day': match_date.day,
     'Goals Scored in Last 5 Games': goals_scored_home_team,
@@ -193,31 +186,9 @@ input_features = {
     'Number of Wins in Last 5 Games': wins_home_team,
 }
 
-# Input-Daten für das Modell
-input_data = pd.DataFrame([input_features])
-expected_columns = model_with_weather.feature_names_in_
-
-# Fehlende Spalten auffüllen
-for col in expected_columns:
-    if col not in input_data.columns:
-        input_data[col] = 0
-input_data = input_data[expected_columns]
-
 # Vorhersage
 if st.button("🎯 Predict Attendance"):
-    # Prüfen, ob Wetterdaten verfügbar sind
-    if temperature_at_match is not None:
-        prediction_percentage = model_with_weather.predict(input_data)[0]
-        weather_status = "Weather data used for prediction."
-    else:
-        prediction_percentage = model_without_weather.predict(input_data)[0]
-        weather_status = "Weather data unavailable. Prediction made without weather information."
-    
-    # Maximal mögliche Zuschauerzahl basierend auf der Kapazität
+    prediction_percentage = model_with_weather.predict(input_features)[0] if temperature_at_match else model_without_weather.predict(input_features)[0]
     max_capacity = stadium_capacity[home_team]
-    predicted_attendance = round(prediction_percentage * max_capacity)  # Zuschauerzahl berechnen
-    
-    # Ergebnisse anzeigen
-    st.success(f"🎉 Predicted Attendance Percentage: **{prediction_percentage:.2f}%**")
-    st.info(f"🏟️ Predicted Attendance: **{predicted_attendance}** out of {max_capacity} seats.")
-    st.warning(weather_status)
+    predicted_attendance = round(prediction_percentage * max_capacity)
+    st.success(f"Predicted Attendance: {predicted_attendance}")
