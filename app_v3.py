@@ -264,7 +264,7 @@ if home_team and match_date and match_time:
 
 league_data = pd.read_csv('new_league_data.csv')
 
-home_team_data = league_data[league_data['Unnamed: 0'] == home_team]
+home_team_data = league_data[league_data['Team'] == home_team]
 
 if home_team_data.empty:
     st.error(f"Home team '{home_team}' not found in the data.")
@@ -275,7 +275,7 @@ else:
 if away_team == "Unknown":
     ranking_away_team = 0 
 else:
-    away_team_data = league_data[league_data['Unnamed: 0'] == away_team]
+    away_team_data = league_data[league_data['Team'] == away_team]
     if away_team_data.empty:
         st.error(f"Away team '{away_team}' not found in the data.")
     else:
