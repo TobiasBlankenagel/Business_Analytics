@@ -149,6 +149,7 @@ if not home_team_data.empty:
     # Beispiel-Features erstellen
     input_features = {
         'Competition': competition,
+        'Matchday': matchday,
         'Time': match_hour,
         'Ranking Home Team': ranking_home_team,
         'Ranking Away Team': ranking_away_team,
@@ -172,7 +173,7 @@ if not home_team_data.empty:
     # Zusätzliche Spalten entfernen
     input_data = input_data[expected_columns]
 
-    st.write(competition)
+    st.write(matchday)
 
 
     # Vorhersage
