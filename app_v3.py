@@ -53,7 +53,7 @@ st.markdown("""
 
 
 
-    .stSelectbox, .stSlider, .stRadio, .stButton {
+    .stSelectbox, .stSlider, .stRadio {
         margin-top: 10px;
         border-radius: 12px;
         background-color: #ffffff;
