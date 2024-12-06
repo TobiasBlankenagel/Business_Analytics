@@ -43,14 +43,6 @@ st.markdown("""
 
 
 
-    /* Auswahlboxen und Buttons */
-    .stSelectbox, .stSlider, .stRadio, .stButton {
-        margin-bottom: 20px;
-        border-radius: 10px;
-        background-color: #ffffff;
-        padding: 12px 20px;
-        font-size: 16px;
-    }
 
 
     /* Farben für Vorhersage und Info */
