@@ -346,6 +346,16 @@ if st.button("Predict Attendance"):
         prediction = model_with_weather.predict(input_df)[0]
         weather_status = "Weather data used for prediction."
     else:
+        # Droppen der Wetter-bezogenen Spalten
+        weather_columns_to_drop = [
+            'Weather_Drizzle', 'Weather_Snowy', 'Weather_Partly cloudy', 
+            'Temperature (°C)', 'Weather_Rainy'
+        ]
+        
+        # Entferne die Spalten, die das Wetter betreffen, falls sie existieren
+        input_df = input_df.drop(columns=[col for col in weather_columns_to_drop if col in input_df.columns])
+        
+        # Verwende das Modell ohne Wetterdaten
         prediction = model_without_weather.predict(input_df)[0]
         weather_status = "Weather data unavailable. Prediction made without weather information."
     
