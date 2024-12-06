@@ -247,6 +247,12 @@ if home_team and match_date and match_time:
     longitude = coordinates['longitude']
     temperature_at_match, weather_condition = get_weather_data(latitude, longitude, match_date, match_hour)
 
+    # Ausgabe des Wetters
+    if temperature_at_match is not None and weather_condition is not None:
+        st.write(f"The weather at the match will be: {weather_condition} with a temperature of {temperature_at_match}°C.")
+    else:
+        st.write("Weather data is unavailable.")
+
 
 
 ################### Rankings usw. mittels Heimteam abrufen #################################
