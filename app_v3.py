@@ -148,7 +148,7 @@ st.markdown("""
     }
 
     .stDateInput, .stTimeInput {
-        margin-top: 10px;
+        margin-top: 0px;
         margin-bottom: 20px;
         border-radius: 12px;
         background-color: #ffffff;
