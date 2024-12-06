@@ -132,6 +132,27 @@ st.markdown("""
         margin-bottom: 10px;
     }
 
+    .stSelectbox, .stSlider, .stRadio, .stButton {
+        margin-bottom: 25px;
+        border-radius: 12px;
+        background-color: #ffffff;
+        padding: 14px 22px;
+        font-size: 16px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Hover-Effekt für Eingabefelder */
+    .stSelectbox:hover, .stSlider:hover, .stRadio:hover {
+        border: 2px solid #0066cc;
+        transition: all 0.3s ease;
+    }
+
+    .stSelectbox, .stSlider, .stRadio, .stButton, .stDateInput, .stTimeInput {
+        margin-top: 10px;
+        margin-bottom: 20px;
+    }
+
+
     </style>
 """, unsafe_allow_html=True)
 
