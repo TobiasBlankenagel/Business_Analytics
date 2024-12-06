@@ -151,7 +151,7 @@ if not home_team_data.empty:
         'Competition': competition,
         'Matchday': matchday,
         'Time': match_hour,
-        'Home Team': home_team.
+        'Home Team': home_team,
         'Ranking Home Team': ranking_home_team,
         'Away Team': away_team,
         'Ranking Away Team': ranking_away_team,
