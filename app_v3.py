@@ -444,9 +444,26 @@ if st.button("🎯 Predict Attendance"):
         )
         ax.set_title(f"Predicted Attendance: {predicted_attendance:.0f} of {max_capacity} ({prediction:.2f}%)")
 
-        st.pyplot(fig)
+        # Speichere das Diagramm in einen Puffer
+        import io
+        buf = io.BytesIO()
+        fig.savefig(buf, format="png", bbox_inches="tight")
+        buf.seek(0)
+
+        # Einbettung des Diagramms mit Rahmen
+        st.markdown(
+            """
+            <div style="background-color: #f9f9f9; padding: 20px; border-radius: 10px; border: 1px solid #ddd; 
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+                <h3 style="text-align: center; color: #003366;">Attendance Prediction Details</h3>
+                <img src="data:image/png;base64,{}" style="display: block; margin: auto;"/>
+            </div>
+            """.format(buf.getvalue().encode("base64").decode("utf-8")),
+            unsafe_allow_html=True
+        )
 
     st.info(weather_status)
+
 
 
 
