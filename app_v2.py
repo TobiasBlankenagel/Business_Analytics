@@ -198,15 +198,19 @@ input_data = input_data[expected_columns]
 
 # Vorhersage
 if st.button("🎯 Predict Attendance"):
-    if temperature_at_match:
+    # Prüfen, ob Wetterdaten verfügbar sind
+    if temperature_at_match is not None:
         prediction_percentage = model_with_weather.predict(input_data)[0]
+        weather_status = "Weather data used for prediction."
     else:
         prediction_percentage = model_without_weather.predict(input_data)[0]
+        weather_status = "Weather data unavailable. Prediction made without weather information."
     
     # Maximal mögliche Zuschauerzahl basierend auf der Kapazität
     max_capacity = stadium_capacity[home_team]
     predicted_attendance = round(prediction_percentage * max_capacity)  # Zuschauerzahl berechnen
     
-    # Ergebnis anzeigen
+    # Ergebnisse anzeigen
     st.success(f"🎉 Predicted Attendance Percentage: **{prediction_percentage:.2f}%**")
     st.info(f"🏟️ Predicted Attendance: **{predicted_attendance}** out of {max_capacity} seats.")
+    st.warning(weather_status)
