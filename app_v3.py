@@ -41,13 +41,7 @@ st.markdown("""
         font-weight: bold;
     }
 
-    /* Beschreibungstext */
-    .markdown-text-container {
-        font-size: 18px;
-        color: #333333;
-        text-align: center;
-        padding: 0 20px;
-    }
+
 
     /* Auswahlboxen und Buttons */
     .stSelectbox, .stSlider, .stRadio, .stButton {
@@ -125,7 +119,6 @@ st.markdown("""
         color: white; /* Schriftfarbe bleibt weiß im Hover-Zustand */
         transition: all 0.3s ease;
     }
-
 
 
     .stSelectbox, .stSlider, .stRadio, .stButton {
