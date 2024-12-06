@@ -249,9 +249,25 @@ if home_team and match_date and match_time:
 
     # Ausgabe des Wetters
     if temperature_at_match is not None and weather_condition is not None:
-        st.write(f"The weather at the match will be: {weather_condition} with a temperature of {temperature_at_match}°C.")
+        st.markdown(f"""
+            <div style="background-color: #f8f9fa; padding: 20px; border-radius: 10px; border: 1px solid #ddd;">
+                <h3 style="color: #003366;">Weather at the Match</h3>
+                <p style="font-size: 18px; color: #333333;">
+                    The weather at the match will be <strong style="color: #007bff;">{weather_condition}</strong> 
+                    with a temperature of <strong style="color: #007bff;">{temperature_at_match}°C</strong>.
+                </p>
+            </div>
+        """, unsafe_allow_html=True)
     else:
-        st.write("Weather data is unavailable.")
+        st.markdown("""
+            <div style="background-color: #f8f9fa; padding: 20px; border-radius: 10px; border: 1px solid #ddd;">
+                <h3 style="color: #003366;">Weather at the Match</h3>
+                <p style="font-size: 18px; color: #333333;">
+                    Unfortunately, the weather data is unavailable at the moment.
+                </p>
+            </div>
+        """, unsafe_allow_html=True)
+
 
 
 
