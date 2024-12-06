@@ -158,7 +158,7 @@ if not home_team_data.empty:
         'Ranking Away Team': ranking_away_team,
         'Weather': weather_condition,
         'Temperature (°C)': temperature_at_match,
-        'Weekday': 
+        'Weekday': weekday,
         'Month': match_date.month,
         'Day': match_date.day,
         'Goals Scored in Last 5 Games': goals_scored_home_team,
