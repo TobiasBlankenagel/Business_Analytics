@@ -366,18 +366,18 @@ if missing_columns:
 
 # Dictionary mit den max_capacity, 30. und 70. Perzentil der Attendance
 team_data = {
-    "BSC Young Boys": {"max_capacity": 31783.0, "attendance_30th_percentile": 25282.1, "attendance_70th_percentile": 31120.0},
-    "FC Basel": {"max_capacity": 38512.0, "attendance_30th_percentile": 19527.0, "attendance_70th_percentile": 22666.5},
-    "FC Lugano": {"max_capacity": 6330.0, "attendance_30th_percentile": 2843.5, "attendance_70th_percentile": 3509.6},
-    "FC Luzern": {"max_capacity": 16800.0, "attendance_30th_percentile": 10105.5, "attendance_70th_percentile": 13171.9},
-    "FC Sion": {"max_capacity": 16232.0, "attendance_30th_percentile": 6500.0, "attendance_70th_percentile": 9480.0},
-    "FC St. Gallen": {"max_capacity": 20029.0, "attendance_30th_percentile": 15683.8, "attendance_70th_percentile": 18482.3},
-    "FC Winterthur": {"max_capacity": 8550.0, "attendance_30th_percentile": 5100.0, "attendance_70th_percentile": 8400.0},
-    "FC Zürich": {"max_capacity": 26104.0, "attendance_30th_percentile": 10870.0, "attendance_70th_percentile": 15393.0},
-    "Grasshoppers": {"max_capacity": 26104.0, "attendance_30th_percentile": 4049.6, "attendance_70th_percentile": 5879.0},
-    "Lausanne-Sport": {"max_capacity": 12544.0, "attendance_30th_percentile": 3773.6, "attendance_70th_percentile": 5728.0},
-    "Servette FC": {"max_capacity": 30084.0, "attendance_30th_percentile": 6076.6, "attendance_70th_percentile": 10860.1},
-    "Yverdon Sport": {"max_capacity": 6600.0, "attendance_30th_percentile": 712.6, "attendance_70th_percentile": 2400.0}
+    "BSC Young Boys": {"max_capacity": 31783, "attendance_30th_percentile": 25282.1, "attendance_70th_percentile": 31120.0},
+    "FC Basel": {"max_capacity": 38512, "attendance_30th_percentile": 19527.0, "attendance_70th_percentile": 22666.5},
+    "FC Lugano": {"max_capacity": 6330, "attendance_30th_percentile": 2843.5, "attendance_70th_percentile": 3509.6},
+    "FC Luzern": {"max_capacity": 16800, "attendance_30th_percentile": 10105.5, "attendance_70th_percentile": 13171.9},
+    "FC Sion": {"max_capacity": 16232, "attendance_30th_percentile": 6500.0, "attendance_70th_percentile": 9480.0},
+    "FC St. Gallen": {"max_capacity": 20029, "attendance_30th_percentile": 15683.8, "attendance_70th_percentile": 18482.3},
+    "FC Winterthur": {"max_capacity": 8550, "attendance_30th_percentile": 5100.0, "attendance_70th_percentile": 8400.0},
+    "FC Zürich": {"max_capacity": 26104, "attendance_30th_percentile": 10870.0, "attendance_70th_percentile": 15393.0},
+    "Grasshoppers": {"max_capacity": 26104, "attendance_30th_percentile": 4049.6, "attendance_70th_percentile": 5879.0},
+    "Lausanne-Sport": {"max_capacity": 12544, "attendance_30th_percentile": 3773.6, "attendance_70th_percentile": 5728.0},
+    "Servette FC": {"max_capacity": 30084, "attendance_30th_percentile": 6076.6, "attendance_70th_percentile": 10860.1},
+    "Yverdon Sport": {"max_capacity": 6600, "attendance_30th_percentile": 712.6, "attendance_70th_percentile": 2400.0}
 }
 
 
