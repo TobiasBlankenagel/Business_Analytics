@@ -6,6 +6,22 @@ import requests
 import datetime
 
 
+
+# Modelle laden
+def load_model(model_path):
+    with open(model_path, 'rb') as file:
+        return pickle.load(file)
+
+model_with_weather = load_model("./finalized_model_with_weather.sav")
+model_without_weather = load_model("./finalized_model_without_weather.sav")
+
+# Streamlit-Konfiguration
+st.set_page_config(
+    page_title="Stadium Attendance Prediction",
+    page_icon="🏟️",
+    layout="wide"
+)
+
 st.markdown("""
     <style>
     /* Hintergrundfarbe der gesamten Seite */
@@ -119,22 +135,6 @@ st.markdown("""
 
     </style>
 """, unsafe_allow_html=True)
-
-
-# Modelle laden
-def load_model(model_path):
-    with open(model_path, 'rb') as file:
-        return pickle.load(file)
-
-model_with_weather = load_model("./finalized_model_with_weather.sav")
-model_without_weather = load_model("./finalized_model_without_weather.sav")
-
-# Streamlit-Konfiguration
-st.set_page_config(
-    page_title="Stadium Attendance Prediction",
-    page_icon="🏟️",
-    layout="wide"
-)
 
 st.title("🏟️ Stadium Attendance Prediction App")
 st.markdown("🎉⚽ This app predicts stadium attendance.")
