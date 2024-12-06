@@ -207,27 +207,46 @@ expected_columns = [
     'Weekday_Tuesday', 'Weekday_Wednesday'
 ]
 
-# Fehlende Spalten hinzufügen und mit 0 auffüllen
+# Dummy-Encode der kategorischen Spalten
+categorical_columns = [
+    "Competition", "Matchday", "Home Team", "Away Team", "Weather", "Weekday"
+]
+
+# Erstelle DataFrame aus input_features
+input_df = pd.DataFrame([input_features])
+
+# Dummy-Encode für die kategorischen Spalten
+input_df = pd.get_dummies(input_df, columns=categorical_columns)
+
+# Fehlende Spalten aus `expected_columns` hinzufügen
 for col in expected_columns:
-    if col not in input_data.columns:
-        input_data[col] = 0
+    if col not in input_df.columns:
+        input_df[col] = 0  # Fehlende Dummy-Variablen auf 0 setzen
 
-input_data = input_data[expected_columns]
+# Zusätzliche Spalten, die nicht in `expected_columns` sind, entfernen
+input_df = input_df[expected_columns]
 
-# Umwandlung in numerische Typen (sicherstellen, dass kein object-Typ enthalten ist)
-input_data = input_data.astype(float)
+# Alle Werte zu numerischen Typen konvertieren
+input_df = input_df.astype(float)
 
-# Vorhersage mit dem Modell
+# Überprüfung: Sicherstellen, dass alle erwarteten Spalten vorhanden sind
+missing_columns = [col for col in expected_columns if col not in input_df.columns]
+if missing_columns:
+    raise ValueError(f"Fehlende Spalten in den Eingabedaten: {missing_columns}")
+
+# Dataset bereit für die Vorhersage
+st.write("Final Input Data for Prediction:", input_df)
+
+# Vorhersage ausführen
 if st.button("Predict Attendance"):
     if temperature_at_match is not None:
-        prediction_percentage = model_with_weather.predict(input_data)[0]
-        weather_status = "Weather data was used for prediction."
+        prediction = model_with_weather.predict(input_df)[0]
+        weather_status = "Weather data used for prediction."
     else:
-        prediction_percentage = model_without_weather.predict(input_data)[0]
+        prediction = model_without_weather.predict(input_df)[0]
         weather_status = "Weather data unavailable. Prediction made without weather information."
     
-    # Ergebnisse anzeigen
-    st.success(f"Predicted Attendance Percentage: {prediction_percentage:.2f}%")
+    st.success(f"Predicted Attendance Percentage: {prediction:.2f}%")
     st.info(weather_status)
 
 
