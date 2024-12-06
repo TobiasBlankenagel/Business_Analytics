@@ -50,11 +50,74 @@ match_date = st.date_input("📅 Match Date:", min_value=datetime.date.today())
 match_time = st.time_input("🕒 Match Time:", value=datetime.time(15, 30))
 match_hour = match_time.hour
 
-# Wetterdaten abrufen (Dummy-Wetterdaten hier als Platzhalter)
+# Wetterdaten abrufen
 st.markdown("### 🌤️ Weather Information")
-temperature_at_match = 15  # Beispielwert
-weather_condition = "Partly Cloudy"
-st.info(f"**Temperature**: {temperature_at_match}°C, **Condition**: {weather_condition}")
+
+def get_weather_data(latitude, longitude, match_date, match_hour):
+    api_url = (
+        f"https://api.open-meteo.com/v1/forecast?"
+        f"latitude={latitude}&longitude={longitude}&start_date={match_date}&end_date={match_date}"
+        f"&hourly=temperature_2m,weathercode"
+        f"&timezone=auto"
+    )
+    try:
+        response = requests.get(api_url)
+        response.raise_for_status()
+        weather_data = response.json()
+        hourly_data = weather_data['hourly']
+        temperature_at_match = hourly_data['temperature_2m'][match_hour]
+        weather_code_at_match = hourly_data['weathercode'][match_hour]
+
+        if weather_code_at_match in [0]:
+            weather_condition = "Clear or mostly clear"
+        elif weather_code_at_match in [1, 2, 3]:
+            weather_condition = "Partly cloudy"
+        elif weather_code_at_match in [61, 63, 65, 80, 81, 82]:
+            weather_condition = "Rainy"
+        elif weather_code_at_match in [51, 53, 55]:
+            weather_condition = "Drizzle"
+        elif weather_code_at_match in [71, 73, 75, 85, 86, 77]:
+            weather_condition = "Snowy"
+        else:
+            weather_condition = "Unknown"
+
+        return temperature_at_match, weather_condition
+    except:
+        return None, None
+
+# Koordinaten des Heimstadions
+stadium_coordinates = {
+    'FC Sion': {'latitude': 46.233333, 'longitude': 7.376389},
+    'FC St. Gallen': {'latitude': 47.408333, 'longitude': 9.310278},
+    'FC Winterthur': {'latitude': 47.505278, 'longitude': 8.724167},
+    'FC Zürich': {'latitude': 47.382778, 'longitude': 8.504167},
+    'BSC Young Boys': {'latitude': 46.963056, 'longitude': 7.464722},
+    'FC Luzern': {'latitude': 47.035833, 'longitude': 8.310833},
+    'Lausanne-Sport': {'latitude': 46.537778, 'longitude': 6.614444},
+    'Servette FC': {'latitude': 46.1875, 'longitude': 6.128333},
+    'FC Basel': {'latitude': 47.541389, 'longitude': 7.620833},
+    'FC Lugano': {'latitude': 46.0225, 'longitude': 8.960278},
+    'Grasshoppers': {'latitude': 47.382778, 'longitude': 8.504167},
+    'Yverdon Sport': {'latitude': 46.778056, 'longitude': 6.641111}
+}
+
+# Wetterdaten abrufen, falls verfügbar
+if home_team and match_date and match_time:
+    coordinates = stadium_coordinates[home_team]
+    latitude = coordinates['latitude']
+    longitude = coordinates['longitude']
+    temperature_at_match, weather_condition = get_weather_data(latitude, longitude, match_date, match_hour)
+else:
+    temperature_at_match, weather_condition = None, None
+
+# Wetteranzeige in der App
+if temperature_at_match is not None:
+    st.info(f"**Temperature**: {temperature_at_match}°C, **Condition**: {weather_condition}")
+else:
+    st.warning("Weather data could not be retrieved. Using default values.")
+    temperature_at_match = 20  # Standardtemperatur
+    weather_condition = "Clear"
+
 
 # Teamdaten laden
 league_data = pd.read_csv('new_league_data.csv')
