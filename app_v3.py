@@ -504,16 +504,16 @@ def game_result_icons(results):
     return "".join([icons[result] for result in results])
 
 # Spalte für visuelle Darstellung der letzten 5 Spiele
-league_table["Last_5_Games_Icons"] = league_table["Last_5_Games"].apply(game_result_icons)
+league_data["Last_5_Games_Icons"] = league_data["Last_5_Games"].apply(game_result_icons)
 
 # Tabelle sortieren
-league_table = league_table.sort_values(by="Ranking")
+league_data = league_data.sort_values(by="Ranking")
 
 # Tabelle in Streamlit anzeigen
 st.markdown("### 🏆 League Table")
 
 # Spalten auswählen und anzeigen
-styled_league_table = league_table[[
+styled_league_table = league_data[[
     "Ranking", "Team", "Goals_Scored_in_Last_5_Games", 
     "Goals_Conceded_in_Last_5_Games", "Number_of_Wins_in_Last_5_Games", "Last_5_Games_Icons"
 ]]
