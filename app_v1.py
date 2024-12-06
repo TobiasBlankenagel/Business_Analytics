@@ -15,13 +15,13 @@ model_without_weather = load_model("./finalized_model_without_weather.sav")
 
 # Streamlit-Konfiguration
 st.set_page_config(
-    page_title="Stadium Capacity Prediction",
+    page_title="Stadium Attendance Prediction",
     page_icon="🏟️",
     layout="wide"
 )
 
-st.title("🏟️ Stadium Capacity Prediction App")
-st.markdown("🎉⚽ This app predicts stadium capacity utilization.")
+st.title("🏟️ Stadium Attendance Prediction App")
+st.markdown("🎉⚽ This app predicts stadium attendance.")
 
 # Eingrenzung der Teams und Wettbewerbe
 available_home_teams = ['FC Sion', 'FC St. Gallen', 'FC Winterthur', 'FC Zürich',
