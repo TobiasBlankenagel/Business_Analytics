@@ -124,7 +124,6 @@ else:
 
 # Wenn Away Team "Unknown" ist, Standardwerte verwenden
 if away_team == "Unknown":
-    st.warning("Away team is 'Unknown'. Using default placeholder values.")
     ranking_away_team = 999  # Beispiel: 999 als Platzhalter für unbekanntes Ranking
     goals_scored_away_team = 0
     goals_conceded_away_team = 0
