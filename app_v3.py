@@ -5,6 +5,122 @@ import pickle
 import requests
 import datetime
 
+
+st.markdown("""
+    <style>
+    /* Hintergrundfarbe der gesamten Seite */
+    body {
+        background-color: #f4f7fc;
+        font-family: 'Arial', sans-serif;
+    }
+
+    /* Titel und Hauptüberschrift */
+    h1 {
+        color: #003366;
+        text-align: center;
+        font-size: 40px;
+        font-weight: bold;
+        margin-top: 50px;
+    }
+
+    /* Beschreibungstext */
+    .markdown-text-container {
+        font-size: 18px;
+        color: #333333;
+        text-align: center;
+        padding: 0 20px;
+    }
+
+    /* Auswahlboxen und Buttons */
+    .stSelectbox, .stSlider, .stRadio, .stButton {
+        margin-bottom: 20px;
+        border-radius: 10px;
+        background-color: #ffffff;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        padding: 12px 20px;
+        font-size: 16px;
+    }
+
+    .stSelectbox:hover, .stSlider:hover, .stRadio:hover {
+        border: 2px solid #003366;
+        transition: all 0.3s ease;
+    }
+
+    /* Farben für Vorhersage und Info */
+    .stSuccess {
+        color: #28a745;
+        font-size: 20px;
+        font-weight: bold;
+        text-align: center;
+    }
+
+    .stInfo {
+        color: #17a2b8;
+        font-size: 18px;
+        text-align: center;
+    }
+
+    /* Design der DataFrame-Tabellen */
+    .stDataFrame {
+        background-color: #ffffff;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        margin-top: 20px;
+    }
+
+    /* Spezifische Stiländerungen für die Tabellenzellen */
+    .stDataFrame table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .stDataFrame th, .stDataFrame td {
+        padding: 10px;
+        text-align: center;
+        border-bottom: 1px solid #ddd;
+    }
+
+    .stDataFrame th {
+        background-color: #003366;
+        color: white;
+    }
+
+    .stDataFrame td {
+        background-color: #f9f9f9;
+    }
+
+    .stDataFrame tr:hover {
+        background-color: #f1f1f1;
+    }
+
+    /* Styling der Buttons */
+    .stButton>button {
+        background-color: #003366;
+        color: white;
+        font-size: 18px;
+        font-weight: bold;
+        padding: 12px 30px;
+        border-radius: 25px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        border: none;
+        cursor: pointer;
+    }
+
+    .stButton>button:hover {
+        background-color: #0066cc;
+        transition: all 0.3s ease;
+    }
+
+    /* Bereich für die Eingabefelder */
+    .stSelectbox, .stSlider, .stRadio, .stButton, .stDateInput, .stTimeInput {
+        margin-top: 10px;
+        margin-bottom: 10px;
+    }
+
+    </style>
+""", unsafe_allow_html=True)
+
+
 # Modelle laden
 def load_model(model_path):
     with open(model_path, 'rb') as file:
