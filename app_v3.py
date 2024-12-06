@@ -390,7 +390,7 @@ if missing_columns:
 
 ################### Vorhersage durchführen #################################
 
-if st.button("Predict Attendance"):
+if st.button("🎯 Predict Attendance"):
     if temperature_at_match is not None:
         prediction = model_with_weather.predict(input_df)[0]
         weather_status = "Weather data used for prediction."
@@ -400,16 +400,17 @@ if st.button("Predict Attendance"):
             'Weather_Drizzle', 'Weather_Snowy', 'Weather_Partly cloudy', 
             'Temperature (°C)', 'Weather_Rainy'
         ]
-        
-        # Entferne die Spalten, die das Wetter betreffen, falls sie existieren
         input_df = input_df.drop(columns=[col for col in weather_columns_to_drop if col in input_df.columns])
-        
-        # Verwende das Modell ohne Wetterdaten
         prediction = model_without_weather.predict(input_df)[0]
         weather_status = "Weather data unavailable. Prediction made without weather information."
-    
-    st.success(f"Predicted Attendance Percentage: {prediction:.2f}%")
+
+    st.markdown(f"""
+        <div style="background-color: #28a745; padding: 20px; border-radius: 10px; border: 1px solid #ddd; color: white;">
+            <h2 style="text-align: center;">Predicted Attendance: {prediction:.2f}% 📊</h2>
+        </div>
+    """, unsafe_allow_html=True)
     st.info(weather_status)
+
 
 
 
