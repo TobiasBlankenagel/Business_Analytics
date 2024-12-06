@@ -27,7 +27,7 @@ st.markdown("🎉⚽ This app predicts stadium attendance.")
 available_home_teams = ['FC Sion', 'FC St. Gallen', 'FC Winterthur', 'FC Zürich',
                         'BSC Young Boys', 'FC Luzern', 'Lausanne-Sport', 'Servette FC',
                         'FC Basel', 'FC Lugano', 'Grasshoppers', 'Yverdon Sport']
-available_away_teams = available_home_teams + ['Unknown']
+available_away_teams = available_home_teams
 available_competitions = ['Super League', 'UEFA Conference League', 'Swiss Cup', 
                           'UEFA Europa League', 'UEFA Champions League']
 
