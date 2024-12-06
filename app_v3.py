@@ -511,9 +511,9 @@ league_table['Highlight'] = league_table['Team'].apply(
 
 # Bedingtes Styling für die Tabelle
 def highlight_teams(row):
-    if row.Highlight == 'Home Team':
+    if row['Highlight'] == 'Home Team':  # Zugriff über row['Highlight']
         return ['background-color: #28a745; color: white'] * len(row)  # Heimteam grün hervorheben
-    elif row.Highlight == 'Away Team':
+    elif row['Highlight'] == 'Away Team':
         return ['background-color: #007bff; color: white'] * len(row)  # Auswärtsteam blau hervorheben
     else:
         return [''] * len(row)  # Keine Hervorhebung
