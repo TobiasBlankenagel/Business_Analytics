@@ -1,13 +1,13 @@
 Team,Ranking,Goals_Scored_in_Last_5_Games,Goals_Conceded_in_Last_5_Games,Number_of_Wins_in_Last_5_Games,Last_1_Game_Result,Last_2_Game_Result,Last_3_Game_Result,Last_4_Game_Result,Last_5_Game_Result,Total_Goals_Scored,Total_Goals_Conceded,Goal_Difference,Games_Played,Points
-FC Basel,1,12,5,3,Tie,Win,Win,Win,Lose,45,20,25,15,36
-FC Lugano,2,10,6,2,Lose,Win,Lose,Win,Tie,40,25,15,15,30
-Servette FC,3,8,7,1,Win,Lose,Tie,Lose,Tie,30,35,-5,15,18
-FC Zürich,4,10,6,1,Tie,Lose,Tie,Tie,Win,38,30,8,15,20
-FC Luzern,5,12,5,2,Win,Tie,Lose,Win,Tie,42,28,14,15,27
-Lausanne-Sport,6,10,6,3,Tie,Win,Lose,Win,Win,36,30,6,15,33
-FC St. Gallen,7,8,7,1,Lose,Tie,Win,Tie,Tie,34,32,2,15,21
-FC Sion,8,8,7,2,Win,Lose,Win,Tie,Lose,32,36,-4,15,24
-BSC Young Boys,9,8,7,3,Win,Tie,Win,Tie,Win,40,32,8,15,33
-Yverdon Sport,10,8,7,0,Lose,Tie,Lose,Lose,Lose,28,38,-10,15,9
-FC Winterthur,11,12,5,1,Lose,Tie,Win,Lose,Tie,35,40,-5,15,18
-Grasshoppers,12,12,5,0,Tie,Tie,Lose,Lose,Tie,28,45,-17,15,9
+FC Basel,1,12,5,3,Tie,Win,Win,Win,Lose,45,20,25,16,29
+FC Lugano,2,10,6,2,Lose,Win,Lose,Win,Tie,40,25,15,16,28
+Servette FC,3,8,7,1,Win,Lose,Tie,Lose,Tie,30,35,-5,16,28
+FC Zürich,4,10,6,1,Tie,Lose,Tie,Tie,Win,38,30,8,16,27
+FC Luzern,5,12,5,2,Win,Tie,Lose,Win,Tie,42,28,14,16,26
+Lausanne-Sport,6,10,6,3,Tie,Win,Lose,Win,Win,36,30,6,16,24
+FC St. Gallen,7,8,7,1,Lose,Tie,Win,Tie,Tie,34,32,2,16,21
+FC Sion,8,8,7,2,Win,Lose,Win,Tie,Lose,32,36,-4,16,20
+BSC Young Boys,9,8,7,3,Win,Tie,Win,Tie,Win,40,32,8,16,20
+Yverdon Sport,10,8,7,0,Lose,Tie,Lose,Lose,Lose,28,38,-10,16,16
+FC Winterthur,11,12,5,1,Lose,Tie,Win,Lose,Tie,35,40,-5,16,12
+Grasshoppers,12,12,5,0,Tie,Tie,Lose,Lose,Tie,28,45,-17,16,11
