@@ -182,6 +182,8 @@ input_data = pd.DataFrame([input_features])
 # Dummy-Encode der kategorischen Variablen
 input_data = pd.get_dummies(input_data, columns=categorical_columns, drop_first=False)
 
+st.write(input_data)
+
 # Erwartete Spalten (Modellstruktur)
 expected_columns = [
     'Time', 'Ranking Home Team', 'Ranking Away Team', 'Temperature (°C)', 'Month', 'Day',
@@ -210,7 +212,6 @@ for col in expected_columns:
     if col not in input_data.columns:
         input_data[col] = 0
 
-# Zusätzliche Spalten entfernen
 input_data = input_data[expected_columns]
 
 # Umwandlung in numerische Typen (sicherstellen, dass kein object-Typ enthalten ist)
