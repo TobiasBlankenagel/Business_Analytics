@@ -492,6 +492,37 @@ if st.button("🎯 Predict Attendance"):
 
     ################### zusätzliche Infos #################################
 
+
+    # Ligatabelle erstellen
+    league_table = df.groupby('Home Team').agg(
+        Ranking=('Ranking Home Team', 'first'),
+        Goals_Scored=('Goals Scored in Last 5 Games', 'mean'),
+        Goals_Conceded=('Goals Conceded in Last 5 Games', 'mean'),
+        Wins=('Number of Wins in Last 5 Games', 'mean')
+    ).reset_index().sort_values(by='Ranking', ascending=True)
+
+    # Markiere Home- und Away-Team
+    league_table['Highlight'] = league_table['Home Team'].apply(
+        lambda x: 'Home Team' if x == home_team else ('Away Team' if x == away_team else 'None')
+    )
+
+    # Bedingtes Styling für die Tabelle
+    def highlight_teams(row):
+        if row.Highlight == 'Home Team':
+            return ['background-color: #28a745; color: white'] * len(row)  # Heimteam grün hervorheben
+        elif row.Highlight == 'Away Team':
+            return ['background-color: #007bff; color: white'] * len(row)  # Auswärtsteam blau hervorheben
+        else:
+            return [''] * len(row)  # Keine Hervorhebung
+
+    # Tabelle anzeigen
+    st.markdown("### League Table")
+    styled_table = league_table.style.apply(highlight_teams, axis=1).hide(axis='columns', subset=['Highlight'])
+    st.dataframe(styled_table)
+
+
+
+
     # Tabelle mit Rankings und den letzten 5 Spielen
     def color_results(val):
         if val == "Win":
