@@ -90,14 +90,39 @@ available_away_teams = available_home_teams
 available_competitions = ['Super League', 'UEFA Conference League', 'Swiss Cup', 
                           'UEFA Europa League', 'UEFA Champions League']
 
+
+
 # In zwei Spalten aufteilen (mehr Platz und Übersichtlichkeit)
 col1, col2 = st.columns([2, 2])
 
 with col1:
+    match_date = st.date_input(
+        "📅 Match Date:", 
+        min_value=datetime.date.today(),
+        key="match_date_input"
+    )
+
+with col2:
+    match_time = st.time_input(
+        "🕒 Match Time:", 
+        value=datetime.time(15, 30),
+        help="Select the match time in HH:MM format",
+        key="match_time_input"
+    )
+
+# Berechne die Stunde aus dem Zeit-Input
+match_hour = match_time.hour  # Holt nur die Stunde aus der Zeit
+weekday = match_date.strftime("%A")
+
+
+# In zwei weiteren Spalten für die restlichen Eingabefelder
+col3, col4 = st.columns([2, 2])
+
+with col3:
     home_team = st.selectbox("🏠 Home Team:", available_home_teams)
     competition = st.selectbox("🏆 Competition:", available_competitions)
 
-with col2:
+with col4:
     if competition == "Super League":
         away_team = st.selectbox("🌍 Away Team:", available_home_teams)
     elif competition == "Swiss Cup":
@@ -110,29 +135,7 @@ with col2:
     else:
         matchday = st.radio("🏅 Matchday Type:", options=["Group", "Knockout"])
 
-
-
-# Zeilen mit weiteren Eingabefeldern für Datum und Uhrzeit
-col3, col4 = st.columns([2, 2])
-
-with col3:
-    match_date = st.date_input(
-        "📅 Match Date:", 
-        min_value=datetime.date.today(),
-        key="match_date_input"
-    )
-
-with col4:
-    match_time = st.time_input(
-        "🕒 Match Time:", 
-        value=datetime.time(15, 30),
-        help="Select the match time in HH:MM format",
-        key="match_time_input"
-    )
-
-# Berechne die Stunde aus dem Zeit-Input
-match_hour = match_time.hour  # Holt nur die Stunde aus der Zeit
-weekday = match_date.strftime("%A")
+   
 
 
 
