@@ -415,7 +415,7 @@ if st.button("🎯 Predict Attendance"):
 
         st.markdown(f"""
             <div style="background-color: #28a745; padding: 20px; border-radius: 10px; border: 1px solid #ddd; color: white;">
-                <h2 style="text-align: center;">Predicted Attendance: {predicted_attendance:.2f} of {max_capacity} ({prediction:.2f}%) 📊</h2>
+                <h2 style="text-align: center;">Predicted Attendance: {predicted_attendance:.0f} of {max_capacity} ({prediction:.0f}%) 📊</h2>
                 <h3 style="text-align: center; font-size: 18px; color: white;">{attendance_status}</h3>
             </div>
         """, unsafe_allow_html=True)
