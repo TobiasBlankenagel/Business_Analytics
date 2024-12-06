@@ -162,7 +162,6 @@ else:
 ## Temperature (°C) -- API Abfrage
 ## Weekday -- Userangabe
 ## Month -- Userangabe
-## Holiday
 ## Day -- Userangabe
 ## Goals Scored in Last 5 Games
 ## Goals Conceded in Last 5 Games
@@ -182,7 +181,6 @@ Day = match_date.day  # Extrahiert den Tag des Monats (1-31)
 
 
 ######## werden noch mit API oder selbst gesuchten Daten benötigt:
-# Holiday
 # Ranking Home Team
 # Ranking Away Team
 # Goals_Scored_in_Last_5_Games
