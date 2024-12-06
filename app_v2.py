@@ -205,7 +205,7 @@ if st.button("🎯 Predict Attendance"):
     
     # Maximal mögliche Zuschauerzahl basierend auf der Kapazität
     max_capacity = stadium_capacity[home_team]
-    predicted_attendance = round(prediction_percentage / 100 * max_capacity)  # Zuschauerzahl berechnen
+    predicted_attendance = round(prediction_percentage * max_capacity)  # Zuschauerzahl berechnen
     
     # Ergebnis anzeigen
     st.success(f"🎉 Predicted Attendance Percentage: **{prediction_percentage:.2f}%**")
