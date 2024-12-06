@@ -105,6 +105,7 @@ def get_weather_data(latitude, longitude, match_date, match_hour):
             st.warning("Weather data for the specified hour is unavailable.")
             return None, None
     except Exception:
+        st.error("Error retrieving weather data. Using default values.")
         return None, None
 
 # Wetterdaten abrufen, falls verfügbar
