@@ -493,24 +493,48 @@ if st.button("🎯 Predict Attendance"):
     ################### zusätzliche Infos #################################
 
 
-# Ligatabelle basierend auf Rankings erstellen
-league_table = league_data.groupby('Unnamed: 0').agg(
-    Ranking=('Ranking', 'first'),
-    Goals_Scored=('Goals_Scored_in_Last_5_Games', 'mean'),
-    Goals_Conceded=('Goals_Conceded_in_Last_5_Games', 'mean'),
-    Wins=('Number_of_Wins_in_Last_5_Games', 'mean')
-).reset_index().rename(columns={'Unnamed: 0': 'Team'})
 
-# Sortiere die Tabelle nach dem Ranking
-league_table = league_table.sort_values(by='Ranking', ascending=True)
+# Funktion, um Ergebnisse mit Icons darzustellen
+def game_result_icons(results):
+    icons = {
+        "Win": "✅",  # Grün für Sieg
+        "Lose": "❌",  # Rot für Niederlage
+        "Tie": "⚪"    # Weiß für Unentschieden
+    }
+    return "".join([icons[result] for result in results])
 
+# Spalte für visuelle Darstellung der letzten 5 Spiele
+league_table["Last_5_Games_Icons"] = league_table["Last_5_Games"].apply(game_result_icons)
 
-# Tabelle anzeigen mit verbessertem Layout
-st.markdown("### League Table")
+# Tabelle sortieren
+league_table = league_table.sort_values(by="Ranking")
 
-# Verwende Streamlit DataFrame mit Styling ohne Index
-st.dataframe(league_table, use_container_width=True)
+# Tabelle in Streamlit anzeigen
+st.markdown("### 🏆 League Table")
 
+# Spalten auswählen und anzeigen
+styled_league_table = league_table[[
+    "Ranking", "Team", "Goals_Scored_in_Last_5_Games", 
+    "Goals_Conceded_in_Last_5_Games", "Number_of_Wins_in_Last_5_Games", "Last_5_Games_Icons"
+]]
+
+# In Streamlit DataFrame anzeigen
+st.markdown("""
+<style>
+    .stDataFrame th, .stDataFrame td {
+        text-align: center;  /* Zentriere den Text */
+    }
+</style>
+""", unsafe_allow_html=True)
+
+st.dataframe(styled_league_table.rename(columns={
+    "Ranking": "🏅 Ranking",
+    "Team": "🏟️ Team",
+    "Goals_Scored_in_Last_5_Games": "⚽ Goals Scored",
+    "Goals_Conceded_in_Last_5_Games": "🛡️ Goals Conceded",
+    "Number_of_Wins_in_Last_5_Games": "🏆 Wins",
+    "Last_5_Games_Icons": "📊 Last 5 Games"
+}), use_container_width=True)
 
 
 
