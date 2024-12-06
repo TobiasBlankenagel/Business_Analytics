@@ -147,6 +147,15 @@ st.markdown("""
         margin-bottom: 20px;
     }
 
+    .stDateInput, .stTimeInput {
+        margin-top: 10px;
+        margin-bottom: 20px;
+        border-radius: 12px;
+        background-color: #ffffff;
+        padding: 14px 22px;
+        font-size: 16px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
 
     </style>
 """, unsafe_allow_html=True)
