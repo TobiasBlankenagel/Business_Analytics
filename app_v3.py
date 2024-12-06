@@ -55,7 +55,7 @@ st.markdown("""
 
 
 
-    .stSelectbox, .stSlider, .stRadio, .stButton .stDateInput, .stTimeInput {
+    .stSelectbox, .stSlider, .stRadio, .stButton, .stDateInput, .stTimeInput {
         margin-top: 10px;
         margin-bottom: 20px;
         border-radius: 12px;
@@ -64,7 +64,6 @@ st.markdown("""
         font-size: 16px;
         box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     }
-
 
 
 
