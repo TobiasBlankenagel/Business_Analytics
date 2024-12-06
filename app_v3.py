@@ -141,11 +141,6 @@ st.markdown("""
         box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     }
 
-    /* Hover-Effekt für Eingabefelder */
-    .stSelectbox:hover, .stSlider:hover, .stRadio:hover {
-        border: 2px solid #0066cc;
-        transition: all 0.3s ease;
-    }
 
     .stSelectbox, .stSlider, .stRadio, .stButton, .stDateInput, .stTimeInput {
         margin-top: 10px;
