@@ -180,26 +180,16 @@ Day = match_date.day  # Extrahiert den Tag des Monats (1-31)
 
 
 
-######## werden noch mit API oder selbst gesuchten Daten benötigt:
+######## werden noch mit new_league_data.csv selbst gesuchten Daten benötigt:
 # Ranking Home Team
 # Ranking Away Team
 # Goals_Scored_in_Last_5_Games
 # Goals_Conceded_in_Last_5_Games
 # Number_of_Wins_in_Last_5_Games
 
+league_data = pd.read_csv('new_league_data.csv')
 
-# so guys im working on the website right now but there are still some things to do. Wir wollen ja dass 
-# der User Informationen angibt (z.b. heimteam, gegner, turnier etc.) und darauf basierend die stadtion attendance schätzen. 
-# die variablen auf die wir dann mit dem modell die attendance vorhersagen wollen enthalten viele "live daten" wie. zb wetter, 
-# heimteam ranking, oder goals scored in the last 5 games. diese daten müssten wir entweder von einer api abfragen (das habe ich 
-# fürs wetter schon eingebaut) oder selber uns daten ausdenken. Für Liga daten wie rankings oder "goals scored in the last 5 games" 
-# finde ich leider keine passende api. da wir das projekt nächste woche schon präsentieren würde ich vorschlagen dass wir dafür uns 
-# selber ein minidatensatz zusammenbauen, den wir dann stellvertretend daten abfragen für variablen, für die wir keine passende api 
-# gefunden haben. deshalb wäre meine bitte wenn ihr mit eurer webscrapping technik die folgenden daten in einem minidatensatz aufbereitet: 
-# für jedes der 12 schweizer teams die "goals scored in the last 5 games", "Goals_Conceded_in_Last_5_Games" , "Number_of_Wins_in_Last_5_Games" 
-# und dann noch den aktuellen stand von jedem team. Am besten ein Datensatz
-
-
+st.write(league_data)
 
 
 
