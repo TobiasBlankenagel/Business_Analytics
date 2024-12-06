@@ -224,7 +224,7 @@ if home_team and match_date and match_time:
         }
         return weather_emoji.get(weather_condition, "🌫️")  # Default-Emoji für unbekanntes Wetter
 
-    if temperature_at_match is not None and weather_condition is not None:
+    if temperature_at_match is not None and weather_condition is not None and weather_condition != "Unknown":
         weather_emoji = get_weather_emoji(weather_condition)
         st.markdown(f"""
             <div style="background-color: #f8f9fa; padding: 20px; border-radius: 10px; border: 1px solid #ddd; margin-bottom:25px; margin-top:10px">
@@ -232,6 +232,16 @@ if home_team and match_date and match_time:
                 <p style="font-size: 18px; color: #333333;">
                     The weather at the match will be <strong style="color: #007bff;">{weather_condition} {weather_emoji}</strong> 
                     with a temperature of <strong style="color: #007bff;">{temperature_at_match}°C</strong> 🌡.
+                </p>
+            </div>
+        """, unsafe_allow_html=True)
+    elif temperature_at_match is not None:
+        st.markdown(f"""
+            <div style="background-color: #f8f9fa; padding: 20px; border-radius: 10px; border: 1px solid #ddd; margin-bottom:25px; margin-top:10px">
+                <h3 style="color: #003366;">Weather at the Match</h3>
+                <p style="font-size: 18px; color: #333333;">
+                    The temperature at the match will be <strong style="color: #007bff;">{temperature_at_match}°C</strong> 🌡.
+                    Unfortunately, detailed weather conditions are unavailable. 😞
                 </p>
             </div>
         """, unsafe_allow_html=True)
@@ -244,6 +254,7 @@ if home_team and match_date and match_time:
                 </p>
             </div>
         """, unsafe_allow_html=True)
+
 
 
 
