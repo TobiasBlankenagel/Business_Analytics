@@ -68,6 +68,7 @@ def get_weather_data(latitude, longitude, match_date, match_hour):
         temperature_at_match = hourly_data['temperature_2m'][match_hour]
         weather_code_at_match = hourly_data['weathercode'][match_hour]
 
+        # Wetterbedingungen basierend auf WeatherCode bestimmen
         if weather_code_at_match in [0]:
             weather_condition = "Clear or mostly clear"
         elif weather_code_at_match in [1, 2, 3]:
@@ -82,7 +83,8 @@ def get_weather_data(latitude, longitude, match_date, match_hour):
             weather_condition = "Unknown"
 
         return temperature_at_match, weather_condition
-    except:
+    except Exception as e:
+        st.error(f"Error retrieving weather data: {e}")
         return None, None
 
 # Koordinaten des Heimstadions
@@ -117,6 +119,7 @@ else:
     st.warning("Weather data could not be retrieved. Using default values.")
     temperature_at_match = 20  # Standardtemperatur
     weather_condition = "Clear"
+
 
 
 # Teamdaten laden
