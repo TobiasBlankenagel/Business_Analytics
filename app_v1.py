@@ -190,8 +190,26 @@ Day = match_date.day  # Extrahiert den Tag des Monats (1-31)
 
 league_data = pd.read_csv('new_league_data.csv')
 
-team_data = league_data[league_data['Unnamed: 0'] == home_team].iloc[0]
-st.write(team_data)
+home_team_data = league_data[league_data['Unnamed: 0'] == home_team].iloc[0]
+away_team_data = league_data[league_data['Unnamed: 0'] == away_team].iloc[0]
+
+
+# Variablen zuweisen
+ranking_home_team = home_team_data['Ranking']
+ranking_away_team = away_team_data['Ranking']
+
+goals_scored_home_team = home_team_data['Goals_Scored_in_Last_5_Games']
+goals_scored_away_team = away_team_data['Goals_Scored_in_Last_5_Games']
+
+goals_conceded_home_team = home_team_data['Goals_Conceded_in_Last_5_Games']
+goals_conceded_away_team = away_team_data['Goals_Conceded_in_Last_5_Games']
+
+wins_home_team = home_team_data['Number_of_Wins_in_Last_5_Games']
+wins_away_team = away_team_data['Number_of_Wins_in_Last_5_Games']
+
+
+st.write(home_team_data)
+st.write(goals_scored_home_team)
 
 
 
