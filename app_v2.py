@@ -147,16 +147,6 @@ if not home_team_data.empty:
     goals_conceded_home_team = home_team_data['Goals_Conceded_in_Last_5_Games']
     wins_home_team = home_team_data['Number_of_Wins_in_Last_5_Games']
 
-# Categorical columns for dummy encoding
-categorical_columns = [
-    "Competition",
-    "Matchday",
-    "Home Team",
-    "Away Team",
-    "Weather",
-    "Weekday"
-]
-
 # Beispiel-Features erstellen
 input_features = {
     'Competition': competition,
@@ -176,13 +166,8 @@ input_features = {
     'Number of Wins in Last 5 Games': wins_home_team,
 }
 
-# Umwandlung in DataFrame
-input_data = pd.DataFrame([input_features])
-
-# Dummy-Encode der kategorischen Variablen
-input_data = pd.get_dummies(input_data, columns=categorical_columns, drop_first=False)
-
-st.write(input_data)
+# Erstelle DataFrame aus input_features
+input_df = pd.DataFrame([input_features])
 
 # Erwartete Spalten (Modellstruktur)
 expected_columns = [
@@ -207,16 +192,13 @@ expected_columns = [
     'Weekday_Tuesday', 'Weekday_Wednesday'
 ]
 
-# Dummy-Encode der kategorischen Spalten
+# Dummy-Encode für die kategorischen Spalten
 categorical_columns = [
     "Competition", "Matchday", "Home Team", "Away Team", "Weather", "Weekday"
 ]
 
-# Erstelle DataFrame aus input_features
-input_df = pd.DataFrame([input_features])
-
-# Dummy-Encode für die kategorischen Spalten
-input_df = pd.get_dummies(input_df, columns=categorical_columns)
+# Dummy-Encode der kategorischen Variablen
+input_df = pd.get_dummies(input_df, columns=categorical_columns, drop_first=False)
 
 # Fehlende Spalten aus `expected_columns` hinzufügen
 for col in expected_columns:
