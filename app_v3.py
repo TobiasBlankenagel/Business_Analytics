@@ -431,14 +431,15 @@ if st.button("🎯 Predict Attendance"):
             attendance_status = "Normal attendance ⚖️"
 
         # Fortschrittsbalken erstellen (vergrößert)
-        fig, ax = plt.subplots(figsize=(12, 2))  # Ändere figsize, um die Grafik größer zu machen
+        fig, ax = plt.subplots(figsize=(12, 3))  # Erhöhe die Höhe (zweiter Wert) des Diagramms
         ax.barh(
             y=[0], 
             width=[predicted_attendance / max_capacity], 
+            height=0.6,  # Passt die Höhe der Leiste an
             color="#28a745", 
             edgecolor="black"
         )
-        
+
         # Markiere 30. und 70. Perzentil
         ax.axvline(x=attendance_30th / max_capacity, color="red", linestyle="--", label="30th Percentile")
         ax.axvline(x=attendance_70th / max_capacity, color="blue", linestyle="--", label="70th Percentile")
@@ -448,7 +449,7 @@ if st.button("🎯 Predict Attendance"):
         ax.set_xticks([0, 0.25, 0.5, 0.75, 1])
         ax.set_xticklabels(["0%", "25%", "50%", "75%", "100%"], fontsize=12)  # Größere Schriftgröße für Achsenticks
         ax.set_yticks([])
-        
+
         # Legende außerhalb der Leiste platzieren
         ax.legend(
             loc="upper center", 
@@ -457,30 +458,13 @@ if st.button("🎯 Predict Attendance"):
             fontsize=10,                 # Schriftgröße der Legende
             frameon=False
         )
-        
+
         ax.set_title(
             f"Predicted Attendance: {predicted_attendance:.0f} of {max_capacity} ({prediction:.2f}%)", 
             fontsize=14,                 # Größere Schriftgröße für den Titel
             pad=20                       # Abstand des Titels von der Grafik vergrößert
         )
 
-        # Speichere das Diagramm in einen Puffer
-        buf = io.BytesIO()
-        fig.savefig(buf, format="png", bbox_inches="tight")
-        buf.seek(0)
-        encoded_image = base64.b64encode(buf.read()).decode("utf-8")
-
-        # Einbettung des Diagramms mit Rahmen
-        st.markdown(
-            f"""
-            <div style="background-color: #f9f9f9; padding: 20px; border-radius: 10px; border: 1px solid #ddd; 
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
-                <h3 style="text-align: center; color: #003366;">Attendance Prediction Details</h3>
-                <img src="data:image/png;base64,{encoded_image}" style="display: block; margin: auto;"/>
-            </div>
-            """,
-            unsafe_allow_html=True
-        )
 
     st.info(weather_status)
 
