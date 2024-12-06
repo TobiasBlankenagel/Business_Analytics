@@ -210,4 +210,3 @@ if st.button("🎯 Predict Attendance"):
     # Ergebnis anzeigen
     st.success(f"🎉 Predicted Attendance Percentage: **{prediction_percentage:.2f}%**")
     st.info(f"🏟️ Predicted Attendance: **{predicted_attendance}** out of {max_capacity} seats.")
-    st.balloons()
