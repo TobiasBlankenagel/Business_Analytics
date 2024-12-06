@@ -539,6 +539,8 @@ table_css = """
         border: 1px solid #ddd;
         font-family: Arial, sans-serif;
         margin: 20px 0;
+        border-radius: 8px;  /* Abgeflachte Ecken */
+        overflow: hidden;    /* Verhindert Überlauf */
     }
     th, td {
         border: 1px solid #ddd;
