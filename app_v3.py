@@ -317,7 +317,6 @@ categorical_columns = [
 # Dummy-Encoding der Eingabedaten
 input_df = pd.get_dummies(pd.DataFrame([input_features]), columns=categorical_columns, drop_first=False)
 
-st.write(input_df)
 
 # Fehlende Spalten ergänzen
 for col in expected_columns:
@@ -329,6 +328,8 @@ input_df = input_df[expected_columns]
 
 # Typkonvertierung sicherstellen
 input_df = input_df.astype(float)
+
+st.write(input_df)
 
 # Überprüfung auf fehlende Spalten
 missing_columns = [col for col in expected_columns if col not in input_df.columns]
