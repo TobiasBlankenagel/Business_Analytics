@@ -139,7 +139,6 @@ st.markdown("""
 ################### Eingabefelder #################################
 
 
-st.title("🏟️ Stadium Attendance Prediction App")
 st.markdown("""
     <h1 style="color: #003366; text-align: center; font-size: 48px; font-weight: bold; margin-top: 50px; 
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);">🏟️ Stadium Attendance Prediction App</h1>
