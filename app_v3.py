@@ -59,10 +59,6 @@ st.markdown("""
         font-size: 16px;
     }
 
-    .stSelectbox:hover, .stSlider:hover, .stRadio:hover {
-        border: 2px solid #003366;
-        transition: all 0.3s ease;
-    }
 
     /* Farben für Vorhersage und Info */
     .stSuccess {
