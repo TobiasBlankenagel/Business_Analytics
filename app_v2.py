@@ -32,20 +32,19 @@ available_competitions = ['Super League', 'UEFA Conference League', 'Swiss Cup',
                           'UEFA Europa League', 'UEFA Champions League']
 
 # Eingabefelder
-home_team = st.selectbox("Home Team:", available_home_teams)
-competition = st.selectbox("Competition:", available_competitions)
+col1, col2 = st.columns(2)
+with col1:
+    home_team = st.selectbox("🏠 Home Team:", available_home_teams)
+    competition = st.selectbox("🏆 Competition:", available_competitions)
+with col2:
+    available_away_teams = [team for team in available_home_teams if team != home_team] + ['Unknown']
+    away_team = st.selectbox("🛫 Away Team:", available_away_teams)
 
 if competition == "Super League":
-    away_team = st.selectbox("Away Team:", available_home_teams)
-elif competition == "Swiss Cup":
-    away_team = st.selectbox("Away Team:", available_away_teams)
+    matchday = st.slider("🗓️ Matchday:", min_value=1, max_value=36, step=1)
 else:
-    away_team = "Unknown"
+    matchday = st.radio("📋 Match Type:", options=["Group Stage", "Knockout Stage"])
 
-if competition == "Super League":
-    matchday = st.slider("Matchday:", min_value=1, max_value=36, step=1)
-else:
-    matchday = st.radio("Matchday Type:", options=["Group", "Knockout"])
 
 match_date = st.date_input("Match Date:", min_value=datetime.date.today())
 match_time = st.time_input(
