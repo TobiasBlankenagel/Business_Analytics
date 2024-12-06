@@ -112,13 +112,13 @@ input_features = {
     'Time': match_hour,
     'Ranking Home Team': 1,  # Beispielwert
     'Ranking Away Team': 2,  # Beispielwert
-    'Temperature (°C)': temperature_at_match if temperature_at_match else 20,
+    'Temperature (°C)': temperature_at_match if temperature_at_match else None,
     'Month': match_date.month,
     'Day': match_date.day,
     'Competition': competition,
     'Home Team': home_team,
     'Away Team': away_team,
-    'Weather': weather_condition if weather_condition else "Unknown",
+    'Weather': weather_condition if weather_condition else None,
     'Matchday': matchday,
     'Weekday': weekday,
 }
