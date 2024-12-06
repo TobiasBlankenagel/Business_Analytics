@@ -455,7 +455,7 @@ if st.button("🎯 Predict Attendance"):
             loc="upper center", 
             bbox_to_anchor=(0.5, -0.3),  # Abstand der Legende von der Grafik vergrößert
             ncol=2,                      # Legende in einer Zeile mit 2 Spalten
-            fontsize=10,                 # Schriftgröße der Legende
+            fontsize=14,                 # Schriftgröße der Legende
             frameon=False
         )
 
