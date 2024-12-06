@@ -533,7 +533,7 @@ def highlight_teams_html(row):
     if row["🏟️ Team"] == home_team:
         return f'<tr style="background-color: rgba(0, 123, 255, 0.7); color: white;">'
     elif row["🏟️ Team"] == away_team:
-        return f'<tr style="background-color: rgba(0, 123, 255, 0.1); color: black;">'
+        return f'<tr style="background-color: rgba(0, 123, 255, 0.2); color: black;">'
     return "<tr>"
 
 # HTML-Tabelle mit Highlighting generieren
