@@ -445,6 +445,9 @@ if st.button("🎯 Predict Attendance"):
         ax.axvline(x=attendance_70th / max_capacity, color="blue", linestyle="--", label="70th Percentile")
 
         # Styling der Leiste
+        # Setze den Hintergrund des Diagramms auf #f9f9f9
+        fig.patch.set_facecolor("#f9f9f9")
+        ax.set_facecolor("#f9f9f9")
         ax.set_xlim(0, 1)
         ax.set_xticks([0, 0.25, 0.5, 0.75, 1])
         ax.set_xticklabels(["0%", "25%", "50%", "75%", "100%"], fontsize=14)  # Größere Schriftgröße für Achsenticks
