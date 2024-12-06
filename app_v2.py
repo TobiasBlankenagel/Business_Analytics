@@ -109,7 +109,6 @@ if home_team and match_date and match_time:
     longitude = coordinates['longitude']
     temperature_at_match, weather_condition = get_weather_data(latitude, longitude, match_date, match_hour)
 
-st.write(weather_condition)
 
 # Matchdaten abrufen
 league_data = pd.read_csv('new_league_data.csv')
@@ -138,6 +137,7 @@ else:
         goals_scored_away_team = away_team_data['Goals_Scored_in_Last_5_Games']
         goals_conceded_away_team = away_team_data['Goals_Conceded_in_Last_5_Games']
         wins_away_team = away_team_data['Number_of_Wins_in_Last_5_Games']
+
 
 # Fortfahren, wenn Home Team gefunden wurde
 if not home_team_data.empty:
@@ -171,6 +171,9 @@ if not home_team_data.empty:
     # Zusätzliche Spalten entfernen
     input_data = input_data[expected_columns]
 
+    st.write(ranking_home_team)
+
+
     # Vorhersage
     if st.button("Predict Attendance"):
         if temperature_at_match is not None:
@@ -179,6 +182,23 @@ if not home_team_data.empty:
             prediction = model_without_weather.predict(input_data)[0]
         
         st.success(f"Predicted Attendance Percentage: {prediction:.2f}%")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 # Tabelle mit Rankings und den letzten 5 Spielen
@@ -190,6 +210,7 @@ def color_results(val):
     elif val == "Tie":
         return "background-color: grey; color: white;"
     return ""  # Keine Farbe für leere Zellen
+
 
 # Teamstatistiken für Heimteam anzeigen
 if not home_team_data.empty:
