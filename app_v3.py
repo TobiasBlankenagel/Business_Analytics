@@ -433,7 +433,7 @@ if st.button("🎯 Predict Attendance"):
         # Styling der Leiste
         ax.set_xlim(0, 1)
         ax.set_xticks([0, 0.25, 0.5, 0.75, 1])
-        ax.set_xticklabels(["0%", "30%", "70%", "100%"])
+        ax.set_xticklabels(["0%", "25%", "50%", "75%", "100%"])
         ax.set_yticks([])
         ax.legend(loc="upper right", frameon=False)
         ax.set_title(f"Predicted Attendance: {predicted_attendance:.0f} of {max_capacity} ({prediction:.2f}%)")
