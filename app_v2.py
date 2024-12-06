@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import pickle
 import datetime
+import requests
 
 # Modelle laden
 def load_model(model_path):
