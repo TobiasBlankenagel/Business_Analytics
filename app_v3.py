@@ -64,7 +64,6 @@ st.markdown("""
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         border: none;
         cursor: pointer;
-        margin-top: 100 px;
     }
 
     /* Hover-Effekt für den Button */
@@ -233,7 +232,7 @@ if home_team and match_date and match_time:
         """, unsafe_allow_html=True)
     else:
         st.markdown("""
-            <div style="background-color: #f8f9fa; padding: 20px; border-radius: 10px; border: 1px solid #ddd;">
+            <div style="background-color: #f8f9fa; padding: 20px; border-radius: 10px; border: 1px solid #ddd; margin-bottom:20px">
                 <h3 style="color: #003366;">Weather at the Match</h3>
                 <p style="font-size: 18px; color: #333333;">
                     Unfortunately, the weather data is unavailable at the moment. 😞
