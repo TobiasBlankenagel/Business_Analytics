@@ -39,7 +39,7 @@ st.markdown("""
         text-align: center;
         font-size: 40px;
         font-weight: bold;
-        margin-top: 50px;
+        margin-top: 20px;
     }
 
     /* Beschreibungstext */
