@@ -494,6 +494,9 @@ if st.button("🎯 Predict Attendance"):
 
 
 
+import streamlit as st
+
+# Funktion, um Ergebnisse mit Icons darzustellen
 def game_result_icons(row):
     result_mapping = {
         "Win": "✅",
@@ -521,21 +524,29 @@ league_table = league_data[[
 # Sortiere die Tabelle nach Ranking
 league_table = league_table.sort_values(by="Ranking", ascending=True)
 
-# Tabelle in Streamlit anzeigen
-st.markdown("### 🏆 League Table")
+# Spaltennamen umbenennen
+league_table = league_table.rename(columns={
+    "Ranking": "🏅 Ranking",
+    "Team": "🏟️ Team",
+    "Goals_Scored_in_Last_5_Games": "⚽ Goals Scored",
+    "Goals_Conceded_in_Last_5_Games": "🛡️ Goals Conceded",
+    "Number_of_Wins_in_Last_5_Games": "🏆 Wins",
+    "Last_5_Games_Icons": "📊 Last 5 Games"
+})
 
-
+# Bedingtes Styling für das Home- und Away-Team
 def highlight_teams(row):
-    if row["Team"] == home_team:
+    if row["🏟️ Team"] == home_team:
         return ['background-color: #28a745; color: white'] * len(row)  # Heimteam grün
-    elif row["Team"] == away_team:
+    elif row["🏟️ Team"] == away_team:
         return ['background-color: #007bff; color: white'] * len(row)  # Auswärtsteam blau
     return [''] * len(row)
 
-# Tabelle mit Styling anzeigen
+# Tabelle mit Styling
 styled_league_table = league_table.style.apply(highlight_teams, axis=1)
 
-# Darstellung in Streamlit
+# Tabelle in Streamlit anzeigen
+st.markdown("### 🏆 League Table")
 st.markdown("""
 <style>
     .stDataFrame th, .stDataFrame td {
@@ -543,18 +554,7 @@ st.markdown("""
     }
 </style>
 """, unsafe_allow_html=True)
-
-st.dataframe(
-    styled_league_table.rename(columns={
-        "Ranking": "🏅 Ranking",
-        "Team": "🏟️ Team",
-        "Goals_Scored_in_Last_5_Games": "⚽ Goals Scored",
-        "Goals_Conceded_in_Last_5_Games": "🛡️ Goals Conceded",
-        "Number_of_Wins_in_Last_5_Games": "🏆 Wins",
-        "Last_5_Games_Icons": "📊 Last 5 Games"
-    }),
-    use_container_width=True
-)
+st.dataframe(league_table, use_container_width=True)
 
 
 
