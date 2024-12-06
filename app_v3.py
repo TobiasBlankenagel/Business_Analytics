@@ -25,7 +25,96 @@ st.set_page_config(
 
 ################### CSS Allgmeien #################################
 
+st.markdown("""
+    <style>
 
+    .stInfo {
+        color: #17a2b8;
+        font-size: 18px;
+        text-align: center;
+    }
+
+    /* Design der DataFrame-Tabellen */
+    .stDataFrame {
+        background-color: #ffffff;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        margin-top: 20px;
+    }
+
+    /* Spezifische Stiländerungen für die Tabellenzellen */
+    .stDataFrame table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .stDataFrame th, .stDataFrame td {
+        padding: 10px;
+        text-align: center;
+        border-bottom: 1px solid #ddd;
+    }
+
+    .stDataFrame th {
+        background-color: #003366;
+        color: white;
+    }
+
+    .stDataFrame td {
+        background-color: #f9f9f9;
+    }
+
+    .stDataFrame tr:hover {
+        background-color: #f1f1f1;
+    }
+
+    /* Styling der Buttons */
+    .stButton>button {
+        background-color: #003366;
+        color: white; /* Schriftfarbe wird auf weiß gesetzt */
+        font-size: 18px;
+        font-weight: bold;
+        padding: 12px 30px;
+        border-radius: 25px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        border: none;
+        cursor: pointer;
+    }
+
+    /* Hover-Effekt für den Button */
+    .stButton>button:hover {
+        background-color: #0066cc;
+        color: white; /* Schriftfarbe bleibt weiß im Hover-Zustand */
+        transition: all 0.3s ease;
+    }
+
+
+    .stSelectbox, .stSlider, .stRadio, .stButton {
+        margin-bottom: 25px;
+        border-radius: 12px;
+        background-color: #ffffff;
+        padding: 14px 22px;
+        font-size: 16px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+
+    .stSelectbox, .stSlider, .stRadio, .stButton, .stDateInput, .stTimeInput {
+        margin-top: 10px;
+        margin-bottom: 20px;
+    }
+
+    .stDateInput, .stTimeInput {
+        margin-top: 0px;
+        margin-bottom: 20px;
+        border-radius: 12px;
+        background-color: #ffffff;
+        padding: 14px 22px;
+        font-size: 16px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    </style>
+""", unsafe_allow_html=True)
 
 
 ################### Eingabefelder #################################
