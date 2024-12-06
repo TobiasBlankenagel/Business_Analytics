@@ -201,14 +201,14 @@ col3, col4 = st.columns([2, 2])
 
 with col3:
     match_date = st.date_input(
-        "Match Date:", 
+        "📅 Match Date:", 
         min_value=datetime.date.today(),
         key="match_date_input"
     )
 
 with col4:
     match_time = st.time_input(
-        "Match Time:", 
+        "🕒 Match Time:", 
         value=datetime.time(15, 30),
         help="Select the match time in HH:MM format",
         key="match_time_input"
@@ -217,6 +217,10 @@ with col4:
 # Berechne die Stunde aus dem Zeit-Input
 match_hour = match_time.hour  # Holt nur die Stunde aus der Zeit
 weekday = match_date.strftime("%A")
+
+
+
+
 
 
 
