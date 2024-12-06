@@ -212,15 +212,11 @@ input_df = input_df[expected_columns]
 # Typkonvertierung sicherstellen
 input_df = input_df.astype(float)
 
-st.write(input_df.columns.tolist())
-
 # Überprüfung auf fehlende Spalten
 missing_columns = [col for col in expected_columns if col not in input_df.columns]
 if missing_columns:
     raise ValueError(f"Fehlende Spalten in den Eingabedaten: {missing_columns}")
 
-# Daten für das Modell bereitstellen
-st.write("Final Input Data for Prediction:", input_df)
 
 
 
