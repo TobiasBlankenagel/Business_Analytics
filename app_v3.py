@@ -447,7 +447,7 @@ if st.button("🎯 Predict Attendance"):
         # Styling der Leiste
         ax.set_xlim(0, 1)
         ax.set_xticks([0, 0.25, 0.5, 0.75, 1])
-        ax.set_xticklabels(["0%", "25%", "50%", "75%", "100%"], fontsize=12)  # Größere Schriftgröße für Achsenticks
+        ax.set_xticklabels(["0%", "25%", "50%", "75%", "100%"], fontsize=14)  # Größere Schriftgröße für Achsenticks
         ax.set_yticks([])
 
         # Legende außerhalb der Leiste platzieren
