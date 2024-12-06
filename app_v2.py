@@ -171,7 +171,7 @@ if not home_team_data.empty:
     # Zusätzliche Spalten entfernen
     input_data = input_data[expected_columns]
 
-    st.write(ranking_home_team)
+    st.write(Competition)
 
 
     # Vorhersage
