@@ -109,7 +109,7 @@ if home_team and match_date and match_time:
     longitude = coordinates['longitude']
     temperature_at_match, weather_condition = get_weather_data(latitude, longitude, match_date, match_hour)
 
-st.write(temperature_at_match)
+st.write(weather_condition)
 
 # Matchdaten abrufen
 league_data = pd.read_csv('new_league_data.csv')
