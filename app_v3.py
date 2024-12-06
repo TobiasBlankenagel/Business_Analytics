@@ -493,35 +493,35 @@ if st.button("🎯 Predict Attendance"):
     ################### zusätzliche Infos #################################
 
 
-    # Ligatabelle basierend auf Rankings erstellen
-    league_table = league_data.groupby('Unnamed: 0').agg(
-        Ranking=('Ranking', 'first'),
-        Goals_Scored=('Goals_Scored_in_Last_5_Games', 'mean'),
-        Goals_Conceded=('Goals_Conceded_in_Last_5_Games', 'mean'),
-        Wins=('Number_of_Wins_in_Last_5_Games', 'mean')
-    ).reset_index().rename(columns={'Unnamed: 0': 'Team'})
+# Ligatabelle basierend auf Rankings erstellen
+league_table = league_data.groupby('Unnamed: 0').agg(
+    Ranking=('Ranking', 'first'),
+    Goals_Scored=('Goals_Scored_in_Last_5_Games', 'mean'),
+    Goals_Conceded=('Goals_Conceded_in_Last_5_Games', 'mean'),
+    Wins=('Number_of_Wins_in_Last_5_Games', 'mean')
+).reset_index().rename(columns={'Unnamed: 0': 'Team'})
 
-    # Sortiere die Tabelle nach dem Ranking
-    league_table = league_table.sort_values(by='Ranking', ascending=True)
+# Sortiere die Tabelle nach dem Ranking
+league_table = league_table.sort_values(by='Ranking', ascending=True)
 
-    # Markiere Home- und Away-Team
-    league_table['Highlight'] = league_table['Team'].apply(
-        lambda x: 'Home Team' if x == home_team else ('Away Team' if x == away_team else 'None')
-    )
+# Markiere Home- und Away-Team
+league_table['Highlight'] = league_table['Team'].apply(
+    lambda x: 'Home Team' if x == home_team else ('Away Team' if x == away_team else 'None')
+)
 
-    # Bedingtes Styling für die Tabelle
-    def highlight_teams(row):
-        if row.Highlight == 'Home Team':
-            return ['background-color: #28a745; color: white'] * len(row)  # Heimteam grün hervorheben
-        elif row.Highlight == 'Away Team':
-            return ['background-color: #007bff; color: white'] * len(row)  # Auswärtsteam blau hervorheben
-        else:
-            return [''] * len(row)  # Keine Hervorhebung
+# Bedingtes Styling für die Tabelle
+def highlight_teams(row):
+    if row.Highlight == 'Home Team':
+        return ['background-color: #28a745; color: white'] * len(row)  # Heimteam grün hervorheben
+    elif row.Highlight == 'Away Team':
+        return ['background-color: #007bff; color: white'] * len(row)  # Auswärtsteam blau hervorheben
+    else:
+        return [''] * len(row)  # Keine Hervorhebung
 
-    # Tabelle anzeigen
-    st.markdown("### League Table")
-    styled_table = league_table.style.apply(highlight_teams, axis=1).hide(axis='columns', subset=['Highlight'])
-    st.dataframe(styled_table)
+# Tabelle anzeigen
+st.markdown("### League Table")
+styled_table = league_table.style.apply(highlight_teams, axis=1).hide(axis='columns', subset=['Highlight'])
+st.dataframe(styled_table)
 
 
 
