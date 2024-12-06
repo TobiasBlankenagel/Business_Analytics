@@ -190,7 +190,8 @@ Day = match_date.day  # Extrahiert den Tag des Monats (1-31)
 
 league_data = pd.read_csv('new_league_data.csv')
 
-st.write(league_data)
+team_data = league_data[league_data['Unnamed: 0'] == home_team].iloc[0]
+st.write(team_data)
 
 
 
