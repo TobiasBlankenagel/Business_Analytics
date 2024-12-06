@@ -435,7 +435,13 @@ if st.button("🎯 Predict Attendance"):
         ax.set_xticks([0, 0.25, 0.5, 0.75, 1])
         ax.set_xticklabels(["0%", "25%", "50%", "75%", "100%"])
         ax.set_yticks([])
-        ax.legend(loc="upper right", frameon=False)
+        # Legende außerhalb der Leiste platzieren
+        ax.legend(
+            loc="upper center", 
+            bbox_to_anchor=(0.5, -0.2),  # Position außerhalb der Leiste
+            ncol=2,                      # Legende in einer Zeile mit 2 Spalten
+            frameon=False
+        )
         ax.set_title(f"Predicted Attendance: {predicted_attendance:.0f} of {max_capacity} ({prediction:.2f}%)")
 
         st.pyplot(fig)
