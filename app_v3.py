@@ -401,7 +401,7 @@ if st.button("🎯 Predict Attendance"):
 
     if team_info:
         max_capacity = team_info["max_capacity"]
-        predicted_attendance = ((prediction / 100 )* max_capacity) # Prozent der max_capacity
+        predicted_attendance = min(((prediction / 100) * max_capacity).round(), max_capacity)
         attendance_30th = team_info["attendance_30th_percentile"]
         attendance_70th = team_info["attendance_70th_percentile"]
 
