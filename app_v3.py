@@ -493,16 +493,19 @@ if st.button("🎯 Predict Attendance"):
     ################### zusätzliche Infos #################################
 
 
-    # Ligatabelle erstellen
-    league_table = df.groupby('Home Team').agg(
-        Ranking=('Ranking Home Team', 'first'),
+    # Ligatabelle basierend auf Rankings erstellen
+    league_table = league_data.groupby('Unnamed: 0').agg(
+        Ranking=('Ranking', 'first'),
         Goals_Scored=('Goals Scored in Last 5 Games', 'mean'),
         Goals_Conceded=('Goals Conceded in Last 5 Games', 'mean'),
         Wins=('Number of Wins in Last 5 Games', 'mean')
-    ).reset_index().sort_values(by='Ranking', ascending=True)
+    ).reset_index().rename(columns={'Unnamed: 0': 'Team'})
+
+    # Sortiere die Tabelle nach dem Ranking
+    league_table = league_table.sort_values(by='Ranking', ascending=True)
 
     # Markiere Home- und Away-Team
-    league_table['Highlight'] = league_table['Home Team'].apply(
+    league_table['Highlight'] = league_table['Team'].apply(
         lambda x: 'Home Team' if x == home_team else ('Away Team' if x == away_team else 'None')
     )
 
@@ -519,6 +522,7 @@ if st.button("🎯 Predict Attendance"):
     st.markdown("### League Table")
     styled_table = league_table.style.apply(highlight_teams, axis=1).hide(axis='columns', subset=['Highlight'])
     st.dataframe(styled_table)
+
 
 
 
