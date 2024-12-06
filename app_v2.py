@@ -124,7 +124,7 @@ else:
 
 # Wenn Away Team "Unknown" ist, Standardwerte verwenden
 if away_team == "Unknown":
-    ranking_away_team = 999  # Beispiel: 999 als Platzhalter für unbekanntes Ranking
+    ranking_away_team = 0  # Beispiel: 999 als Platzhalter für unbekanntes Ranking
     goals_scored_away_team = 0
     goals_conceded_away_team = 0
     wins_away_team = 0
