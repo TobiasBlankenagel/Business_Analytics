@@ -147,51 +147,87 @@ if not home_team_data.empty:
     goals_conceded_home_team = home_team_data['Goals_Conceded_in_Last_5_Games']
     wins_home_team = home_team_data['Number_of_Wins_in_Last_5_Games']
 
-    # Beispiel-Features erstellen
-    input_features = {
-        'Competition': competition,
-        'Matchday': matchday,
-        'Time': match_hour,
-        'Home Team': home_team,
-        'Ranking Home Team': ranking_home_team,
-        'Away Team': away_team,
-        'Ranking Away Team': ranking_away_team,
-        'Weather': weather_condition,
-        'Temperature (°C)': temperature_at_match,
-        'Weekday': weekday,
-        'Month': match_date.month,
-        'Day': match_date.day,
-        'Goals Scored in Last 5 Games': goals_scored_home_team,
-        'Goals Conceded in Last 5 Games': goals_conceded_home_team,
-        'Number of Wins in Last 5 Games': wins_home_team,
-    }
+# Categorical columns for dummy encoding
+categorical_columns = [
+    "Competition",
+    "Matchday",
+    "Home Team",
+    "Away Team",
+    "Weather",
+    "Weekday"
+]
 
-    # Dummy-coding vorbereiten
-    input_data = pd.DataFrame([input_features])
-    expected_columns = model_with_weather.feature_names_in_
+# Beispiel-Features erstellen
+input_features = {
+    'Competition': competition,
+    'Matchday': matchday,
+    'Time': match_hour,
+    'Home Team': home_team,
+    'Ranking Home Team': ranking_home_team,
+    'Away Team': away_team,
+    'Ranking Away Team': ranking_away_team,
+    'Weather': weather_condition,
+    'Temperature (°C)': temperature_at_match,
+    'Weekday': match_date.strftime("%A"),  # Wochentagname
+    'Month': match_date.month,
+    'Day': match_date.day,
+    'Goals Scored in Last 5 Games': goals_scored_home_team,
+    'Goals Conceded in Last 5 Games': goals_conceded_home_team,
+    'Number of Wins in Last 5 Games': wins_home_team,
+}
 
-    # Fehlende Spalten hinzufügen
-    for col in expected_columns:
-        if col not in input_data.columns:
-            input_data[col] = 0
+# Umwandlung in DataFrame
+input_data = pd.DataFrame([input_features])
 
-    # Zusätzliche Spalten entfernen
-    input_data = input_data[expected_columns]
+# Dummy-Encode der kategorischen Variablen
+input_data = pd.get_dummies(input_data, columns=categorical_columns, drop_first=False)
 
-    st.write(wins_home_team)
+# Erwartete Spalten (Modellstruktur)
+expected_columns = [
+    'Time', 'Ranking Home Team', 'Ranking Away Team', 'Temperature (°C)', 'Month', 'Day',
+    'Goals Scored in Last 5 Games', 'Goals Conceded in Last 5 Games', 'Number of Wins in Last 5 Games',
+    'Competition_Super League', 'Competition_Swiss Cup', 'Competition_UEFA Champions League',
+    'Competition_UEFA Conference League', 'Competition_UEFA Europa League',
+    'Matchday_2', 'Matchday_3', 'Matchday_4', 'Matchday_5', 'Matchday_6', 'Matchday_7',
+    'Matchday_8', 'Matchday_9', 'Matchday_10', 'Matchday_11', 'Matchday_12', 'Matchday_13',
+    'Matchday_14', 'Matchday_15', 'Matchday_16', 'Matchday_17', 'Matchday_18', 'Matchday_19',
+    'Matchday_20', 'Matchday_21', 'Matchday_22', 'Matchday_23', 'Matchday_24', 'Matchday_25',
+    'Matchday_26', 'Matchday_27', 'Matchday_28', 'Matchday_29', 'Matchday_30', 'Matchday_31',
+    'Matchday_32', 'Matchday_33', 'Matchday_34', 'Matchday_35', 'Matchday_36', 'Matchday_Group Stage',
+    'Matchday_Knockout Stage', 'Matchday_Qualification', 'Home Team_FC Basel', 'Home Team_FC Lugano',
+    'Home Team_FC Luzern', 'Home Team_FC Sion', 'Home Team_FC St. Gallen', 'Home Team_FC Winterthur',
+    'Home Team_FC Zürich', 'Home Team_Grasshoppers', 'Home Team_Lausanne-Sport', 'Home Team_Servette FC',
+    'Home Team_Yverdon Sport', 'Away Team_FC Basel', 'Away Team_FC Lugano', 'Away Team_FC Luzern',
+    'Away Team_FC Sion', 'Away Team_FC St. Gallen', 'Away Team_FC Winterthur', 'Away Team_FC Zürich',
+    'Away Team_Grasshoppers', 'Away Team_Lausanne-Sport', 'Away Team_Servette FC', 'Away Team_Unknown',
+    'Away Team_Yverdon Sport', 'Weather_Drizzle', 'Weather_Partly cloudy', 'Weather_Rainy',
+    'Weather_Snowy', 'Weekday_Monday', 'Weekday_Saturday', 'Weekday_Sunday', 'Weekday_Thursday',
+    'Weekday_Tuesday', 'Weekday_Wednesday'
+]
 
+# Fehlende Spalten hinzufügen und mit 0 auffüllen
+for col in expected_columns:
+    if col not in input_data.columns:
+        input_data[col] = 0
 
-    # Vorhersage
-    if st.button("Predict Attendance"):
-        if temperature_at_match is not None:
-            prediction = model_with_weather.predict(input_data)[0]
-        else:
-            prediction = model_without_weather.predict(input_data)[0]
-        
-        st.success(f"Predicted Attendance Percentage: {prediction:.2f}%")
+# Zusätzliche Spalten entfernen
+input_data = input_data[expected_columns]
 
+# Umwandlung in numerische Typen (sicherstellen, dass kein object-Typ enthalten ist)
+input_data = input_data.astype(float)
 
-
+# Vorhersage mit dem Modell
+if st.button("Predict Attendance"):
+    if temperature_at_match is not None:
+        prediction_percentage = model_with_weather.predict(input_data)[0]
+        weather_status = "Weather data was used for prediction."
+    else:
+        prediction_percentage = model_without_weather.predict(input_data)[0]
+        weather_status = "Weather data unavailable. Prediction made without weather information."
+    
+    # Ergebnisse anzeigen
+    st.success(f"Predicted Attendance Percentage: {prediction_percentage:.2f}%")
+    st.info(weather_status)
 
 
 
