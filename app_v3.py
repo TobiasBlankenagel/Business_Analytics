@@ -528,24 +528,73 @@ league_table = league_table.rename(columns={
     "Last_5_Games_Icons": "📊 Last 5 Games"
 })
 
-# Funktion zum Hervorheben der Teams
+# CSS für die Tabelle
+table_css = """
+<style>
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        border: 1px solid #ddd;
+        font-family: Arial, sans-serif;
+        margin: 20px 0;
+    }
+    th, td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: center;
+    }
+    th {
+        background-color: #f4f4f4;
+        font-weight: bold;
+        font-size: 14px;
+        color: #333;
+    }
+    tr:nth-child(even) {
+        background-color: #f9f9f9;
+    }
+    tr:nth-child(odd) {
+        background-color: #ffffff;
+    }
+    tr:hover {
+        background-color: #f1f1f1;
+    }
+    td {
+        font-size: 13px;
+        color: #555;
+    }
+    .highlight-home {
+        background-color: rgba(0, 123, 255, 0.7);
+        color: white;
+        font-weight: bold;
+    }
+    .highlight-away {
+        background-color: rgba(0, 123, 255, 0.2);
+        color: black;
+    }
+</style>
+"""
+
+# Funktion zum Hervorheben der Teams mit CSS-Klassen
 def highlight_teams_html(row):
     if row["🏟️ Team"] == home_team:
-        return f'<tr style="background-color: rgba(0, 123, 255, 0.7); color: white;">'
+        return '<tr class="highlight-home">'
     elif row["🏟️ Team"] == away_team:
-        return f'<tr style="background-color: rgba(0, 123, 255, 0.2); color: black;">'
+        return '<tr class="highlight-away">'
     return "<tr>"
 
 # HTML-Tabelle mit Highlighting generieren
-table_html = '<table style="width:100%; border-collapse: collapse;">'
-table_html += '<thead><tr>' + ''.join(f'<th style="border: 1px solid black; padding: 5px;">{col}</th>' for col in league_table.columns) + '</tr></thead>'
+table_html = '<table>'
+table_html += '<thead><tr>' + ''.join(f'<th>{col}</th>' for col in league_table.columns) + '</tr></thead>'
 table_html += '<tbody>'
 for _, row in league_table.iterrows():
     table_html += highlight_teams_html(row)  # Highlight-Team-Funktion
-    table_html += ''.join(f'<td style="border: 1px solid black; padding: 5px; text-align: center;">{row[col]}</td>' for col in league_table.columns)
+    table_html += ''.join(f'<td>{row[col]}</td>' for col in league_table.columns)
     table_html += '</tr>'
 table_html += '</tbody></table>'
 
+# Kombiniere CSS und HTML
+styled_table_html = table_css + table_html
+
 # Tabelle in Streamlit anzeigen
 st.markdown("### 🏆 League Table")
-st.markdown(table_html, unsafe_allow_html=True)
+st.markdown(styled_table_html, unsafe_allow_html=True)
