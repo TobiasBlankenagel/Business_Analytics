@@ -494,16 +494,9 @@ if st.button("🎯 Predict Attendance"):
 
 
 
-# Torverhältnis berechnen
-league_data["Goal_Difference"] = league_data["Total_Goals_Scored"] - league_data["Total_Goals_Conceded"]
-
 # Funktion, um Ergebnisse mit Icons darzustellen
 def game_result_icons(row):
-    result_mapping = {
-        "Win": "✅",
-        "Lose": "❌",
-        "Tie": "➖"
-    }
+    result_mapping = {"Win": "✅", "Lose": "❌", "Tie": "➖"}
     return "".join(result_mapping.get(row[col], "❓") for col in [
         "Last_1_Game_Result",
         "Last_2_Game_Result",
@@ -512,13 +505,13 @@ def game_result_icons(row):
         "Last_5_Game_Result"
     ])
 
-# Spalte für visuelle Darstellung der letzten 5 Spiele
 league_data["Last_5_Games_Icons"] = league_data.apply(game_result_icons, axis=1)
 
 # Ligatabelle erstellen
 league_table = league_data[[
-    "Team", "Points", "Ranking", "Games_Played", "Total_Goals_Scored", 
-    "Total_Goals_Conceded", "Last_5_Games_Icons"
+    "Team", "Points", "Ranking", "Games_Played", 
+    "Total_Goals_Scored", "Total_Goals_Conceded", 
+    "Last_5_Games_Icons"
 ]]
 
 # Sortiere die Tabelle nach Ranking
@@ -535,17 +528,24 @@ league_table = league_table.rename(columns={
     "Last_5_Games_Icons": "📊 Last 5 Games"
 })
 
-# Setze Ranking als Index
-league_table = league_table.set_index("🏅 Ranking")
+# Funktion zum Hervorheben der Teams
+def highlight_teams_html(row):
+    if row["🏟️ Team"] == home_team:
+        return f'<tr style="background-color: rgba(40, 167, 69, 1); color: white;">'
+    elif row["🏟️ Team"] == away_team:
+        return f'<tr style="background-color: rgba(0, 123, 255, 0.5); color: black;">'
+    return "<tr>"
 
-# Streamlit-Anzeige
+# HTML-Tabelle mit Highlighting generieren
+table_html = '<table style="width:100%; border-collapse: collapse;">'
+table_html += '<thead><tr>' + ''.join(f'<th style="border: 1px solid black; padding: 5px;">{col}</th>' for col in league_table.columns) + '</tr></thead>'
+table_html += '<tbody>'
+for _, row in league_table.iterrows():
+    table_html += highlight_teams_html(row)  # Highlight-Team-Funktion
+    table_html += ''.join(f'<td style="border: 1px solid black; padding: 5px; text-align: center;">{row[col]}</td>' for col in league_table.columns)
+    table_html += '</tr>'
+table_html += '</tbody></table>'
+
+# Tabelle in Streamlit anzeigen
 st.markdown("### 🏆 League Table")
-st.markdown("""
-<style>
-    .stDataFrame th, .stDataFrame td {
-        text-align: center;  /* Zentriere den Text */
-    }
-</style>
-""", unsafe_allow_html=True)
-
-st.dataframe(league_table, use_container_width=True)
+st.markdown(table_html, unsafe_allow_html=True)
