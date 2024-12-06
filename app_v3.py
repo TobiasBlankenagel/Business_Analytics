@@ -478,7 +478,7 @@ if st.button("🎯 Predict Attendance"):
         }
         team_stats_df = pd.DataFrame(team_stats)
         st.dataframe(
-            team_stats_df.style.applymap(color_results, subset=[
+            team_stats_df.style.map(color_results, subset=[
                 "Last 1 Game Result", "Last 2 Game Result", 
                 "Last 3 Game Result", "Last 4 Game Result", 
                 "Last 5 Game Result"
