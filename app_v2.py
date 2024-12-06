@@ -157,6 +157,22 @@ else:
     goals_conceded_away_team = 0
     wins_away_team = 0
 
+# Stadionkapazitäten der Teams
+stadium_capacity = {
+    'FC Sion': 16232,
+    'FC St. Gallen': 20029,
+    'FC Winterthur': 8550,
+    'FC Zürich': 26104,
+    'BSC Young Boys': 31783,
+    'FC Luzern': 16800,
+    'Lausanne-Sport': 12544,
+    'Servette FC': 30084,
+    'FC Basel': 38512,
+    'FC Lugano': 6330,
+    'Grasshoppers': 26104,
+    'Yverdon Sport': 6600
+}
+
 # Features für das Modell vorbereiten
 input_features = {
     'Time': match_hour,
@@ -183,9 +199,15 @@ input_data = input_data[expected_columns]
 # Vorhersage
 if st.button("🎯 Predict Attendance"):
     if temperature_at_match:
-        prediction = model_with_weather.predict(input_data)[0]
+        prediction_percentage = model_with_weather.predict(input_data)[0]
     else:
-        prediction = model_without_weather.predict(input_data)[0]
-    st.success(f"🎉 Predicted Attendance Percentage: **{prediction:.2f}%**")
+        prediction_percentage = model_without_weather.predict(input_data)[0]
+    
+    # Maximal mögliche Zuschauerzahl basierend auf der Kapazität
+    max_capacity = stadium_capacity[home_team]
+    predicted_attendance = round(prediction_percentage / 100 * max_capacity)  # Zuschauerzahl berechnen
+    
+    # Ergebnis anzeigen
+    st.success(f"🎉 Predicted Attendance Percentage: **{prediction_percentage:.2f}%**")
+    st.info(f"🏟️ Predicted Attendance: **{predicted_attendance}** out of {max_capacity} seats.")
     st.balloons()
-
