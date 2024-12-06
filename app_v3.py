@@ -420,8 +420,8 @@ if st.button("🎯 Predict Attendance"):
         else:
             attendance_status = "Normal attendance ⚖️"
 
-        # Fortschrittsbalken erstellen
-        fig, ax = plt.subplots(figsize=(8, 1))
+        # Fortschrittsbalken erstellen (vergrößert)
+        fig, ax = plt.subplots(figsize=(12, 2))  # Ändere figsize, um die Grafik größer zu machen
         ax.barh(
             y=[0], 
             width=[predicted_attendance / max_capacity], 
@@ -436,16 +436,23 @@ if st.button("🎯 Predict Attendance"):
         # Styling der Leiste
         ax.set_xlim(0, 1)
         ax.set_xticks([0, 0.25, 0.5, 0.75, 1])
-        ax.set_xticklabels(["0%", "25%", "50%", "75%", "100%"])
+        ax.set_xticklabels(["0%", "25%", "50%", "75%", "100%"], fontsize=12)  # Größere Schriftgröße für Achsenticks
         ax.set_yticks([])
+        
         # Legende außerhalb der Leiste platzieren
         ax.legend(
             loc="upper center", 
-            bbox_to_anchor=(0.5, -0.2),  # Position außerhalb der Leiste
+            bbox_to_anchor=(0.5, -0.3),  # Abstand der Legende von der Grafik vergrößert
             ncol=2,                      # Legende in einer Zeile mit 2 Spalten
+            fontsize=10,                 # Schriftgröße der Legende
             frameon=False
         )
-        ax.set_title(f"Predicted Attendance: {predicted_attendance:.0f} of {max_capacity} ({prediction:.2f}%)")
+        
+        ax.set_title(
+            f"Predicted Attendance: {predicted_attendance:.0f} of {max_capacity} ({prediction:.2f}%)", 
+            fontsize=14,                 # Größere Schriftgröße für den Titel
+            pad=20                       # Abstand des Titels von der Grafik vergrößert
+        )
 
         # Speichere das Diagramm in einen Puffer
         buf = io.BytesIO()
