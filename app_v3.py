@@ -200,11 +200,18 @@ with col2:
 col3, col4 = st.columns([2, 2])
 
 with col3:
-    match_date = st.date_input("Match Date:", min_value=datetime.date.today())
+    match_date = st.date_input(
+        "Match Date:", 
+        min_value=datetime.date.today(),
+        key="match_date_input"
+    )
 
 with col4:
     match_time = st.time_input(
-        "Match Time:", value=datetime.time(15, 30), help="Select the match time in HH:MM format"
+        "Match Time:", 
+        value=datetime.time(15, 30),
+        help="Select the match time in HH:MM format",
+        key="match_time_input"
     )
 
 # Berechne die Stunde aus dem Zeit-Input
