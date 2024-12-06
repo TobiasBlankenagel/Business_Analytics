@@ -518,7 +518,7 @@ league_data["Last_5_Games_Icons"] = league_data.apply(game_result_icons, axis=1)
 # Ligatabelle erstellen
 league_table = league_data[[
     "Team", "Ranking", "Games_Played", "Total_Goals_Scored", 
-    "Total_Goals_Conceded", "Goal_Difference"
+    "Total_Goals_Conceded", "Goal_Difference", "Last_5_Games_Icons"
 ]]
 
 # Sortiere die Tabelle nach Ranking
@@ -531,7 +531,8 @@ league_table = league_table.rename(columns={
     "Games_Played": "🕒 Games Played",
     "Total_Goals_Scored": "⚽ Total Goals Scored",
     "Total_Goals_Conceded": "🛡️ Total Goals Conceded",
-    "Goal_Difference": "📊 Goal Difference"
+    "Goal_Difference": "📊 Goal Difference",
+    "Last_5_Games_Icons": "📊 Last 5 Games"
 })
 
 # Streamlit-Anzeige
