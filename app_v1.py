@@ -4,6 +4,7 @@ import pickle
 import numpy as np
 import requests
 import sklearn
+import pandas as pd
 
 # Modelle laden
 def load_model(model_path):
