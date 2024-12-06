@@ -41,6 +41,14 @@ with col2:
     else:
         away_team = "Unknown"
 
+        
+# Matchday oder Modus auswählen
+if competition == "Super League":
+    matchday = st.slider("🗓️ Matchday:", min_value=1, max_value=36, step=1)
+else:
+    matchday = st.radio("📋 Match Type:", options=["Group Stage", "Knockout Stage"])
+
+
 # Eingabe für Datum und Uhrzeit
 match_date = st.date_input("📅 Match Date:", min_value=datetime.date.today())
 match_time = st.time_input("🕒 Match Time:", value=datetime.time(15, 30))
