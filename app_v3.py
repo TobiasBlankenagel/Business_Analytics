@@ -494,7 +494,6 @@ if st.button("🎯 Predict Attendance"):
 
 
 
-# Funktion, um Ergebnisse mit Icons darzustellen
 def game_result_icons(row):
     result_mapping = {
         "Win": "✅",
@@ -512,7 +511,6 @@ def game_result_icons(row):
 # Spalte für visuelle Darstellung der letzten 5 Spiele
 league_data["Last_5_Games_Icons"] = league_data.apply(game_result_icons, axis=1)
 
-
 # Ligatabelle basierend auf Rankings erstellen
 league_table = league_data[[
     "Team", "Ranking", "Goals_Scored_in_Last_5_Games", 
@@ -526,7 +524,7 @@ league_table = league_table.sort_values(by="Ranking", ascending=True)
 # Tabelle in Streamlit anzeigen
 st.markdown("### 🏆 League Table")
 
-# Bedingtes Styling für das Home- und Away-Team
+
 def highlight_teams(row):
     if row["Team"] == home_team:
         return ['background-color: #28a745; color: white'] * len(row)  # Heimteam grün
@@ -536,7 +534,8 @@ def highlight_teams(row):
 
 # Tabelle mit Styling anzeigen
 styled_league_table = league_table.style.apply(highlight_teams, axis=1)
-# In Streamlit DataFrame anzeigen
+
+# Darstellung in Streamlit
 st.markdown("""
 <style>
     .stDataFrame th, .stDataFrame td {
@@ -545,15 +544,17 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-st.dataframe(styled_league_table.rename(columns={
-    "Ranking": "🏅 Ranking",
-    "Team": "🏟️ Team",
-    "Goals_Scored_in_Last_5_Games": "⚽ Goals Scored",
-    "Goals_Conceded_in_Last_5_Games": "🛡️ Goals Conceded",
-    "Number_of_Wins_in_Last_5_Games": "🏆 Wins",
-    "Last_5_Games_Icons": "📊 Last 5 Games"
-}), use_container_width=True)
-
+st.dataframe(
+    styled_league_table.rename(columns={
+        "Ranking": "🏅 Ranking",
+        "Team": "🏟️ Team",
+        "Goals_Scored_in_Last_5_Games": "⚽ Goals Scored",
+        "Goals_Conceded_in_Last_5_Games": "🛡️ Goals Conceded",
+        "Number_of_Wins_in_Last_5_Games": "🏆 Wins",
+        "Last_5_Games_Icons": "📊 Last 5 Games"
+    }),
+    use_container_width=True
+)
 
 
 
