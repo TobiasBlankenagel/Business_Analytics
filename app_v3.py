@@ -110,10 +110,13 @@ with col1:
     competition = st.selectbox("🏆 Competition:", available_competitions)
 
 with col2:
+    # Dynamisch die Liste der verfügbaren Away-Teams anpassen
+    available_away_teams_dynamic = [team for team in available_home_teams if team != home_team]
+
     if competition == "Super League":
-        away_team = st.selectbox("🌍 Away Team:", available_home_teams)
+        away_team = st.selectbox("🌍 Away Team:", available_away_teams_dynamic)
     elif competition == "Swiss Cup":
-        away_team = st.selectbox("🌍 Away Team:", available_away_teams)
+        away_team = st.selectbox("🌍 Away Team:", available_away_teams_dynamic)
     else:
         away_team = "Unknown"
 
@@ -121,6 +124,7 @@ with col2:
         matchday = st.slider("📅 Matchday:", min_value=1, max_value=36, step=1)
     else:
         matchday = st.radio("🏅 Matchday Type:", options=["Group", "Knockout"])
+
 
 
 
