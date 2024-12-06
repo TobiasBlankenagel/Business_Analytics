@@ -37,14 +37,18 @@ with col1:
     home_team = st.selectbox("🏠 Home Team:", available_home_teams)
     competition = st.selectbox("🏆 Competition:", available_competitions)
 
+# Dynamische Liste der Auswärtsteams erstellen (ohne Heimteam)
+filtered_away_teams = [team for team in available_home_teams if team != home_team] + ['Unknown']
+
 # Eingabe: Away Team und Matchday/Modus
 with col2:
     if competition == "Super League":
-        away_team = st.selectbox("🛫 Away Team:", available_home_teams)
+        away_team = st.selectbox("🛫 Away Team:", filtered_away_teams)
         matchday = st.slider("🗓️ Matchday:", min_value=1, max_value=36, step=1)
     else:
-        away_team = st.selectbox("🛫 Away Team:", available_away_teams)
+        away_team = st.selectbox("🛫 Away Team:", filtered_away_teams)
         matchday = st.radio("📋 Match Type:", options=["Group Stage", "Knockout Stage"])
+
 
 # Datum und Uhrzeit
 match_date = st.date_input("📅 Match Date:", min_value=datetime.date.today())
