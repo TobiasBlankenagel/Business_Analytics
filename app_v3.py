@@ -29,13 +29,6 @@ st.markdown("""
     <style>
 
 
-    /* Farben für Vorhersage und Info */
-    .stSuccess {
-        color: #28a745;
-        font-size: 20px;
-        font-weight: bold;
-        text-align: center;
-    }
 
     .stInfo {
         color: #17a2b8;
