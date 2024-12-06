@@ -1,5 +1,6 @@
 import streamlit as st
 import pandas as pd
+import numpy as np
 import pickle
 import requests
 import datetime
@@ -26,13 +27,12 @@ st.markdown("🎉 Welcome to the ultimate tool for predicting stadium attendance
 available_home_teams = ['FC Sion', 'FC St. Gallen', 'FC Winterthur', 'FC Zürich',
                         'BSC Young Boys', 'FC Luzern', 'Lausanne-Sport', 'Servette FC',
                         'FC Basel', 'FC Lugano', 'Grasshoppers', 'Yverdon Sport']
-available_away_teams = available_home_teams + ['Unknown']
 available_competitions = ['Super League', 'UEFA Conference League', 'Swiss Cup', 
                           'UEFA Europa League', 'UEFA Champions League']
 
-# Dynamische Liste der Auswärtsteams
-def get_filtered_away_teams(home_team, available_teams):
-    return [team for team in available_teams if team != home_team] + ['Unknown']
+# Dynamische Filterung der Auswärtsteams
+def get_filtered_away_teams(home_team):
+    return [team for team in available_home_teams if team != home_team] + ['Unknown']
 
 # Eingabe: Home Team und Wettbewerb
 col1, col2 = st.columns(2)
@@ -40,15 +40,14 @@ with col1:
     home_team = st.selectbox("🏠 Home Team:", available_home_teams)
     competition = st.selectbox("🏆 Competition:", available_competitions)
 
-filtered_away_teams = get_filtered_away_teams(home_team, available_home_teams)
+filtered_away_teams = get_filtered_away_teams(home_team)
 
 # Eingabe: Away Team und Spieltag/Modus
 with col2:
+    away_team = st.selectbox("🛫 Away Team:", filtered_away_teams)
     if competition == "Super League":
-        away_team = st.selectbox("🛫 Away Team:", filtered_away_teams)
         matchday = st.slider("🗓️ Matchday:", min_value=1, max_value=36, step=1)
     else:
-        away_team = st.selectbox("🛫 Away Team:", filtered_away_teams)
         matchday = st.radio("📋 Match Type:", options=["Group Stage", "Knockout Stage"])
 
 if away_team == home_team:
@@ -90,25 +89,11 @@ def get_weather_data(latitude, longitude, match_date, match_hour):
         hourly_data = weather_data['hourly']
         temperature_at_match = hourly_data['temperature_2m'][match_hour]
         weather_code_at_match = hourly_data['weathercode'][match_hour]
-
-        if weather_code_at_match in [0]:
-            weather_condition = "Clear or mostly clear"
-        elif weather_code_at_match in [1, 2, 3]:
-            weather_condition = "Partly cloudy"
-        elif weather_code_at_match in [61, 63, 65, 80, 81, 82]:
-            weather_condition = "Rainy"
-        elif weather_code_at_match in [51, 53, 55]:
-            weather_condition = "Drizzle"
-        elif weather_code_at_match in [71, 73, 75, 85, 86, 77]:
-            weather_condition = "Snowy"
-        else:
-            weather_condition = "Unknown"
-
-        return temperature_at_match, weather_condition
+        return temperature_at_match, weather_code_at_match
     except:
         return None, None
 
-if home_team:
+if home_team and match_date and match_time:
     coordinates = stadium_coordinates[home_team]
     temperature_at_match, weather_condition = get_weather_data(
         coordinates['latitude'], coordinates['longitude'], match_date, match_hour
@@ -121,48 +106,25 @@ if temperature_at_match is not None:
 else:
     st.warning("Weather data unavailable. Default model will be used.")
 
-# Match-Daten vorbereiten
+# Daten vorbereiten
 league_data = pd.read_csv('new_league_data.csv')
 home_team_data = league_data[league_data['Unnamed: 0'] == home_team].iloc[0]
-away_team_data = league_data[league_data['Unnamed: 0'] == away_team].iloc[0] if away_team != "Unknown" else None
 
-stadium_capacity = {
-    'FC Sion': 16232,
-    'FC St. Gallen': 20029,
-    'FC Winterthur': 8550,
-    'FC Zürich': 26104,
-    'BSC Young Boys': 31783,
-    'FC Luzern': 16800,
-    'Lausanne-Sport': 12544,
-    'Servette FC': 30084,
-    'FC Basel': 38512,
-    'FC Lugano': 6330,
-    'Grasshoppers': 26104,
-    'Yverdon Sport': 6600
-}
-
-# Input-Daten erstellen
+# Spalten dynamisch anpassen
+required_columns = model_with_weather.feature_names_in_
 input_features = {
     'Time': match_hour,
     'Ranking Home Team': home_team_data['Ranking'],
-    'Ranking Away Team': away_team_data['Ranking'] if away_team_data is not None else 999,
-    'Temperature (°C)': temperature_at_match if temperature_at_match is not None else 20,
-    'Month': match_date.month,
-    'Day': match_date.day,
-    'Goals Scored in Last 5 Games': home_team_data['Goals_Scored_in_Last_5_Games'],
-    'Goals Conceded in Last 5 Games': home_team_data['Goals_Conceded_in_Last_5_Games'],
-    'Number of Wins in Last 5 Games': home_team_data['Number_of_Wins_in_Last_5_Games'],
+    'Temperature (°C)': temperature_at_match if temperature_at_match else 20,
 }
 
 input_data = pd.DataFrame([input_features])
 
+for col in required_columns:
+    if col not in input_data:
+        input_data[col] = 0
+
 if st.button("🎯 Predict Attendance"):
-    if temperature_at_match is not None:
-        prediction_percentage = model_with_weather.predict(input_data)[0]
-    else:
-        prediction_percentage = model_without_weather.predict(input_data)[0]
-
-    max_capacity = stadium_capacity[home_team]
-    predicted_attendance = round(prediction_percentage * max_capacity)
-
-    st.success(f"Predicted Attendance: {predicted_attendance}/{max_capacity} ({prediction_percentage*100:.2f}%)")
+    model = model_with_weather if temperature_at_match else model_without_weather
+    prediction_percentage = model.predict(input_data)[0]
+    st.success(f"Predicted Attendance Percentage: {prediction_percentage*100:.2f}%")
