@@ -178,7 +178,7 @@ if not home_team_data.empty:
     # Zusätzliche Spalten entfernen
     input_data = input_data[expected_columns]
 
-    st.write(match_date.month)
+    st.write(match_date.day)
 
 
     # Vorhersage
