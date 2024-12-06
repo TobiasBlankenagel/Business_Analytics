@@ -65,6 +65,9 @@ match_hour = match_time.hour
 # Wetterdaten abrufen
 st.markdown("### 🌤️ Weather Information")
 
+# Wetterdaten abrufen
+st.markdown("### 🌤️ Weather Information")
+
 def get_weather_data(latitude, longitude, match_date, match_hour):
     api_url = (
         f"https://api.open-meteo.com/v1/forecast?"
@@ -74,30 +77,51 @@ def get_weather_data(latitude, longitude, match_date, match_hour):
     )
     try:
         response = requests.get(api_url)
-        response.raise_for_status()
+        response.raise_for_status()  # Prüft, ob die Anfrage erfolgreich war
         weather_data = response.json()
         hourly_data = weather_data['hourly']
-        temperature_at_match = hourly_data['temperature_2m'][match_hour]
-        weather_code_at_match = hourly_data['weathercode'][match_hour]
 
-        # Wetterbedingungen basierend auf WeatherCode bestimmen
-        if weather_code_at_match in [0]:
-            weather_condition = "Clear or mostly clear"
-        elif weather_code_at_match in [1, 2, 3]:
-            weather_condition = "Partly cloudy"
-        elif weather_code_at_match in [61, 63, 65, 80, 81, 82]:
-            weather_condition = "Rainy"
-        elif weather_code_at_match in [51, 53, 55]:
-            weather_condition = "Drizzle"
-        elif weather_code_at_match in [71, 73, 75, 85, 86, 77]:
-            weather_condition = "Snowy"
+        # Sicherstellen, dass die Stunde im Datensatz vorhanden ist
+        if match_hour < len(hourly_data['temperature_2m']):
+            temperature_at_match = hourly_data['temperature_2m'][match_hour]
+            weather_code_at_match = hourly_data['weathercode'][match_hour]
+
+            # Wetterbedingungen basierend auf WeatherCode bestimmen
+            if weather_code_at_match in [0]:
+                weather_condition = "Clear or mostly clear"
+            elif weather_code_at_match in [1, 2, 3]:
+                weather_condition = "Partly cloudy"
+            elif weather_code_at_match in [61, 63, 65, 80, 81, 82]:
+                weather_condition = "Rainy"
+            elif weather_code_at_match in [51, 53, 55]:
+                weather_condition = "Drizzle"
+            elif weather_code_at_match in [71, 73, 75, 85, 86, 77]:
+                weather_condition = "Snowy"
+            else:
+                weather_condition = "Unknown"
+
+            return temperature_at_match, weather_condition
         else:
-            weather_condition = "Unknown"
-
-        return temperature_at_match, weather_condition
-    except Exception as e:
-        st.error(f"Error retrieving weather data: {e}")
+            st.warning("Weather data for the specified hour is unavailable.")
+            return None, None
+    except Exception:
+        st.error("Error retrieving weather data. Using default values.")
         return None, None
+
+# Wetterdaten abrufen, falls verfügbar
+if home_team and match_date and match_time:
+    coordinates = stadium_coordinates[home_team]
+    latitude = coordinates['latitude']
+    longitude = coordinates['longitude']
+    temperature_at_match, weather_condition = get_weather_data(latitude, longitude, match_date, match_hour)
+else:
+    temperature_at_match, weather_condition = None, None
+
+# Wetteranzeige in der App
+if temperature_at_match is not None:
+    st.info(f"**Temperature**: {temperature_at_match}°C, **Condition**: {weather_condition}")
+else:
+    st.warning("Weather data unavailable. Default model will be used.")
 
 # Koordinaten des Heimstadions
 stadium_coordinates = {
@@ -114,23 +138,6 @@ stadium_coordinates = {
     'Grasshoppers': {'latitude': 47.382778, 'longitude': 8.504167},
     'Yverdon Sport': {'latitude': 46.778056, 'longitude': 6.641111}
 }
-
-# Wetterdaten abrufen, falls verfügbar
-if home_team and match_date and match_time:
-    coordinates = stadium_coordinates[home_team]
-    latitude = coordinates['latitude']
-    longitude = coordinates['longitude']
-    temperature_at_match, weather_condition = get_weather_data(latitude, longitude, match_date, match_hour)
-else:
-    temperature_at_match, weather_condition = None, None
-
-# Wetteranzeige in der App
-if temperature_at_match is not None:
-    st.info(f"**Temperature**: {temperature_at_match}°C, **Condition**: {weather_condition}")
-else:
-    st.warning("Weather data could not be retrieved. Using default values.")
-    temperature_at_match = 20  # Standardtemperatur
-    weather_condition = "Clear"
 
 
 
