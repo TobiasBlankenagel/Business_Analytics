@@ -392,7 +392,7 @@ if st.button("🎯 Predict Attendance"):
             'Temperature (°C)', 'Weather_Rainy'
         ]
         input_df = input_df.drop(columns=[col for col in weather_columns_to_drop if col in input_df.columns])
-        prediction = model_without_weather.predict(input_df)[0]
+        prediction = model_without_weather.predict(input_df)[0] * 100
         weather_status = "Weather data unavailable. Prediction made without weather information."
     
     # Berechne die absolute Attendance
@@ -401,7 +401,7 @@ if st.button("🎯 Predict Attendance"):
 
     if team_info:
         max_capacity = team_info["max_capacity"]
-        predicted_attendance = (prediction* max_capacity) # Prozent der max_capacity
+        predicted_attendance = ((prediction / 100 )* max_capacity) # Prozent der max_capacity
         attendance_30th = team_info["attendance_30th_percentile"]
         attendance_70th = team_info["attendance_70th_percentile"]
 
