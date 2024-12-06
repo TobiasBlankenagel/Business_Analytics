@@ -177,7 +177,7 @@ expected_columns = [
     'Competition_UEFA Conference League', 'Competition_UEFA Europa League', 'Matchday_10', 'Matchday_11', 'Matchday_12', 'Matchday_13',
     'Matchday_14', 'Matchday_15', 'Matchday_16', 'Matchday_17', 'Matchday_18', 'Matchday_19',
     'Matchday_2', 'Matchday_20', 'Matchday_21', 'Matchday_22', 'Matchday_23', 'Matchday_24', 'Matchday_25',
-    'Matchday_26', 'Matchday_27', 'Matchday_28', 'Matchday_29', 'Matchday 3', 'Matchday_30', 'Matchday_31',
+    'Matchday_26', 'Matchday_27', 'Matchday_28', 'Matchday_29', 'Matchday_3', 'Matchday_30', 'Matchday_31',
     'Matchday_32', 'Matchday_33', 'Matchday_34', 'Matchday_35', 'Matchday_36', 'Matchday_37', 'Matchday_38', 
     'Matchday_4', 'Matchday_5', 'Matchday_6', 'Matchday_7',
     'Matchday_8', 'Matchday_9', 
