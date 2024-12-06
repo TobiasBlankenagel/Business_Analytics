@@ -52,6 +52,7 @@ match_time = st.time_input(
     "Match Time:", value=datetime.time(15, 30), help="Select the match time in HH:MM format"
 )
 match_hour = match_time.hour  # Holt nur die Stunde aus der Zeit
+weekday = match_date.strftime("%A")
 
 # Wetterdaten abrufen
 def get_weather_data(latitude, longitude, match_date, match_hour):
@@ -156,7 +157,8 @@ if not home_team_data.empty:
         'Away Team': away_team,
         'Ranking Away Team': ranking_away_team,
         'Weather': weather_condition,
-        'Temperature (°C)': temperature_at_match if temperature_at_match else None,
+        'Temperature (°C)': temperature_at_match,
+        'Weekday': 
         'Month': match_date.month,
         'Day': match_date.day,
         'Goals Scored in Last 5 Games': goals_scored_home_team,
@@ -176,7 +178,7 @@ if not home_team_data.empty:
     # Zusätzliche Spalten entfernen
     input_data = input_data[expected_columns]
 
-    st.write(temperature_at_match)
+    st.write(weekday)
 
 
     # Vorhersage
