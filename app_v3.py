@@ -565,13 +565,12 @@ table_css = """
         color: #555;
     }
     .highlight-home {
-        background-color: rgba(0, 123, 255, 0.7) !important;
+        background-color: rgba(0, 123, 255, 0.5) !important;
         color: white !important;
         font-weight: bold !important;
     }
     .highlight-away {
         background-color: rgba(0, 123, 255, 0.2) !important;
-        color: white !important;
     }
 </style>
 """
