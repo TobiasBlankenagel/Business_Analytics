@@ -158,25 +158,28 @@ available_away_teams = available_home_teams
 available_competitions = ['Super League', 'UEFA Conference League', 'Swiss Cup', 
                           'UEFA Europa League', 'UEFA Champions League']
 
-# Erstellen von 2 Spalten für Eingabefelder
+# In zwei Spalten aufteilen (mehr Platz und Übersichtlichkeit)
 col1, col2 = st.columns([2, 2])
 
 with col1:
-    home_team = st.selectbox("Home Team:", available_home_teams)
-    competition = st.selectbox("Competition:", available_competitions)
+    home_team = st.selectbox("🏠 Home Team:", available_home_teams)
+    competition = st.selectbox("🏆 Competition:", available_competitions)
 
 with col2:
     if competition == "Super League":
-        away_team = st.selectbox("Away Team:", available_home_teams)
+        away_team = st.selectbox("🌍 Away Team:", available_home_teams)
     elif competition == "Swiss Cup":
-        away_team = st.selectbox("Away Team:", available_away_teams)
+        away_team = st.selectbox("🌍 Away Team:", available_away_teams)
     else:
         away_team = "Unknown"
-    
+
     if competition == "Super League":
-        matchday = st.slider("Matchday:", min_value=1, max_value=36, step=1)
+        matchday = st.slider("📅 Matchday:", min_value=1, max_value=36, step=1)
     else:
-        matchday = st.radio("Matchday Type:", options=["Group", "Knockout"])
+        matchday = st.radio("🏅 Matchday Type:", options=["Group", "Knockout"])
+
+# Die Spalten sind nun nebeneinander und weicheres Design
+
 
 # Zeilen mit weiteren Eingabefeldern für Datum und Uhrzeit
 col3, col4 = st.columns([2, 2])
