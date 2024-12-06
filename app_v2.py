@@ -151,7 +151,9 @@ if not home_team_data.empty:
         'Competition': competition,
         'Matchday': matchday,
         'Time': match_hour,
+        'Home Team': home_team.
         'Ranking Home Team': ranking_home_team,
+        'Away Team': away_team,
         'Ranking Away Team': ranking_away_team,
         'Temperature (°C)': temperature_at_match if temperature_at_match else None,
         'Month': match_date.month,
@@ -173,7 +175,7 @@ if not home_team_data.empty:
     # Zusätzliche Spalten entfernen
     input_data = input_data[expected_columns]
 
-    st.write(matchday)
+    st.write(away_team)
 
 
     # Vorhersage
