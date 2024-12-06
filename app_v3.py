@@ -535,6 +535,9 @@ league_table = league_table.rename(columns={
     "Last_5_Games_Icons": "📊 Last 5 Games"
 })
 
+# Setze Ranking als Index
+league_table = league_table.set_index("🏅 Ranking")
+
 # Streamlit-Anzeige
 st.markdown("### 🏆 League Table")
 st.markdown("""
