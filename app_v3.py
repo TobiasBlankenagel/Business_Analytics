@@ -495,16 +495,23 @@ if st.button("🎯 Predict Attendance"):
 
 
 # Funktion, um Ergebnisse mit Icons darzustellen
-def game_result_icons(results):
-    icons = {
-        "Win": "✅",  # Grün für Sieg
-        "Lose": "❌",  # Rot für Niederlage
-        "Tie": "⚪"    # Weiß für Unentschieden
+def game_result_icons(row):
+    result_mapping = {
+        "Win": "✅",
+        "Lose": "❌",
+        "Tie": "➖"
     }
-    return "".join([icons[result] for result in results])
+    return "".join(result_mapping.get(row[col], "❓") for col in [
+        "Last_1_Game_Result",
+        "Last_2_Game_Result",
+        "Last_3_Game_Result",
+        "Last_4_Game_Result",
+        "Last_5_Game_Result"
+    ])
 
 # Spalte für visuelle Darstellung der letzten 5 Spiele
-league_data["Last_5_Games_Icons"] = league_data["Last_5_Games"].apply(game_result_icons)
+league_data["Last_5_Games_Icons"] = league_data.apply(game_result_icons, axis=1)
+
 
 # Tabelle sortieren
 league_data = league_data.sort_values(by="Ranking")
