@@ -114,7 +114,7 @@ st.markdown("""
     /* Styling der Buttons */
     .stButton>button {
         background-color: #003366;
-        color: white;
+        color: white; /* Schriftfarbe wird auf weiß gesetzt */
         font-size: 18px;
         font-weight: bold;
         padding: 12px 30px;
@@ -124,8 +124,10 @@ st.markdown("""
         cursor: pointer;
     }
 
+    /* Hover-Effekt für den Button */
     .stButton>button:hover {
         background-color: #0066cc;
+        color: white; /* Schriftfarbe bleibt weiß im Hover-Zustand */
         transition: all 0.3s ease;
     }
 
