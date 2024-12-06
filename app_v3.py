@@ -507,10 +507,9 @@ league_table = league_table.sort_values(by='Ranking', ascending=True)
 
 # Tabelle anzeigen mit verbessertem Layout
 st.markdown("### League Table")
-styled_table = league_table_display.style.apply(highlight_teams, axis=1)
 
 # Verwende Streamlit DataFrame mit Styling ohne Index
-st.dataframe(styled_table, use_container_width=True)
+st.dataframe(league_table, use_container_width=True)
 
 
 
