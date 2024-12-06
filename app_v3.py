@@ -253,13 +253,25 @@ if home_team and match_date and match_time:
     longitude = coordinates['longitude']
     temperature_at_match, weather_condition = get_weather_data(latitude, longitude, match_date, match_hour)
 
+    def get_weather_emoji(weather_condition):
+        weather_emoji = {
+            "Clear or mostly clear": "☀️",  # Sonne
+            "Partly cloudy": "⛅",  # Teilweise Wolken
+            "Rainy": "🌧️",  # Regen
+            "Drizzle": "🌦️",  # Nieselregen
+            "Snowy": "❄️",  # Schnee
+            "Unknown": "🌫️",  # Unklar
+        }
+        return weather_emoji.get(weather_condition, "🌫️")  # Default-Emoji für unbekanntes Wetter
+
     if temperature_at_match is not None and weather_condition is not None:
+        weather_emoji = get_weather_emoji(weather_condition)
         st.markdown(f"""
             <div style="background-color: #f8f9fa; padding: 20px; border-radius: 10px; border: 1px solid #ddd;">
                 <h3 style="color: #003366;">Weather at the Match</h3>
                 <p style="font-size: 18px; color: #333333;">
-                    The weather at the match will be <strong style="color: #007bff;">{weather_condition}</strong> 
-                    🌤 with a temperature of <strong style="color: #007bff;">{temperature_at_match}°C</strong> 🌡.
+                    The weather at the match will be <strong style="color: #007bff;">{weather_condition} {weather_emoji}</strong> 
+                    with a temperature of <strong style="color: #007bff;">{temperature_at_match}°C</strong> 🌡.
                 </p>
             </div>
         """, unsafe_allow_html=True)
@@ -272,6 +284,7 @@ if home_team and match_date and match_time:
                 </p>
             </div>
         """, unsafe_allow_html=True)
+
 
 
 
