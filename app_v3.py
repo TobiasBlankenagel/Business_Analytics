@@ -466,6 +466,24 @@ if st.button("🎯 Predict Attendance"):
         )
 
 
+        # Speichere das Diagramm in einen Puffer
+        buf = io.BytesIO()
+        fig.savefig(buf, format="png", bbox_inches="tight")
+        buf.seek(0)
+        encoded_image = base64.b64encode(buf.read()).decode("utf-8")
+
+        # Einbettung des Diagramms mit Rahmen
+        st.markdown(
+            f"""
+            <div style="background-color: #f9f9f9; padding: 20px; border-radius: 10px; border: 1px solid #ddd; 
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+                <h3 style="text-align: center; color: #003366;">Attendance Prediction Details</h3>
+                <img src="data:image/png;base64,{encoded_image}" style="display: block; margin: auto;"/>
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
+
     st.info(weather_status)
 
 
