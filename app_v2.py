@@ -197,27 +197,30 @@ categorical_columns = [
     "Competition", "Matchday", "Home Team", "Away Team", "Weather", "Weekday"
 ]
 
-# Dummy-Encode der kategorischen Variablen
-input_df = pd.get_dummies(input_df, columns=categorical_columns, drop_first=False)
+# Dummy-Encoding der Eingabedaten
+input_df = pd.get_dummies(pd.DataFrame([input_features]), columns=categorical_columns, drop_first=False)
 
-# Fehlende Spalten aus `expected_columns` hinzufügen
+# Fehlende Spalten ergänzen
 for col in expected_columns:
     if col not in input_df.columns:
-        input_df[col] = 0  # Fehlende Dummy-Variablen auf 0 setzen
+        input_df[col] = 0
 
-# Zusätzliche Spalten, die nicht in `expected_columns` sind, entfernen
+# Zusätzliche Spalten entfernen
 input_df = input_df[expected_columns]
 
-# Alle Werte zu numerischen Typen konvertieren
+# Typkonvertierung sicherstellen
 input_df = input_df.astype(float)
 
-# Überprüfung: Sicherstellen, dass alle erwarteten Spalten vorhanden sind
+# Überprüfung auf fehlende Spalten
 missing_columns = [col for col in expected_columns if col not in input_df.columns]
 if missing_columns:
     raise ValueError(f"Fehlende Spalten in den Eingabedaten: {missing_columns}")
 
-# Dataset bereit für die Vorhersage
+# Daten für das Modell bereitstellen
 st.write("Final Input Data for Prediction:", input_df)
+
+
+
 
 # Vorhersage ausführen
 if st.button("Predict Attendance"):
