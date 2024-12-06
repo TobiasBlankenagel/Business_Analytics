@@ -113,89 +113,70 @@ else:
 
 # Matchdaten abrufen
 league_data = pd.read_csv('new_league_data.csv')
+
 # Matchdaten abrufen
 home_team_data = league_data[league_data['Unnamed: 0'] == home_team]
-away_team_data = league_data[league_data['Unnamed: 0'] == away_team]
 
 if home_team_data.empty:
     st.error(f"Home team '{home_team}' not found in the data.")
 else:
     home_team_data = home_team_data.iloc[0]
 
-if away_team_data.empty:
-    st.error(f"Away team '{away_team}' not found in the data.")
+# Wenn Away Team "Unknown" ist, Standardwerte verwenden
+if away_team == "Unknown":
+    st.warning("Away team is 'Unknown'. Using default placeholder values.")
+    ranking_away_team = 999  # Beispiel: 999 als Platzhalter für unbekanntes Ranking
+    goals_scored_away_team = 0
+    goals_conceded_away_team = 0
+    wins_away_team = 0
 else:
-    away_team_data = away_team_data.iloc[0]
+    away_team_data = league_data[league_data['Unnamed: 0'] == away_team]
+    if away_team_data.empty:
+        st.error(f"Away team '{away_team}' not found in the data.")
+    else:
+        away_team_data = away_team_data.iloc[0]
+        ranking_away_team = away_team_data['Ranking']
+        goals_scored_away_team = away_team_data['Goals_Scored_in_Last_5_Games']
+        goals_conceded_away_team = away_team_data['Goals_Conceded_in_Last_5_Games']
+        wins_away_team = away_team_data['Number_of_Wins_in_Last_5_Games']
 
-# Fortfahren, wenn beide Teams vorhanden sind
-if not home_team_data.empty and not away_team_data.empty:
-    # Daten extrahieren und Vorhersage durchführen
+# Fortfahren, wenn Home Team gefunden wurde
+if not home_team_data.empty:
     ranking_home_team = home_team_data['Ranking']
-    ranking_away_team = away_team_data['Ranking']
     goals_scored_home_team = home_team_data['Goals_Scored_in_Last_5_Games']
-    goals_scored_away_team = away_team_data['Goals_Scored_in_Last_5_Games']
     goals_conceded_home_team = home_team_data['Goals_Conceded_in_Last_5_Games']
-    goals_conceded_away_team = away_team_data['Goals_Conceded_in_Last_5_Games']
     wins_home_team = home_team_data['Number_of_Wins_in_Last_5_Games']
-    wins_away_team = away_team_data['Number_of_Wins_in_Last_5_Games']
-else:
-    st.error("Prediction could not be performed due to missing data.")
 
-
-# Features vorbereiten
-input_features = {
-    'Time': match_hour,
-    'Ranking Home Team': home_team_data['Ranking'],
-    'Ranking Away Team': away_team_data['Ranking'],
-    'Temperature (°C)': temperature_at_match if temperature_at_match else 20,
-    'Month': match_date.month,
-    'Day': match_date.day,
-    'Goals Scored in Last 5 Games': home_team_data['Goals_Scored_in_Last_5_Games'],
-    'Goals Conceded in Last 5 Games': home_team_data['Goals_Conceded_in_Last_5_Games'],
-    'Number of Wins in Last 5 Games': home_team_data['Number_of_Wins_in_Last_5_Games'],
-}
-
-# Dummy-coding für Features
-input_data = pd.DataFrame([input_features])
-input_data = pd.get_dummies(input_data)
-
-# Vorhersage
-if st.button("Predict Attendance"):
-    # Berechnung der Features
+    # Beispiel-Features erstellen
     input_features = {
         'Time': match_hour,
-        'Ranking Home Team': home_team_data['Ranking'],
-        'Ranking Away Team': away_team_data['Ranking'],
+        'Ranking Home Team': ranking_home_team,
+        'Ranking Away Team': ranking_away_team,
         'Temperature (°C)': temperature_at_match if temperature_at_match else 20,
         'Month': match_date.month,
         'Day': match_date.day,
-        'Goals Scored in Last 5 Games': home_team_data['Goals_Scored_in_Last_5_Games'],
-        'Goals Conceded in Last 5 Games': home_team_data['Goals_Conceded_in_Last_5_Games'],
-        'Number of Wins in Last 5 Games': home_team_data['Number_of_Wins_in_Last_5_Games'],
-        f'Competition_{competition}': 1,  # Dummy-Encode Wettbewerb
-        f'Matchday_{matchday}' if isinstance(matchday, int) else f'Matchday_{matchday}': 1,  # Matchday-Dummy
-        f'Home Team_{home_team}': 1,  # Home Team Dummy
-        f'Away Team_{away_team}': 1,  # Away Team Dummy
-        f'Weather_{weather_condition}' if weather_condition else 'Weather_Unknown': 1,  # Wetter Dummy
+        'Goals Scored in Last 5 Games': goals_scored_home_team,
+        'Goals Conceded in Last 5 Games': goals_conceded_home_team,
+        'Number of Wins in Last 5 Games': wins_home_team,
     }
 
-    # Konvertiere die Features in einen DataFrame
+    # Dummy-coding vorbereiten
     input_data = pd.DataFrame([input_features])
-
-    # Alle erwarteten Spalten sicherstellen
     expected_columns = model_with_weather.feature_names_in_
+
+    # Fehlende Spalten hinzufügen
     for col in expected_columns:
         if col not in input_data.columns:
-            input_data[col] = 0  # Fehlende Spalten initialisieren
+            input_data[col] = 0
 
     # Zusätzliche Spalten entfernen
     input_data = input_data[expected_columns]
 
-    # Vorhersage durchführen
-    if temperature_at_match is not None:
-        prediction = model_with_weather.predict(input_data)[0]
-    else:
-        prediction = model_without_weather.predict(input_data)[0]
-
-    st.success(f"Predicted Attendance Percentage: {prediction:.2f}%")
-
+    # Vorhersage
+    if st.button("Predict Attendance"):
+        if temperature_at_match is not None:
+            prediction = model_with_weather.predict(input_data)[0]
+        else:
+            prediction = model_without_weather.predict(input_data)[0]
+        
+        st.success(f"Predicted Attendance Percentage: {prediction:.2f}%")
