@@ -27,7 +27,6 @@ st.markdown("🎉⚽ This app predicts stadium attendance.")
 available_home_teams = ['FC Sion', 'FC St. Gallen', 'FC Winterthur', 'FC Zürich',
                         'BSC Young Boys', 'FC Luzern', 'Lausanne-Sport', 'Servette FC',
                         'FC Basel', 'FC Lugano', 'Grasshoppers', 'Yverdon Sport']
-available_away_teams = available_home_teams + ['Unknown']
 available_competitions = ['Super League', 'UEFA Conference League', 'Swiss Cup', 
                           'UEFA Europa League', 'UEFA Champions League']
 
@@ -45,46 +44,41 @@ if competition == "Super League":
 else:
     matchday = st.radio("📋 Match Type:", options=["Group Stage", "Knockout Stage"])
 
-match_date = st.date_input("Match Date:", min_value=datetime.date.today())
-match_time = st.time_input(
-    "Match Time:", value=datetime.time(15, 30), help="Select the match time in HH:MM format"
-)
+match_date = st.date_input("📅 Match Date:", min_value=datetime.date.today())
+match_time = st.time_input("⏰ Match Time:", value=datetime.time(15, 30))
 match_hour = match_time.hour
 
 # Wetterdaten abrufen
-def get_weather_data(lat, lon, date, hour):
-    api_url = f"https://api.open-meteo.com/v1/forecast?latitude={lat}&longitude={lon}&start_date={date}&end_date={date}&hourly=temperature_2m,weathercode&timezone=auto"
+def get_weather_data(latitude, longitude, match_date, match_hour):
+    api_url = (
+        f"https://api.open-meteo.com/v1/forecast?"
+        f"latitude={latitude}&longitude={longitude}&start_date={match_date}&end_date={match_date}"
+        f"&hourly=temperature_2m,weathercode"
+        f"&timezone=auto"
+    )
+
     try:
         response = requests.get(api_url)
         response.raise_for_status()
-        weather_data = response.json()['hourly']
-        temp = weather_data['temperature_2m'][hour]
-        code = weather_data['weathercode'][hour]
+        weather_data = response.json()
+        hourly_data = weather_data['hourly']
+        temperature_at_match = hourly_data['temperature_2m'][match_hour]
+        weather_code_at_match = hourly_data['weathercode'][match_hour]
 
-        # Wetterbedingungen korrekt mappen
-        weather_conditions = {
-            0: "Clear or mostly clear",
-            1: "Partly cloudy",
-            2: "Partly cloudy",
-            3: "Partly cloudy",
-            61: "Rainy",
-            63: "Rainy",
-            65: "Rainy",
-            80: "Rainy",
-            81: "Rainy",
-            82: "Rainy",
-            51: "Drizzle",
-            53: "Drizzle",
-            55: "Drizzle",
-            71: "Snowy",
-            73: "Snowy",
-            75: "Snowy",
-            85: "Snowy",
-            86: "Snowy",
-            77: "Snowy"
-        }
-        condition = weather_conditions.get(code, "Unknown")
-        return temp, condition
+        if weather_code_at_match in [0]:
+            weather_condition = "Clear"
+        elif weather_code_at_match in [1, 2, 3]:
+            weather_condition = "Partly cloudy"
+        elif weather_code_at_match in [61, 63, 65, 80, 81, 82]:
+            weather_condition = "Rainy"
+        elif weather_code_at_match in [51, 53, 55]:
+            weather_condition = "Drizzle"
+        elif weather_code_at_match in [71, 73, 75, 85, 86, 77]:
+            weather_condition = "Snowy"
+        else:
+            weather_condition = "Unknown"
+
+        return temperature_at_match, weather_condition
     except:
         return None, None
 
@@ -112,79 +106,42 @@ if home_team and match_date and match_time:
 else:
     temperature_at_match, weather_condition = None, None
 
-# Anzeige der Wetterdaten
-if temperature_at_match is not None:
-    st.info(f"**Temperature:** {temperature_at_match}°C, **Condition:** {weather_condition}")
-else:
-    st.warning("Weather data unavailable. Default model will be used.")
-
-# Teamdaten laden
-league_data = pd.read_csv('new_league_data.csv')
-
-# Home Team Daten
-home_team_data = league_data[league_data['Unnamed: 0'] == home_team].iloc[0]
-ranking_home_team = home_team_data['Ranking']
-goals_scored_home_team = home_team_data['Goals_Scored_in_Last_5_Games']
-goals_conceded_home_team = home_team_data['Goals_Conceded_in_Last_5_Games']
-wins_home_team = home_team_data['Number_of_Wins_in_Last_5_Games']
-
-# Away Team Daten
-if away_team != "Unknown":
-    away_team_data = league_data[league_data['Unnamed: 0'] == away_team].iloc[0]
-    ranking_away_team = away_team_data['Ranking']
-    goals_scored_away_team = away_team_data['Goals_Scored_in_Last_5_Games']
-    goals_conceded_away_team = away_team_data['Goals_Conceded_in_Last_5_Games']
-    wins_away_team = away_team_data['Number_of_Wins_in_Last_5_Games']
-else:
-    ranking_away_team = 999
-    goals_scored_away_team = 0
-    goals_conceded_away_team = 0
-    wins_away_team = 0
-
-# Stadionkapazitäten
-stadium_capacity = {
-    'FC Sion': 16232,
-    'FC St. Gallen': 20029,
-    'FC Winterthur': 8550,
-    'FC Zürich': 26104,
-    'BSC Young Boys': 31783,
-    'FC Luzern': 16800,
-    'Lausanne-Sport': 12544,
-    'Servette FC': 30084,
-    'FC Basel': 38512,
-    'FC Lugano': 6330,
-    'Grasshoppers': 26104,
-    'Yverdon Sport': 6600
-}
-
-# Features vorbereiten
+# Feature-Vorbereitung
+weekday = match_date.strftime("%A")  # Wochentag
 input_features = {
     'Time': match_hour,
-    'Ranking Home Team': ranking_home_team,
-    'Ranking Away Team': ranking_away_team,
-    'Temperature (°C)': temperature_at_match if temperature_at_match is not None else 20,
+    'Ranking Home Team': 1,  # Beispielwert
+    'Ranking Away Team': 2,  # Beispielwert
+    'Temperature (°C)': temperature_at_match if temperature_at_match else 20,
     'Month': match_date.month,
     'Day': match_date.day,
-    'Goals Scored in Last 5 Games': goals_scored_home_team,
-    'Goals Conceded in Last 5 Games': goals_conceded_home_team,
-    'Number of Wins in Last 5 Games': wins_home_team,
+    'Competition': competition,
+    'Home Team': home_team,
+    'Away Team': away_team,
+    'Weather': weather_condition if weather_condition else "Unknown",
+    'Matchday': matchday,
+    'Weekday': weekday,
 }
 
-# Umwandlung in DataFrame
-input_data = pd.DataFrame([input_features])
+# One-Hot-Encoding
+categorical_columns = ['Competition', 'Home Team', 'Away Team', 'Weather', 'Matchday', 'Weekday']
+encoded_features = pd.get_dummies(pd.DataFrame([input_features]), columns=categorical_columns)
+
+# Fehlende Spalten auffüllen
+expected_columns = model_with_weather.feature_names_in_
+for col in expected_columns:
+    if col not in encoded_features:
+        encoded_features[col] = 0
+encoded_features = encoded_features[expected_columns]
 
 # Vorhersage
 if st.button("🎯 Predict Attendance"):
     if temperature_at_match is not None:
-        prediction_percentage = model_with_weather.predict(input_data)[0]
+        prediction_percentage = model_with_weather.predict(encoded_features)[0]
         weather_status = "Weather data used for prediction."
     else:
-        prediction_percentage = model_without_weather.predict(input_data)[0]
+        prediction_percentage = model_without_weather.predict(encoded_features)[0]
         weather_status = "Weather data unavailable. Prediction made without weather information."
-    
-    max_capacity = stadium_capacity[home_team]
-    predicted_attendance = round(prediction_percentage * max_capacity)
-    
-    st.success(f"🎉 Predicted Attendance Percentage: **{prediction_percentage:.2f}%**")
-    st.info(f"🏟️ Predicted Attendance: **{predicted_attendance}** out of {max_capacity} seats.")
+
+    st.success(f"Predicted Attendance Percentage: {prediction_percentage:.2f}%")
     st.warning(weather_status)
