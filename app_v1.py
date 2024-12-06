@@ -135,9 +135,41 @@ input_data = pd.get_dummies(input_data)
 
 # Vorhersage
 if st.button("Predict Attendance"):
+    # Berechnung der Features
+    input_features = {
+        'Time': match_hour,
+        'Ranking Home Team': home_team_data['Ranking'],
+        'Ranking Away Team': away_team_data['Ranking'],
+        'Temperature (°C)': temperature_at_match if temperature_at_match else 20,
+        'Month': match_date.month,
+        'Day': match_date.day,
+        'Goals Scored in Last 5 Games': home_team_data['Goals_Scored_in_Last_5_Games'],
+        'Goals Conceded in Last 5 Games': home_team_data['Goals_Conceded_in_Last_5_Games'],
+        'Number of Wins in Last 5 Games': home_team_data['Number_of_Wins_in_Last_5_Games'],
+        f'Competition_{competition}': 1,  # Dummy-Encode Wettbewerb
+        f'Matchday_{matchday}' if isinstance(matchday, int) else f'Matchday_{matchday}': 1,  # Matchday-Dummy
+        f'Home Team_{home_team}': 1,  # Home Team Dummy
+        f'Away Team_{away_team}': 1,  # Away Team Dummy
+        f'Weather_{weather_condition}' if weather_condition else 'Weather_Unknown': 1,  # Wetter Dummy
+    }
+
+    # Konvertiere die Features in einen DataFrame
+    input_data = pd.DataFrame([input_features])
+
+    # Alle erwarteten Spalten sicherstellen
+    expected_columns = model_with_weather.feature_names_in_
+    for col in expected_columns:
+        if col not in input_data.columns:
+            input_data[col] = 0  # Fehlende Spalten initialisieren
+
+    # Zusätzliche Spalten entfernen
+    input_data = input_data[expected_columns]
+
+    # Vorhersage durchführen
     if temperature_at_match is not None:
         prediction = model_with_weather.predict(input_data)[0]
     else:
         prediction = model_without_weather.predict(input_data)[0]
 
     st.success(f"Predicted Attendance Percentage: {prediction:.2f}%")
+
