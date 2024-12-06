@@ -381,6 +381,9 @@ team_data = {
 }
 
 
+import matplotlib.pyplot as plt
+import streamlit as st
+
 if st.button("🎯 Predict Attendance"):
     if temperature_at_match is not None:
         prediction = model_with_weather.predict(input_df)[0] * 100
@@ -413,14 +416,31 @@ if st.button("🎯 Predict Attendance"):
         else:
             attendance_status = "Normal attendance ⚖️"
 
-        st.markdown(f"""
-            <div style="background-color: #28a745; padding: 20px; border-radius: 10px; border: 1px solid #ddd; color: white;">
-                <h2 style="text-align: center;">Predicted Attendance: {predicted_attendance:.0f} of {max_capacity} ({prediction:.2f}%) 📊</h2>
-                <h3 style="text-align: center; font-size: 18px; color: white;">{attendance_status}</h3>
-            </div>
-        """, unsafe_allow_html=True)
+        # Fortschrittsbalken erstellen
+        fig, ax = plt.subplots(figsize=(8, 1))
+        ax.barh(
+            y=[0], 
+            width=[predicted_attendance / max_capacity], 
+            color="#28a745", 
+            edgecolor="black"
+        )
+        
+        # Markiere 30. und 70. Perzentil
+        ax.axvline(x=attendance_30th / max_capacity, color="red", linestyle="--", label="30th Percentile")
+        ax.axvline(x=attendance_70th / max_capacity, color="blue", linestyle="--", label="70th Percentile")
+
+        # Styling der Leiste
+        ax.set_xlim(0, 1)
+        ax.set_xticks([0, 0.3, 0.7, 1])
+        ax.set_xticklabels(["0%", "30%", "70%", "100%"])
+        ax.set_yticks([])
+        ax.legend(loc="upper right", frameon=False)
+        ax.set_title(f"Predicted Attendance: {predicted_attendance:.0f} of {max_capacity} ({prediction:.2f}%)")
+
+        st.pyplot(fig)
 
     st.info(weather_status)
+
 
 
     ################### zusätzliche Infos #################################
