@@ -186,9 +186,24 @@ input_features = {
     'Number of Wins in Last 5 Games': wins_home_team,
 }
 
+# Umwandlung in DataFrame
+input_data = pd.DataFrame([input_features])
+
 # Vorhersage
 if st.button("🎯 Predict Attendance"):
-    prediction_percentage = model_with_weather.predict(input_features)[0] if temperature_at_match else model_without_weather.predict(input_features)[0]
+    if temperature_at_match is not None:
+        prediction_percentage = model_with_weather.predict(input_data)[0]
+        weather_status = "Weather data used for prediction."
+    else:
+        prediction_percentage = model_without_weather.predict(input_data)[0]
+        weather_status = "Weather data unavailable. Prediction made without weather information."
+    
+    # Maximal mögliche Zuschauerzahl berechnen
     max_capacity = stadium_capacity[home_team]
     predicted_attendance = round(prediction_percentage * max_capacity)
-    st.success(f"Predicted Attendance: {predicted_attendance}")
+    
+    # Ergebnisse anzeigen
+    st.success(f"🎉 Predicted Attendance Percentage: **{prediction_percentage:.2f}%**")
+    st.info(f"🏟️ Predicted Attendance: **{predicted_attendance}** out of {max_capacity} seats.")
+    st.warning(weather_status)
+
