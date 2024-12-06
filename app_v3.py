@@ -363,6 +363,24 @@ if missing_columns:
 
 ################### Vorhersage durchführen #################################
 
+
+# Dictionary mit den max_capacity, 30. und 70. Perzentil der Attendance
+team_data = {
+    "BSC Young Boys": {"max_capacity": 31783.0, "attendance_30th_percentile": 25282.1, "attendance_70th_percentile": 31120.0},
+    "FC Basel": {"max_capacity": 38512.0, "attendance_30th_percentile": 19527.0, "attendance_70th_percentile": 22666.5},
+    "FC Lugano": {"max_capacity": 6330.0, "attendance_30th_percentile": 2843.5, "attendance_70th_percentile": 3509.6},
+    "FC Luzern": {"max_capacity": 16800.0, "attendance_30th_percentile": 10105.5, "attendance_70th_percentile": 13171.9},
+    "FC Sion": {"max_capacity": 16232.0, "attendance_30th_percentile": 6500.0, "attendance_70th_percentile": 9480.0},
+    "FC St. Gallen": {"max_capacity": 20029.0, "attendance_30th_percentile": 15683.8, "attendance_70th_percentile": 18482.3},
+    "FC Winterthur": {"max_capacity": 8550.0, "attendance_30th_percentile": 5100.0, "attendance_70th_percentile": 8400.0},
+    "FC Zürich": {"max_capacity": 26104.0, "attendance_30th_percentile": 10870.0, "attendance_70th_percentile": 15393.0},
+    "Grasshoppers": {"max_capacity": 26104.0, "attendance_30th_percentile": 4049.6, "attendance_70th_percentile": 5879.0},
+    "Lausanne-Sport": {"max_capacity": 12544.0, "attendance_30th_percentile": 3773.6, "attendance_70th_percentile": 5728.0},
+    "Servette FC": {"max_capacity": 30084.0, "attendance_30th_percentile": 6076.6, "attendance_70th_percentile": 10860.1},
+    "Yverdon Sport": {"max_capacity": 6600.0, "attendance_30th_percentile": 712.6, "attendance_70th_percentile": 2400.0}
+}
+
+
 if st.button("🎯 Predict Attendance"):
     if temperature_at_match is not None:
         prediction = model_with_weather.predict(input_df)[0]
@@ -376,13 +394,34 @@ if st.button("🎯 Predict Attendance"):
         input_df = input_df.drop(columns=[col for col in weather_columns_to_drop if col in input_df.columns])
         prediction = model_without_weather.predict(input_df)[0]
         weather_status = "Weather data unavailable. Prediction made without weather information."
+    
+    # Berechne die absolute Attendance
+    home_team_name = home_team  # Das Home Team
+    team_info = team_data.get(home_team_name, None)
 
-    st.markdown(f"""
-        <div style="background-color: #28a745; padding: 20px; border-radius: 10px; border: 1px solid #ddd; color: white;">
-            <h2 style="text-align: center;">Predicted Attendance: {prediction:.2f}% 📊</h2>
-        </div>
-    """, unsafe_allow_html=True)
+    if team_info:
+        max_capacity = team_info["max_capacity"]
+        predicted_attendance = (prediction / 100) * max_capacity  # Prozent der max_capacity
+        attendance_30th = team_info["attendance_30th_percentile"]
+        attendance_70th = team_info["attendance_70th_percentile"]
+
+        # Berechne den Status der Auslastung
+        if predicted_attendance < attendance_30th:
+            attendance_status = "Low attendance 🚶‍♂️"
+        elif predicted_attendance > attendance_70th:
+            attendance_status = "High attendance 🏟️"
+        else:
+            attendance_status = "Normal attendance ⚖️"
+
+        st.markdown(f"""
+            <div style="background-color: #28a745; padding: 20px; border-radius: 10px; border: 1px solid #ddd; color: white;">
+                <h2 style="text-align: center;">Predicted Attendance: {predicted_attendance:.2f} of {max_capacity} ({prediction:.2f}%) 📊</h2>
+                <h3 style="text-align: center; font-size: 18px; color: white;">{attendance_status}</h3>
+            </div>
+        """, unsafe_allow_html=True)
+
     st.info(weather_status)
+
 
     ################### zusätzliche Infos #################################
 
