@@ -509,6 +509,10 @@ league_table['Highlight'] = league_table['Team'].apply(
     lambda x: 'Home Team' if x == home_team else ('Away Team' if x == away_team else 'None')
 )
 
+# Prüfe, ob die Spalte 'Highlight' korrekt erstellt wurde
+if 'Highlight' not in league_table.columns:
+    st.error("The 'Highlight' column is missing. Please check the code logic.")
+
 # Bedingtes Styling für die Tabelle
 def highlight_teams(row):
     if row['Highlight'] == 'Home Team':  # Zugriff über row['Highlight']
@@ -527,6 +531,7 @@ styled_table = league_table_display.style.apply(highlight_teams, axis=1)
 
 # Verwende Streamlit DataFrame mit Styling ohne Index
 st.dataframe(styled_table, use_container_width=True)
+
 
 
 
