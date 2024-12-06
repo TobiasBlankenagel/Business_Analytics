@@ -383,7 +383,7 @@ team_data = {
 
 if st.button("🎯 Predict Attendance"):
     if temperature_at_match is not None:
-        prediction = model_with_weather.predict(input_df)[0]
+        prediction = model_with_weather.predict(input_df)[0] * 100
         weather_status = "Weather data used for prediction."
     else:
         # Droppen der Wetter-bezogenen Spalten
