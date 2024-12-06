@@ -171,68 +171,105 @@ if not home_team_data.empty:
     # Zusätzliche Spalten entfernen
     input_data = input_data[expected_columns]
 
-    # Vorhersage
-    if st.button("Predict Attendance"):
-        if temperature_at_match is not None:
-            prediction = model_with_weather.predict(input_data)[0]
-        else:
-            prediction = model_without_weather.predict(input_data)[0]
-        
-        st.success(f"Predicted Attendance Percentage: {prediction:.2f}%")
 
 
-# Tabelle mit Rankings und den letzten 5 Spielen
+
+# CSS für benutzerdefiniertes Styling
+st.markdown("""
+<style>
+    .dataframe-table {
+        border: 2px solid #ddd;
+        border-radius: 10px;
+        padding: 10px;
+        margin-bottom: 20px;
+        font-family: Arial, sans-serif;
+    }
+    th {
+        background-color: #f4f4f4;
+        font-weight: bold;
+        color: #333;
+        padding: 10px;
+    }
+    td {
+        padding: 10px;
+        text-align: center;
+    }
+    .highlight-win {
+        background-color: green !important;
+        color: white !important;
+    }
+    .highlight-lose {
+        background-color: red !important;
+        color: white !important;
+    }
+    .highlight-tie {
+        background-color: grey !important;
+        color: white !important;
+    }
+</style>
+""", unsafe_allow_html=True)
+
+# Funktion zur farblichen Darstellung der letzten 5 Spiele
 def color_results(val):
     if val == "Win":
-        return "background-color: green; color: white;"
+        return "highlight-win"
     elif val == "Lose":
-        return "background-color: red; color: white;"
+        return "highlight-lose"
     elif val == "Tie":
-        return "background-color: grey; color: white;"
+        return "highlight-tie"
     return ""  # Keine Farbe für leere Zellen
 
-# Teamstatistiken für Heimteam anzeigen
-if not home_team_data.empty:
-    st.write("### Home Team Statistics")
-    team_stats = {
-        "Ranking": [ranking_home_team],
-        "Goals Scored in Last 5 Games": [goals_scored_home_team],
-        "Goals Conceded in Last 5 Games": [goals_conceded_home_team],
-        "Number of Wins in Last 5 Games": [wins_home_team],
-        "Last 1 Game Result": [home_team_data['Last_1_Game_Result']],
-        "Last 2 Game Result": [home_team_data['Last_2_Game_Result']],
-        "Last 3 Game Result": [home_team_data['Last_3_Game_Result']],
-        "Last 4 Game Result": [home_team_data['Last_4_Game_Result']],
-        "Last 5 Game Result": [home_team_data['Last_5_Game_Result']],
-    }
-    team_stats_df = pd.DataFrame(team_stats)
-    st.dataframe(
-        team_stats_df.style.applymap(color_results, subset=[
-            "Last 1 Game Result", "Last 2 Game Result", 
-            "Last 3 Game Result", "Last 4 Game Result", 
-            "Last 5 Game Result"
-        ])
-    )
+# Nur anzeigen, wenn auf Predict geklickt wird
+if st.button("Predict Attendance"):
+    # Vorhersage
+    if temperature_at_match is not None:
+        prediction = model_with_weather.predict(input_data)[0]
+    else:
+        prediction = model_without_weather.predict(input_data)[0]
 
-# Teamstatistiken für Auswärtsteam anzeigen, wenn nicht "Unknown"
-if away_team != "Unknown" and not away_team_data.empty:
-    st.write("### Away Team Statistics")
-    away_stats = {
-        "Ranking": [ranking_away_team],
-        "Goals Scored in Last 5 Games": [goals_scored_away_team],
-        "Goals Conceded in Last 5 Games": [goals_conceded_away_team],
-        "Number of Wins in Last 5 Games": [wins_away_team],
-        "Last 1 Game Result": [away_team_data['Last_1_Game_Result']],
-        "Last 2 Game Result": [away_team_data['Last_2_Game_Result']],
-        "Last 3 Game Result": [away_team_data['Last_3_Game_Result']],
-        "Last 4 Game Result": [away_team_data['Last_4_Game_Result']],
-        "Last 5 Game Result": [away_team_data['Last_5_Game_Result']],
+    st.success(f"Predicted Attendance Percentage: {prediction:.2f}%")
+
+    # Tabelle mit Rankings und den letzten 5 Spielen für alle Teams
+    st.write("### Team Rankings and Performance")
+
+    # Daten vorbereiten
+    league_data_display = league_data.copy()
+    league_data_display = league_data_display.rename(columns={
+        "Unnamed: 0": "Team",
+        "Ranking": "Ranking",
+        "Goals_Scored_in_Last_5_Games": "Goals Scored",
+        "Goals_Conceded_in_Last_5_Games": "Goals Conceded",
+        "Number_of_Wins_in_Last_5_Games": "Wins",
+        "Last_1_Game_Result": "Last 1 Game",
+        "Last_2_Game_Result": "Last 2 Game",
+        "Last_3_Game_Result": "Last 3 Game",
+        "Last_4_Game_Result": "Last 4 Game",
+        "Last_5_Game_Result": "Last 5 Game",
+    })
+
+    # Farbliche Darstellung
+    styled_table = league_data_display.style.applymap(
+        color_results, subset=["Last 1 Game", "Last 2 Game", "Last 3 Game", "Last 4 Game", "Last 5 Game"]
+    ).set_table_attributes('class="dataframe-table"')
+
+    st.dataframe(styled_table)
+
+    # Spezifische Statistiken für Heim- und Auswärtsteams
+    st.write(f"### {home_team} Statistics")
+    home_stats = {
+        "Ranking": [ranking_home_team],
+        "Goals Scored": [goals_scored_home_team],
+        "Goals Conceded": [goals_conceded_home_team],
+        "Wins": [wins_home_team],
     }
-    away_stats_df = pd.DataFrame(away_stats)
-    st.dataframe(
-        away_stats_df.style.applymap(color_results, subset=[
-            "Last 1 Game Result", "Last 2 Game Result", 
-            "Last 3 Game Result", "Last 4 Game Result", 
-            "Last 5 Game Result"
-        ])
-    )
+    st.table(pd.DataFrame(home_stats))
+
+    if away_team != "Unknown":
+        st.write(f"### {away_team} Statistics")
+        away_stats = {
+            "Ranking": [ranking_away_team],
+            "Goals Scored": [goals_scored_away_team],
+            "Goals Conceded": [goals_conceded_away_team],
+            "Wins": [wins_away_team],
+        }
+        st.table(pd.DataFrame(away_stats))
