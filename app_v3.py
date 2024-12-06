@@ -459,6 +459,7 @@ if not home_team_data.empty:
         ])
     )
 
+
 # Teamstatistiken für Auswärtsteam anzeigen, wenn nicht "Unknown"
 if away_team != "Unknown" and not away_team_data.empty:
     st.write("### Away Team Statistics")
