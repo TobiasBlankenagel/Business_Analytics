@@ -504,26 +504,6 @@ league_table = league_data.groupby('Unnamed: 0').agg(
 # Sortiere die Tabelle nach dem Ranking
 league_table = league_table.sort_values(by='Ranking', ascending=True)
 
-# Markiere Home- und Away-Team
-league_table['Highlight'] = league_table['Team'].apply(
-    lambda x: 'Home Team' if x == home_team else ('Away Team' if x == away_team else 'None')
-)
-
-# Prüfe, ob die Spalte 'Highlight' korrekt erstellt wurde
-if 'Highlight' not in league_table.columns:
-    st.error("The 'Highlight' column is missing. Please check the code logic.")
-
-# Bedingtes Styling für die Tabelle
-def highlight_teams(row):
-    if row['Highlight'] == 'Home Team':  # Zugriff über row['Highlight']
-        return ['background-color: #28a745; color: white'] * len(row)  # Heimteam grün hervorheben
-    elif row['Highlight'] == 'Away Team':
-        return ['background-color: #007bff; color: white'] * len(row)  # Auswärtsteam blau hervorheben
-    else:
-        return [''] * len(row)  # Keine Hervorhebung
-
-# Entferne die Highlight-Spalte und den Index
-league_table_display = league_table.drop(columns=['Highlight']).reset_index(drop=True)
 
 # Tabelle anzeigen mit verbessertem Layout
 st.markdown("### League Table")
