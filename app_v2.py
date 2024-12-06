@@ -102,10 +102,34 @@ def get_weather_data(lat, lon, date, hour):
         weather_data = response.json()['hourly']
         temp = weather_data['temperature_2m'][hour]
         code = weather_data['weathercode'][hour]
-        condition = {0: "Clear", 1: "Partly cloudy", 61: "Rainy", 71: "Snowy"}.get(code, "Unknown")
+
+        # Wetterbedingungen korrekt mappen
+        weather_conditions = {
+            0: "Clear or mostly clear",
+            1: "Partly cloudy",
+            2: "Partly cloudy",
+            3: "Partly cloudy",
+            61: "Rainy",
+            63: "Rainy",
+            65: "Rainy",
+            80: "Rainy",
+            81: "Rainy",
+            82: "Rainy",
+            51: "Drizzle",
+            53: "Drizzle",
+            55: "Drizzle",
+            71: "Snowy",
+            73: "Snowy",
+            75: "Snowy",
+            85: "Snowy",
+            86: "Snowy",
+            77: "Snowy"
+        }
+        condition = weather_conditions.get(code, "Unknown")
         return temp, condition
-    except:
+    except Exception:
         return None, None
+
 
 coordinates = {
     'FC Sion': {'latitude': 46.233333, 'longitude': 7.376389},
