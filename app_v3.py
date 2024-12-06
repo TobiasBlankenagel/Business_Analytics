@@ -28,11 +28,7 @@ st.set_page_config(
 st.markdown("""
     <style>
 
-    .stInfo {
-        color: #17a2b8;
-        font-size: 18px;
-        text-align: center;
-    }
+
 
     /* Design der DataFrame-Tabellen */
     .stDataFrame {
