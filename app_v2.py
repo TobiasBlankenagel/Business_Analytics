@@ -31,14 +31,18 @@ available_away_teams = available_home_teams + ['Unknown']
 available_competitions = ['Super League', 'UEFA Conference League', 'Swiss Cup', 
                           'UEFA Europa League', 'UEFA Champions League']
 
+# Dynamische Liste der Auswärtsteams erstellen (ohne Heimteam)
+def get_filtered_away_teams(home_team, available_teams):
+    return [team for team in available_teams if team != home_team] + ['Unknown']
+
 # Eingabe: Home Team und Wettbewerb
 col1, col2 = st.columns(2)
 with col1:
     home_team = st.selectbox("🏠 Home Team:", available_home_teams)
     competition = st.selectbox("🏆 Competition:", available_competitions)
 
-# Dynamische Liste der Auswärtsteams erstellen (ohne Heimteam)
-filtered_away_teams = [team for team in available_home_teams if team != home_team] + ['Unknown']
+# Dynamische Filterung der Auswärtsteams basierend auf der Auswahl des Heimteams
+filtered_away_teams = get_filtered_away_teams(home_team, available_home_teams)
 
 # Eingabe: Away Team und Matchday/Modus
 with col2:
@@ -49,6 +53,9 @@ with col2:
         away_team = st.selectbox("🛫 Away Team:", filtered_away_teams)
         matchday = st.radio("📋 Match Type:", options=["Group Stage", "Knockout Stage"])
 
+# Optional: Hinweis anzeigen, wenn keine gültige Auswahl möglich ist
+if away_team == home_team:
+    st.warning("The home team and away team cannot be the same. Please select a different away team.")
 
 # Datum und Uhrzeit
 match_date = st.date_input("📅 Match Date:", min_value=datetime.date.today())
