@@ -113,8 +113,34 @@ else:
 
 # Matchdaten abrufen
 league_data = pd.read_csv('new_league_data.csv')
-home_team_data = league_data[league_data['Unnamed: 0'] == home_team].iloc[0]
-away_team_data = league_data[league_data['Unnamed: 0'] == away_team].iloc[0]
+# Matchdaten abrufen
+home_team_data = league_data[league_data['Unnamed: 0'] == home_team]
+away_team_data = league_data[league_data['Unnamed: 0'] == away_team]
+
+if home_team_data.empty:
+    st.error(f"Home team '{home_team}' not found in the data.")
+else:
+    home_team_data = home_team_data.iloc[0]
+
+if away_team_data.empty:
+    st.error(f"Away team '{away_team}' not found in the data.")
+else:
+    away_team_data = away_team_data.iloc[0]
+
+# Fortfahren, wenn beide Teams vorhanden sind
+if not home_team_data.empty and not away_team_data.empty:
+    # Daten extrahieren und Vorhersage durchführen
+    ranking_home_team = home_team_data['Ranking']
+    ranking_away_team = away_team_data['Ranking']
+    goals_scored_home_team = home_team_data['Goals_Scored_in_Last_5_Games']
+    goals_scored_away_team = away_team_data['Goals_Scored_in_Last_5_Games']
+    goals_conceded_home_team = home_team_data['Goals_Conceded_in_Last_5_Games']
+    goals_conceded_away_team = away_team_data['Goals_Conceded_in_Last_5_Games']
+    wins_home_team = home_team_data['Number_of_Wins_in_Last_5_Games']
+    wins_away_team = away_team_data['Number_of_Wins_in_Last_5_Games']
+else:
+    st.error("Prediction could not be performed due to missing data.")
+
 
 # Features vorbereiten
 input_features = {
