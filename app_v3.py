@@ -241,7 +241,6 @@ if home_team and match_date and match_time:
                 <h3 style="color: #003366;">Weather at the Match</h3>
                 <p style="font-size: 18px; color: #333333;">
                     The temperature at the match will be <strong style="color: #007bff;">{temperature_at_match}°C</strong> 🌡.
-                    Unfortunately, detailed weather conditions are unavailable. 😞
                 </p>
             </div>
         """, unsafe_allow_html=True)
