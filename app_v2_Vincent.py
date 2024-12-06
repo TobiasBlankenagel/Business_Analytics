@@ -5,6 +5,20 @@ import pickle
 import requests
 import datetime
 
+PAGES = {
+    f" Welcome": None,
+    f" Feature Analysis": None,
+    f"Attendance Prediction": None
+}
+
+def welcome_page():
+
+    #Setting up our logo in the middle
+    logo_path = "photo"
+    col1, col2, col3 = st.columns([1, 1, 1])
+    with col2:
+        st.image(logo_path, width=250)
+
 # Modelle laden
 def load_model(model_path):
     with open(model_path, 'rb') as file:
