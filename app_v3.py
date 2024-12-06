@@ -27,22 +27,6 @@ st.set_page_config(
 
 st.markdown("""
     <style>
-    /* Hintergrundfarbe der gesamten Seite */
-    body {
-        background-color: #f4f7fc;
-        font-family: 'Arial', sans-serif;
-    }
-
-    /* Titel und Hauptüberschrift */
-    h1 {
-        color: #003366;
-        text-align: center;
-        font-size: 40px;
-        font-weight: bold;
-    }
-
-
-
 
 
     /* Farben für Vorhersage und Info */
