@@ -129,7 +129,7 @@ st.markdown("""
     /* Bereich für die Eingabefelder */
     .stSelectbox, .stSlider, .stRadio, .stButton, .stDateInput, .stTimeInput {
         margin-top: 10px;
-        margin-bottom: 10px;
+        margin-bottom: 0px;
     }
 
     .stSelectbox, .stSlider, .stRadio, .stButton {
