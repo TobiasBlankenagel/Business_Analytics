@@ -528,6 +528,8 @@ league_table = league_table.rename(columns={
     "Last_5_Games_Icons": "📊 Last 5 Games"
 })
 
+
+
 # CSS für die Tabelle
 table_css = """
 <style>
@@ -563,13 +565,13 @@ table_css = """
         color: #555;
     }
     .highlight-home {
-        background-color: rgba(0, 123, 255, 0.7);
-        color: white;
-        font-weight: bold;
+        background-color: rgba(0, 123, 255, 0.7) !important;
+        color: white !important;
+        font-weight: bold !important;
     }
     .highlight-away {
-        background-color: rgba(0, 123, 255, 0.2);
-        color: black;
+        background-color: rgba(0, 123, 255, 0.2) !important;
+        color: black !important;
     }
 </style>
 """
