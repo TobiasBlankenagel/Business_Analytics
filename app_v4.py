@@ -349,6 +349,8 @@ for col in expected_columns:
 # Display the missing columns in Streamlit
 if missing_columns:
     st.warning(f"The following columns were missing and filled with zeros: {', '.join(missing_columns)}")
+else:
+    st.write("cool")
 
 # Aufbau abgleichen
 input_df = input_df[expected_columns]
