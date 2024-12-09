@@ -68,6 +68,7 @@ st.markdown("""
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         border: none;
         cursor: pointer;
+        margin-bottom: 20px;
     }
 
     /* Hover-Effekt für den Button */
