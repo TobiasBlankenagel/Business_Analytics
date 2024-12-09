@@ -44,6 +44,10 @@ st.markdown("""
         box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     }
 
+    .stExpander details {
+        border-color: #ffffff;
+    }
+
     .stDateInput, .stTimeInput {
         margin-top: 5px;
         border-radius: 12px;
