@@ -596,6 +596,31 @@ styled_table_html = table_css + table_html
 ################### Toggle Button for League Table #################################
 
 # Create an expander for the league table
+
+st.markdown("""
+    <style>
+    /* Style for Streamlit expander */
+    .streamlit-expanderHeader {
+        font-size: 18px;
+        font-weight: bold;
+        color: #003366;
+        padding: 14px 20px;
+        border-radius: 12px;
+        background-color: #ffffff;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        margin-bottom: 15px;
+    }
+    .streamlit-expander {
+        border: 1px solid #ddd;
+        border-radius: 12px;
+        margin-bottom: 20px;
+        background-color: #f9f9f9;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+    </style>
+""", unsafe_allow_html=True)
+
+
 with st.expander("🏆 Show League Table"):
     # Render the styled HTML table inside the expander
     st.markdown(styled_table_html, unsafe_allow_html=True)
