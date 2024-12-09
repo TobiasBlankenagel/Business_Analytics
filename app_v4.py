@@ -204,17 +204,19 @@ if home_team and match_date and match_time:
     longitude = coordinates['longitude']
     temperature_at_match, weather_condition = get_weather_data(latitude, longitude, match_date, match_hour)
 
+# Weather display and emoji mapping logic
 def get_weather_emoji(weather_condition):
     weather_emoji = {
-        "Clear or mostly clear": "☀️",  # Sonne
-        "Partly cloudy": "⛅",  # Teilweise Wolken
-        "Rainy": "🌧️",  # Regen
-        "Drizzle": "🌦️",  # Nieselregen
-        "Snowy": "❄️",  # Schnee
-        "Unknown": "🌫️",  # Unklar
+        "Clear or mostly clear": "☀️", 
+        "Partly cloudy": "⛅", 
+        "Rainy": "🌧️", 
+        "Drizzle": "🌦️", 
+        "Snowy": "❄️",  
+        "Unknown": "🌫️",  
     }
     return weather_emoji.get(weather_condition, "🌫️")
 
+# Display weather data in a styled container
 if temperature_at_match is not None and weather_condition is not None and weather_condition != "Unknown":
     weather_emoji = get_weather_emoji(weather_condition)
     st.markdown(f"""
@@ -246,25 +248,23 @@ else:
     """, unsafe_allow_html=True)
 
 
+################### Rankings and Team Data Processing ##############################
 
-
-
-
-
-################### Rankings usw. mittels Heimteam abrufen #################################
-
+# Load league data from a CSV file
 league_data = pd.read_csv('new_league_data.csv')
 
+# Retrieve data for the selected home team
 home_team_data = league_data[league_data['Team'] == home_team]
 
+# Handle the case where the home team is not found in the data
 if home_team_data.empty:
     st.error(f"Home team '{home_team}' not found in the data.")
 else:
     home_team_data = home_team_data.iloc[0]
 
-# Wenn Away Team "Unknown" ist, Standardwerte verwenden
+# Handle the away team data; assign default values if "Unknown"
 if away_team == "Unknown":
-    ranking_away_team = 0 
+    ranking_away_team = 0  # Default ranking for unknown away team
 else:
     away_team_data = league_data[league_data['Team'] == away_team]
     if away_team_data.empty:
@@ -276,8 +276,7 @@ else:
         goals_conceded_away_team = away_team_data['Goals_Conceded_in_Last_5_Games']
         wins_away_team = away_team_data['Number_of_Wins_in_Last_5_Games']
 
-
-# Fortfahren, wenn Home Team gefunden wurde
+# Retrieve relevant statistics for the home team if the data exists
 if not home_team_data.empty:
     ranking_home_team = home_team_data['Ranking']
     goals_scored_home_team = home_team_data['Goals_Scored_in_Last_5_Games']
@@ -285,9 +284,9 @@ if not home_team_data.empty:
     wins_home_team = home_team_data['Number_of_Wins_in_Last_5_Games']
 
 
+################### Preparing Input Data for the Model ##############################
 
-################### Input Daten vorbereiten fürs Modell #################################
-
+# Define the input features for the prediction model
 input_features = {
     'Competition': competition,
     'Matchday': matchday,
@@ -298,7 +297,7 @@ input_features = {
     'Ranking Away Team': ranking_away_team,
     'Weather': weather_condition,
     'Temperature (°C)': temperature_at_match,
-    'Weekday': match_date.strftime("%A"),  # Wochentagname
+    'Weekday': match_date.strftime("%A"),
     'Month': match_date.month,
     'Day': match_date.day,
     'Goals Scored in Last 5 Games': goals_scored_home_team,
@@ -306,10 +305,10 @@ input_features = {
     'Number of Wins in Last 5 Games': wins_home_team,
 }
 
-# Erstelle DataFrame aus input_features
+# Convert the input features into a DataFrame
 input_df = pd.DataFrame([input_features])
 
-# Erwartete Spalten (Modellstruktur)
+# List of expected columns for the model
 expected_columns = [
     'Time', 'Ranking Home Team', 'Ranking Away Team', 'Temperature (°C)', 'Month', 'Day',
     'Goals Scored in Last 5 Games', 'Goals Conceded in Last 5 Games', 'Number of Wins in Last 5 Games',
@@ -333,19 +332,23 @@ expected_columns = [
     'Weekday_Tuesday', 'Weekday_Wednesday'
 ]
 
-# Dummy-Encode für die kategorischen Spalten
+# Perform one-hot encoding for categorical columns
 categorical_columns = [
     "Competition", "Matchday", "Home Team", "Away Team", "Weather", "Weekday"
 ]
 
-# Dummy-Encoding der Eingabedaten
+# Apply one-hot encoding to input DataFrame
 input_df = pd.get_dummies(pd.DataFrame([input_features]), columns=categorical_columns, drop_first=False)
 
 
-# Fehlende Spalten ergänzen
+# Add any missing columns as zeros
 for col in expected_columns:
     if col not in input_df.columns:
         input_df[col] = 0
+
+# Display the missing columns in Streamlit
+if missing_columns:
+    st.warning(f"The following columns were missing and filled with zeros: {', '.join(missing_columns)}")
 
 # Aufbau abgleichen
 input_df = input_df[expected_columns]
