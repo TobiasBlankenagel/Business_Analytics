@@ -596,24 +596,8 @@ styled_table_html = table_css + table_html
 ################### Toggle Button for League Table #################################
 
 # Create an expander for the league table
+
 with st.expander("🏆 Show League Table"):
-    # Add custom styling and container for the league table
-    st.markdown("""
-    <div style="
-        background-color: #ffffff;
-        padding: 20px;
-        border-radius: 12px;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-        border: 1px solid #ddd;
-        margin-top: 10px;
-    ">
-    <h3 style="color: #003366; text-align: center;">🏆 League Table</h3>
-    """, unsafe_allow_html=True)
-
-    # Render the styled HTML table inside the container
+    # Render the styled HTML table inside the expander
     st.markdown(styled_table_html, unsafe_allow_html=True)
-
-    # Close the div container
-    st.markdown("</div>", unsafe_allow_html=True)
-
 
