@@ -418,60 +418,93 @@ if st.button("🎯 Predict Attendance"):
         # Display attendance status in Streamlit
         st.success(f"Attendance Status: {attendance_status}")
 
-        
+
         # Create a horizontal bar chart to visualize attendance prediction
-        fig, ax = plt.subplots(figsize=(8, 1.8))  # Adjusted figure size to fit the layout better
+        fig, ax = plt.subplots(figsize=(8, 2))  # Adjust figure size for a sleek layout
+
+        # Add a background rectangle for rounded edges
+        background_rect = patches.FancyBboxPatch(
+            (0, -0.25),  # Position the background
+            1, 1,  # Width and height of the background
+            boxstyle="round,pad=0.2",  # Rounded corners
+            facecolor="#f9f9f9",  # Match the background color of the Streamlit app
+            edgecolor="#ddd",  # Subtle border color
+            linewidth=1.5,
+            zorder=0  # Place it behind everything
+        )
+        ax.add_patch(background_rect)
 
         # Plot the horizontal bar with rounded edges
         ax.barh(
             y=[0], 
             width=[predicted_attendance / max_capacity], 
             height=0.5, 
-            color="#28a745", 
-            edgecolor="none", 
-            alpha=0.9, 
+            color="#28a745",  # Green for attendance
+            edgecolor="none",  # No hard edges for the bar
+            alpha=0.95, 
+            zorder=2,  # Keep the bar above the background
             align="center"
         )
 
-        # Add vertical lines for attendance thresholds (30th and 70th percentiles)
-        ax.axvline(x=attendance_30th / max_capacity, color="red", linestyle="--", linewidth=1.2, label="30th Percentile")
-        ax.axvline(x=attendance_70th / max_capacity, color="blue", linestyle="--", linewidth=1.2, label="70th Percentile")
+        # Add vertical lines for attendance thresholds with annotations
+        ax.axvline(x=attendance_30th / max_capacity, color="red", linestyle="--", linewidth=1.5, label="30th Percentile", zorder=3)
+        ax.text(
+            attendance_30th / max_capacity, 0.1, "30th", 
+            color="red", fontsize=10, ha="center", va="bottom", zorder=4
+        )
+        ax.axvline(x=attendance_70th / max_capacity, color="blue", linestyle="--", linewidth=1.5, label="70th Percentile", zorder=3)
+        ax.text(
+            attendance_70th / max_capacity, 0.1, "70th", 
+            color="blue", fontsize=10, ha="center", va="bottom", zorder=4
+        )
 
-        # Customize chart aesthetics for a rounded, minimal look
-        fig.patch.set_facecolor("#f9f9f9")  # Match the Streamlit app background
-        ax.set_facecolor("#ffffff")  # Chart area white for contrast
-        ax.spines['top'].set_visible(False)  # Remove top spine
-        ax.spines['right'].set_visible(False)  # Remove right spine
-        ax.spines['left'].set_visible(False)  # Remove left spine
-        ax.spines['bottom'].set_color("#ddd")  # Subtle bottom border
+        # Add a subtle shadow below the bar for depth
+        ax.barh(
+            y=[0], 
+            width=[predicted_attendance / max_capacity], 
+            height=0.5, 
+            color="gray", 
+            alpha=0.2, 
+            zorder=1,  # Place it behind the bar
+            align="center"
+        )
 
-        # Configure x-axis
-        ax.set_xlim(0, 1)  # Bar spans 0% to 100%
-        ax.set_xticks([0, 0.25, 0.5, 0.75, 1])  # Ticks at 0%, 25%, etc.
-        ax.set_xticklabels(["0%", "25%", "50%", "75%", "100%"], fontsize=10, color="#555")  # Smaller font size and gray text
-        ax.set_yticks([])  # Remove y-axis ticks
-        ax.tick_params(axis="x", colors="#555")  # Subtle axis ticks
+        # Customize chart aesthetics
+        ax.set_xlim(0, 1)  # Ensure the bar spans from 0% to 100%
+        ax.set_ylim(-0.5, 0.5)  # Center the bar vertically
+        ax.set_xticks([0, 0.25, 0.5, 0.75, 1])  # Define tick positions
+        ax.set_xticklabels(["0%", "25%", "50%", "75%", "100%"], fontsize=10, color="#555")  # Small, subtle labels
+        ax.set_yticks([0])  # Add a single y-axis tick for clarity
+        ax.set_yticklabels(["Attendance"], fontsize=10, color="#555")  # Label the y-axis
+        ax.tick_params(axis="y", length=0)  # Remove tick lines from the y-axis
+        ax.tick_params(axis="x", length=0, colors="#555")  # Subtle ticks on the x-axis
 
-        # Add a legend below the bar
+        # Remove chart spines for a clean look
+        ax.spines["top"].set_visible(False)
+        ax.spines["right"].set_visible(False)
+        ax.spines["left"].set_visible(False)
+        ax.spines["bottom"].set_color("#ddd")  # Subtle bottom border
+
+        # Add a legend below the chart
         ax.legend(
             loc="upper center", 
-            bbox_to_anchor=(0.5, -0.4),  # Position legend below chart
+            bbox_to_anchor=(0.5, -0.6), 
             ncol=2, 
-            fontsize=10, 
+            fontsize=9, 
             frameon=False
         )
 
-        # Add a title with smaller font size and subtle color
+        # Add a title for the chart
         ax.set_title(
             f"Predicted Attendance: {predicted_attendance:.0f} of {max_capacity} ({prediction:.2f}%)", 
-            fontsize=12,  # Reduced font size
-            pad=10,  # Smaller padding
-            color="#333333"  # Dark gray text for better readability
+            fontsize=12,
+            pad=20,
+            color="#333333"
         )
 
         # Save the chart to a buffer for embedding into Streamlit
         buf = io.BytesIO()
-        fig.savefig(buf, format="png", bbox_inches="tight", dpi=150)  # High resolution for clarity
+        fig.savefig(buf, format="png", bbox_inches="tight", dpi=150)  # High resolution for crisp visuals
         buf.seek(0)
         encoded_image = base64.b64encode(buf.read()).decode("utf-8")
 
