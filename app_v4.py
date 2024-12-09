@@ -346,6 +346,7 @@ input_df = pd.get_dummies(pd.DataFrame([input_features]), columns=categorical_co
 for col in expected_columns:
     if col not in input_df.columns:
         input_df[col] = 0
+        st.write(col)
 
 # Aufbau abgleichen
 input_df = input_df[expected_columns]
@@ -358,6 +359,8 @@ input_df = input_df.astype(float)
 missing_columns = [col for col in expected_columns if col not in input_df.columns]
 if missing_columns:
     raise ValueError(f"Fehlende Spalten in den Eingabedaten: {missing_columns}")
+else:
+    st.write("cool")
 
 
 
