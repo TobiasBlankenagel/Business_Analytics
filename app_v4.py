@@ -612,5 +612,5 @@ st.markdown("""
 
 with st.expander("🏆 Show League Table"):
     # Render the styled HTML table inside the expander
-    st.markdown(styled_table_html, unsafe_allow_html=True)
+    st.markdown("</div>", styled_table_html, unsafe_allow_html=True)
 
