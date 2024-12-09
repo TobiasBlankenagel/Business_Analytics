@@ -480,7 +480,6 @@ if st.button("🎯 Predict Attendance"):
             unsafe_allow_html=True
         )
 
-
     st.info(weather_status)
 
 
