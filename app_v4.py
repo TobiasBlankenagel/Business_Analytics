@@ -418,115 +418,70 @@ if st.button("🎯 Predict Attendance"):
         # Display attendance status in Streamlit
         st.success(f"Attendance Status: {attendance_status}")
 
-
-        import matplotlib.patches as patches
-
         # Create a horizontal bar chart to visualize attendance prediction
-        fig, ax = plt.subplots(figsize=(8, 2))  # Adjust figure size for a sleek layout
-
-        # Add a background rectangle for rounded edges
-        background_rect = patches.FancyBboxPatch(
-            (0, -0.25),  # Position the background
-            1, 1,  # Width and height of the background
-            boxstyle="round,pad=0.2",  # Rounded corners
-            facecolor="#f9f9f9",  # Match the background color of the Streamlit app
-            edgecolor="#ddd",  # Subtle border color
-            linewidth=1.5,
-            zorder=0  # Place it behind everything
-        )
-        ax.add_patch(background_rect)
-
-        # Plot the horizontal bar with rounded edges
+        fig, ax = plt.subplots(figsize=(10, 2.5))  # Adjust figure size for better integration
         ax.barh(
             y=[0], 
             width=[predicted_attendance / max_capacity], 
-            height=0.5, 
-            color="#28a745",  # Green for attendance
-            edgecolor="none",  # No hard edges for the bar
-            alpha=0.95, 
-            zorder=2,  # Keep the bar above the background
-            align="center"
+            height=0.5,  # Slightly thinner bar for a sleek look
+            color="#28a745", 
+            edgecolor="black",
+            alpha=0.8  # Add transparency for softer appearance
         )
 
-        # Add vertical lines for attendance thresholds with annotations
-        ax.axvline(x=attendance_30th / max_capacity, color="red", linestyle="--", linewidth=1.5, label="30th Percentile", zorder=3)
-        ax.text(
-            attendance_30th / max_capacity, 0.1, "30th", 
-            color="red", fontsize=10, ha="center", va="bottom", zorder=4
-        )
-        ax.axvline(x=attendance_70th / max_capacity, color="blue", linestyle="--", linewidth=1.5, label="70th Percentile", zorder=3)
-        ax.text(
-            attendance_70th / max_capacity, 0.1, "70th", 
-            color="blue", fontsize=10, ha="center", va="bottom", zorder=4
-        )
+        # Add vertical lines for attendance thresholds
+        ax.axvline(x=attendance_30th / max_capacity, color="red", linestyle="--", label="30th Percentile", linewidth=1.2)
+        ax.axvline(x=attendance_70th / max_capacity, color="blue", linestyle="--", label="70th Percentile", linewidth=1.2)
 
-        # Add a subtle shadow below the bar for depth
-        ax.barh(
-            y=[0], 
-            width=[predicted_attendance / max_capacity], 
-            height=0.5, 
-            color="gray", 
-            alpha=0.2, 
-            zorder=1,  # Place it behind the bar
-            align="center"
-        )
+        # Customize the chart background and frame
+        fig.patch.set_facecolor("#f8f9fa")  # Match Streamlit's light gray background
+        ax.set_facecolor("#ffffff")  # Set chart background to white
+        ax.spines['top'].set_visible(False)  
+        ax.spines['right'].set_visible(False) 
 
-        # Customize chart aesthetics
-        ax.set_xlim(0, 1)  # Ensure the bar spans from 0% to 100%
-        ax.set_ylim(-0.5, 0.5)  # Center the bar vertically
+        # Configure axis limits and labels
+        ax.set_xlim(0, 1) 
         ax.set_xticks([0, 0.25, 0.5, 0.75, 1])  # Define tick positions
-        ax.set_xticklabels(["0%", "25%", "50%", "75%", "100%"], fontsize=10, color="#555")  # Small, subtle labels
-        ax.set_yticks([0])  # Add a single y-axis tick for clarity
-        ax.set_yticklabels(["Attendance"], fontsize=10, color="#555")  # Label the y-axis
-        ax.tick_params(axis="y", length=0)  # Remove tick lines from the y-axis
-        ax.tick_params(axis="x", length=0, colors="#555")  # Subtle ticks on the x-axis
+        ax.set_xticklabels(["0%", "25%", "50%", "75%", "100%"], fontsize=12) 
+        ax.set_yticks([])
 
-        # Remove chart spines for a clean look
-        ax.spines["top"].set_visible(False)
-        ax.spines["right"].set_visible(False)
-        ax.spines["left"].set_visible(False)
-        ax.spines["bottom"].set_color("#ddd")  # Subtle bottom border
-
-        # Add a legend below the chart
+        # Add a legend and adjust its position
         ax.legend(
-            loc="upper center", 
-            bbox_to_anchor=(0.5, -0.6), 
+            loc="lower center", 
+            bbox_to_anchor=(0.5, -0.4),  # Move the legend below the chart
             ncol=2, 
-            fontsize=9, 
-            frameon=False
+            fontsize=12,
+            frameon=False 
         )
 
-        # Add a title for the chart
+        # Add a clear title for the chart
         ax.set_title(
             f"Predicted Attendance: {predicted_attendance:.0f} of {max_capacity} ({prediction:.2f}%)", 
-            fontsize=12,
-            pad=20,
-            color="#333333"
+            fontsize=14,
+            pad=15,
+            color="#333333" 
         )
 
-        # Save the chart to a buffer for embedding into Streamlit
+        # Save the chart to a buffer for embedding
         buf = io.BytesIO()
-        fig.savefig(buf, format="png", bbox_inches="tight", dpi=150)  # High resolution for crisp visuals
+        fig.savefig(buf, format="png", bbox_inches="tight", dpi=100) 
         buf.seek(0)
         encoded_image = base64.b64encode(buf.read()).decode("utf-8")
 
-        # Embed the matplotlib chart into Streamlit as an image
+        # Embed the chart into the Streamlit app
         st.markdown(
             f"""
-            <div style="background-color: #f9f9fa; padding: 15px; border-radius: 15px; border: 1px solid #ddd; 
+            <div style="background-color: #f9f9fa; padding: 20px; border-radius: 10px; border: 1px solid #ddd; 
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
                 <h3 style="text-align: center; color: #003366;">Attendance Prediction Details</h3>
-                <img src="data:image/png;base64,{encoded_image}" style="display: block; margin: auto; border-radius: 10px;"/>
+                <img src="data:image/png;base64,{encoded_image}" style="display: block; margin: auto;"/>
             </div>
             """,
             unsafe_allow_html=True
         )
 
-        # Display the weather status below the chart
-        st.info(weather_status)
 
-
-
+    st.info(weather_status)
 
 
 ################### Additional Information: League Table #################################
