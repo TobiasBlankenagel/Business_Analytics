@@ -122,7 +122,7 @@ with col2:
     if competition == "Super League":
         matchday = st.slider("📅 Matchday:", min_value=1, max_value=36, step=1)  # Matchday slider for Super League
     else:
-        matchday = st.radio("🏅 Matchday Type:", options=["Group", "Knockout"])  # Radio for non-league competitions
+        matchday = st.radio("🏅 Matchday Type:", options=["Group Stage", "Knockout Stage", "Group Stage"])  # Radio for non-league competitions
 
 # Add match date and time inputs
 col3, col4 = st.columns([2, 2])
