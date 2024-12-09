@@ -598,36 +598,16 @@ styled_table_html = table_css + table_html
 # Create an expander for the league table
 
 st.markdown("""
-    <style>
-    /* Style for the expander header */
-    .streamlit-expanderHeader {
-        font-size: 18px;
-        font-weight: bold;
-        color: #003366;
-        padding: 14px 20px;
+    <div style="
         background-color: #ffffff;
+        padding: 20px;
         border-radius: 12px;
         box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-        transition: background-color 0.3s ease, box-shadow 0.3s ease;
-        margin-bottom: 10px;
         border: 1px solid #ddd;
-    }
-    .streamlit-expanderHeader:hover {
-        background-color: #f4f6f9;
-        box-shadow: 0 6px 14px rgba(0, 0, 0, 0.15);
-    }
-
-    /* Style for the expander content */
-    .streamlit-expander {
-        border-radius: 12px;
-        background-color: #f9f9f9;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-        padding: 10px;
-        border: 1px solid #ddd;
-    }
-    </style>
-""", unsafe_allow_html=True)
-
+        margin-top: 10px;
+    ">
+    <h3 style="color: #003366; text-align: center;">🏆 League Table</h3>
+    """, unsafe_allow_html=True)
 
 
 with st.expander("🏆 Show League Table"):
