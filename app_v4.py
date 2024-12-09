@@ -423,6 +423,8 @@ if st.button("🎯 Predict Attendance"):
         else:
             attendance_status = "Normal attendance ⚖️"
 
+        # Display attendance status in Streamlit
+        st.success(f"Attendance Status: {attendance_status}")
 
 
 
