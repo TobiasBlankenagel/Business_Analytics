@@ -5,6 +5,9 @@ import pickle
 import requests
 import datetime
 import matplotlib
+import matplotlib.pyplot as plt
+import base64
+import io
 
 
 ############################## MODELS & STREAMLIT CONFIGURATION ##############################
@@ -342,31 +345,26 @@ categorical_columns = [
 input_df = pd.get_dummies(pd.DataFrame([input_features]), columns=categorical_columns, drop_first=False)
 
 
-# Add any missing columns as zeros
+# Add missing columns as zeros for any expected columns not generated during one-hot encoding
 for col in expected_columns:
     if col not in input_df.columns:
         input_df[col] = 0
 
-# Aufbau abgleichen
+# Ensure the DataFrame columns are in the correct order
 input_df = input_df[expected_columns]
 
-# Typkonvertierung sicherstellen
+# Ensure all values are of type float for compatibility with the model
 input_df = input_df.astype(float)
 
-
-# Überprüfung auf fehlende Spalten
+# Check for any missing columns that could break the model
 missing_columns = [col for col in expected_columns if col not in input_df.columns]
 if missing_columns:
     raise ValueError(f"Fehlende Spalten in den Eingabedaten: {missing_columns}")
 
 
+################### Predicting Attendance ##############################
 
-
-
-################### Vorhersage durchführen #################################
-
-
-# Dictionary mit den max_capacity, 30. und 70. Perzentil der Attendance
+# Define team-specific data, including stadium capacity and attendance thresholds
 team_data = {
     "BSC Young Boys": {"max_capacity": 31783, "attendance_30th_percentile": 25282.1, "attendance_70th_percentile": 31120.0},
     "FC Basel": {"max_capacity": 38512, "attendance_30th_percentile": 19527.0, "attendance_70th_percentile": 22666.5},
@@ -382,19 +380,15 @@ team_data = {
     "Yverdon Sport": {"max_capacity": 6600, "attendance_30th_percentile": 712.6, "attendance_70th_percentile": 2400.0}
 }
 
-
-import matplotlib.pyplot as plt
-import streamlit as st
-
-import base64
-import io
-
+# Predict attendance when the user clicks the button
 if st.button("🎯 Predict Attendance"):
+    # Use weather-based model if weather data is available
     if temperature_at_match is not None:
         prediction = model_with_weather.predict(input_df)[0] * 100
         weather_status = "Weather data used for prediction."
+
+    # Drop weather-related columns for the fallback model
     else:
-        # Droppen der Wetter-bezogenen Spalten
         weather_columns_to_drop = [
             'Weather_Drizzle', 'Weather_Snowy', 'Weather_Partly cloudy', 
             'Temperature (°C)', 'Weather_Rainy'
@@ -403,8 +397,8 @@ if st.button("🎯 Predict Attendance"):
         prediction = model_without_weather.predict(input_df)[0] * 100
         weather_status = "Weather data unavailable. Prediction made without weather information."
     
-    # Berechne die absolute Attendance
-    home_team_name = home_team  # Das Home Team
+    # Calculate absolute attendance based on prediction percentage and stadium capacity
+    home_team_name = home_team
     team_info = team_data.get(home_team_name, None)
 
     if team_info:
@@ -413,7 +407,15 @@ if st.button("🎯 Predict Attendance"):
         attendance_30th = team_info["attendance_30th_percentile"]
         attendance_70th = team_info["attendance_70th_percentile"]
 
-        # Berechne den Status der Auslastung
+
+
+
+
+
+
+
+
+        # Determine attendance status based on thresholds
         if predicted_attendance < attendance_30th:
             attendance_status = "Low attendance 🚶‍♂️"
         elif predicted_attendance > attendance_70th:
@@ -421,52 +423,53 @@ if st.button("🎯 Predict Attendance"):
         else:
             attendance_status = "Normal attendance ⚖️"
 
-        # Fortschrittsbalken erstellen (vergrößert)
-        fig, ax = plt.subplots(figsize=(12, 3))  # Erhöhe die Höhe (zweiter Wert) des Diagramms
+
+
+
+
+
+
+
+
+        # Create a horizontal bar chart to visualize attendance prediction
+        fig, ax = plt.subplots(figsize=(12, 3))
         ax.barh(
             y=[0], 
             width=[predicted_attendance / max_capacity], 
-            height=0.6,  # Passt die Höhe der Leiste an
+            height=0.6,
             color="#28a745", 
             edgecolor="black"
         )
-
-        # Markiere 30. und 70. Perzentil
         ax.axvline(x=attendance_30th / max_capacity, color="red", linestyle="--", label="30th Percentile")
         ax.axvline(x=attendance_70th / max_capacity, color="blue", linestyle="--", label="70th Percentile")
 
-        # Styling der Leiste
-        # Setze den Hintergrund des Diagramms auf #f9f9f9
+        # Customize the chart appearance
         fig.patch.set_facecolor("#f9f9f9")
         ax.set_facecolor("#f9f9f9")
         ax.set_xlim(0, 1)
         ax.set_xticks([0, 0.25, 0.5, 0.75, 1])
-        ax.set_xticklabels(["0%", "25%", "50%", "75%", "100%"], fontsize=14)  # Größere Schriftgröße für Achsenticks
+        ax.set_xticklabels(["0%", "25%", "50%", "75%", "100%"], fontsize=14)
         ax.set_yticks([])
-
-        # Legende außerhalb der Leiste platzieren
         ax.legend(
             loc="upper center", 
-            bbox_to_anchor=(0.5, -0.3),  # Abstand der Legende von der Grafik vergrößert
-            ncol=2,                      # Legende in einer Zeile mit 2 Spalten
-            fontsize=14,                 # Schriftgröße der Legende
+            bbox_to_anchor=(0.5, -0.3), 
+            ncol=2,                  
+            fontsize=14,       
             frameon=False
         )
-
         ax.set_title(
             f"Predicted Attendance: {predicted_attendance:.0f} of {max_capacity} ({prediction:.2f}%)", 
             fontsize=14,                 # Größere Schriftgröße für den Titel
             pad=20                       # Abstand des Titels von der Grafik vergrößert
         )
 
-
-        # Speichere das Diagramm in einen Puffer
+        # Save the chart to a buffer for embedding        
         buf = io.BytesIO()
         fig.savefig(buf, format="png", bbox_inches="tight")
         buf.seek(0)
         encoded_image = base64.b64encode(buf.read()).decode("utf-8")
 
-        # Einbettung des Diagramms mit Rahmen
+        # Embed the chart into the Streamlit app
         st.markdown(
             f"""
             <div style="background-color: #f9f9f9; padding: 20px; border-radius: 10px; border: 1px solid #ddd; 
