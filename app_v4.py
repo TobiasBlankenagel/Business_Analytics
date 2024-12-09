@@ -35,7 +35,7 @@ st.set_page_config(
 st.markdown("""
     <style>
     
-    .stSelectbox, .stSlider, .stRadio {
+    .stSelectbox, .stSlider, .stRadio, .stExpander {
         margin-top: 10px;
         border-radius: 12px;
         background-color: #ffffff;
