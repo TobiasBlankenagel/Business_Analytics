@@ -418,69 +418,70 @@ if st.button("🎯 Predict Attendance"):
         # Display attendance status in Streamlit
         st.success(f"Attendance Status: {attendance_status}")
 
+        
         # Create a horizontal bar chart to visualize attendance prediction
-        fig, ax = plt.subplots(figsize=(10, 2.5))  # Adjusted figure size for better integration into the layout
+        fig, ax = plt.subplots(figsize=(8, 1.8))  # Adjusted figure size to fit the layout better
 
-        # Plot the horizontal bar
+        # Plot the horizontal bar with rounded edges
         ax.barh(
             y=[0], 
             width=[predicted_attendance / max_capacity], 
-            height=0.4,  # Thinner bar for a sleek look
-            color="#28a745",  # Green bar for attendance
-            edgecolor="#006400",  # Dark green edge for contrast
-            alpha=0.9  # Slight transparency for better visual appeal
+            height=0.5, 
+            color="#28a745", 
+            edgecolor="none", 
+            alpha=0.9, 
+            align="center"
         )
 
-        # Add vertical lines for attendance thresholds
-        ax.axvline(x=attendance_30th / max_capacity, color="red", linestyle="--", linewidth=1.5, label="30th Percentile")
-        ax.axvline(x=attendance_70th / max_capacity, color="blue", linestyle="--", linewidth=1.5, label="70th Percentile")
+        # Add vertical lines for attendance thresholds (30th and 70th percentiles)
+        ax.axvline(x=attendance_30th / max_capacity, color="red", linestyle="--", linewidth=1.2, label="30th Percentile")
+        ax.axvline(x=attendance_70th / max_capacity, color="blue", linestyle="--", linewidth=1.2, label="70th Percentile")
 
-        # Customize the chart aesthetics
-        fig.patch.set_facecolor("#f8f9fa")  # Match the Streamlit app's light gray background
-        ax.set_facecolor("#ffffff")  # Set chart area background to white for better contrast
+        # Customize chart aesthetics for a rounded, minimal look
+        fig.patch.set_facecolor("#f9f9f9")  # Match the Streamlit app background
+        ax.set_facecolor("#ffffff")  # Chart area white for contrast
+        ax.spines['top'].set_visible(False)  # Remove top spine
+        ax.spines['right'].set_visible(False)  # Remove right spine
+        ax.spines['left'].set_visible(False)  # Remove left spine
+        ax.spines['bottom'].set_color("#ddd")  # Subtle bottom border
 
-        # Remove unnecessary chart elements for minimalistic design
-        ax.spines['top'].set_visible(False)
-        ax.spines['right'].set_visible(False)
-        ax.spines['left'].set_visible(False)
+        # Configure x-axis
+        ax.set_xlim(0, 1)  # Bar spans 0% to 100%
+        ax.set_xticks([0, 0.25, 0.5, 0.75, 1])  # Ticks at 0%, 25%, etc.
+        ax.set_xticklabels(["0%", "25%", "50%", "75%", "100%"], fontsize=10, color="#555")  # Smaller font size and gray text
+        ax.set_yticks([])  # Remove y-axis ticks
+        ax.tick_params(axis="x", colors="#555")  # Subtle axis ticks
 
-        # Configure the x-axis
-        ax.set_xlim(0, 1)  # Ensure bar spans from 0% to 100%
-        ax.set_xticks([0, 0.25, 0.5, 0.75, 1])  # Define tick positions
-        ax.set_xticklabels(["0%", "25%", "50%", "75%", "100%"], fontsize=12, color="#555")  # Adjust font size and color
-        ax.tick_params(axis="y", left=False)  # Hide y-axis ticks
-        ax.set_yticks([])  # Remove y-axis labels
-
-        # Add a legend and position it below the bar
+        # Add a legend below the bar
         ax.legend(
             loc="upper center", 
-            bbox_to_anchor=(0.5, -0.3), 
+            bbox_to_anchor=(0.5, -0.4),  # Position legend below chart
             ncol=2, 
-            fontsize=12, 
-            frameon=False  # Remove legend frame
+            fontsize=10, 
+            frameon=False
         )
 
-        # Add a title for the chart
+        # Add a title with smaller font size and subtle color
         ax.set_title(
             f"Predicted Attendance: {predicted_attendance:.0f} of {max_capacity} ({prediction:.2f}%)", 
-            fontsize=14,
-            pad=15,
-            color="#333333"  # Dark gray title for readability
+            fontsize=12,  # Reduced font size
+            pad=10,  # Smaller padding
+            color="#333333"  # Dark gray text for better readability
         )
 
         # Save the chart to a buffer for embedding into Streamlit
         buf = io.BytesIO()
-        fig.savefig(buf, format="png", bbox_inches="tight", dpi=150)  # High DPI for sharper visuals
+        fig.savefig(buf, format="png", bbox_inches="tight", dpi=150)  # High resolution for clarity
         buf.seek(0)
         encoded_image = base64.b64encode(buf.read()).decode("utf-8")
 
         # Embed the matplotlib chart into Streamlit as an image
         st.markdown(
             f"""
-            <div style="background-color: #f9f9fa; padding: 20px; border-radius: 10px; border: 1px solid #ddd; 
+            <div style="background-color: #f9f9fa; padding: 15px; border-radius: 15px; border: 1px solid #ddd; 
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
                 <h3 style="text-align: center; color: #003366;">Attendance Prediction Details</h3>
-                <img src="data:image/png;base64,{encoded_image}" style="display: block; margin: auto;"/>
+                <img src="data:image/png;base64,{encoded_image}" style="display: block; margin: auto; border-radius: 10px;"/>
             </div>
             """,
             unsafe_allow_html=True
@@ -488,6 +489,7 @@ if st.button("🎯 Predict Attendance"):
 
         # Display the weather status below the chart
         st.info(weather_status)
+
 
 
 
