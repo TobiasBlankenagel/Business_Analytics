@@ -491,7 +491,7 @@ st.markdown(bar_html, unsafe_allow_html=True)
 
 
 
-    st.info(weather_status)
+st.info(weather_status)
 
 
 ################### Additional Information: League Table #################################
