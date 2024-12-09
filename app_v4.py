@@ -419,6 +419,8 @@ if st.button("🎯 Predict Attendance"):
         st.success(f"Attendance Status: {attendance_status}")
 
 
+        import matplotlib.patches as patches
+
         # Create a horizontal bar chart to visualize attendance prediction
         fig, ax = plt.subplots(figsize=(8, 2))  # Adjust figure size for a sleek layout
 
