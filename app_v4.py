@@ -7,25 +7,27 @@ import datetime
 import matplotlib
 
 
+############################## MODELS & STREAMLIT CONFIGURATION ##############################
 
-################### Vorbereitung -- Modelle laden und Streamlit-Konfiguration #################################
-def load_model(model_path):
+# Function to load a model using pickle
     with open(model_path, 'rb') as file:
         return pickle.load(file)
 
+# Load models
 model_with_weather = load_model("./finalized_model_with_weather.sav")
 model_without_weather = load_model("./finalized_model_without_weather.sav")
 
+# Configure Streamlit page
 st.set_page_config(
-    page_title="Stadium Attendance Prediction",
-    page_icon="🏟️",
-    layout="wide"
+    page_title="Stadium Attendance Prediction",  # Title of the app
+    page_icon="🏟️",  # Icon for the app
+    layout="wide"  # Use the entire width of the page
 )
 
 
+############################## CUSTOM STYLING (CSS) ##############################
 
-################### CSS Allgmeien #################################
-
+# Add custom CSS for consistent and modern design
 st.markdown("""
     <style>
     
@@ -72,9 +74,9 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 
-################### Eingabefelder #################################
+############################## APP HEADER ##############################
 
-
+# Display the app's main title and description
 st.markdown("""
     <h1 style="color: #003366; text-align: center; font-size: 48px; font-weight: bold; margin-top: -60px;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);">🏟️ Stadium Attendance Prediction App</h1>
@@ -86,7 +88,9 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 
-# Eingrenzung der Teams und Wettbewerbe
+############################## INPUT FIELDS ##############################
+
+# Define available teams and competitions
 available_home_teams = ['FC Sion', 'FC St. Gallen', 'FC Winterthur', 'FC Zürich',
                         'BSC Young Boys', 'FC Luzern', 'Lausanne-Sport', 'Servette FC',
                         'FC Basel', 'FC Lugano', 'Grasshoppers', 'Yverdon Sport']
@@ -94,37 +98,35 @@ available_away_teams = available_home_teams
 available_competitions = ['Super League', 'UEFA Conference League', 'Swiss Cup', 
                           'UEFA Europa League', 'UEFA Champions League']
 
-
-
-# In zwei Spalten aufteilen (mehr Platz und Übersichtlichkeit)
+# Divide input fields into two columns for better layout
 col1, col2 = st.columns([2, 2])
 
+# Left column: Home Team and Competition inputs
 with col1:
-    home_team = st.selectbox("🏠 Home Team:", available_home_teams)
-    competition = st.selectbox("🏆 Competition:", available_competitions)
+    home_team = st.selectbox("🏠 Home Team:", available_home_teams)  # Home team selection
+    competition = st.selectbox("🏆 Competition:", available_competitions)  # Competition selection
 
+# Right column: Away Team and Matchday inputs
 with col2:
     # Dynamisch die Liste der verfügbaren Away-Teams anpassen
     available_away_teams_dynamic = [team for team in available_home_teams if team != home_team]
-
+    # Away team selection
     if competition == "Super League":
-        away_team = st.selectbox("🌍 Away Team:", available_away_teams_dynamic)
+        away_team = st.selectbox("🌍 Away Team:", available_away_teams_dynamic)  
     elif competition == "Swiss Cup":
         away_team = st.selectbox("🌍 Away Team:", available_away_teams_dynamic)
     else:
         away_team = "Unknown"
 
     if competition == "Super League":
-        matchday = st.slider("📅 Matchday:", min_value=1, max_value=36, step=1)
+        matchday = st.slider("📅 Matchday:", min_value=1, max_value=36, step=1)  # Matchday slider for Super League
     else:
-        matchday = st.radio("🏅 Matchday Type:", options=["Group", "Knockout"])
+        matchday = st.radio("🏅 Matchday Type:", options=["Group", "Knockout"])  # Radio for non-league competitions
 
-
-
-
-# Zeilen mit weiteren Eingabefeldern für Datum und Uhrzeit
+# Add match date and time inputs
 col3, col4 = st.columns([2, 2])
 
+# Left column: Match date
 with col3:
     match_date = st.date_input(
         "📅 Match Date:", 
@@ -132,6 +134,7 @@ with col3:
         key="match_date_input"
     )
 
+# Right column: Match time
 with col4:
     match_time = st.time_input(
         "🕒 Match Time:", 
@@ -139,10 +142,8 @@ with col4:
         help="Select the match time in HH:MM format",
         key="match_time_input"
     )
-
-# Berechne die Stunde aus dem Zeit-Input
-match_hour = match_time.hour  # Holt nur die Stunde aus der Zeit
-weekday = match_date.strftime("%A")
+    match_hour = match_time.hour  # Extract hour from time input
+    weekday = match_date.strftime("%A")  # Get the weekday name for the selected date
 
 
 
