@@ -596,7 +596,6 @@ styled_table_html = table_css + table_html
 ################### Toggle Button for League Table #################################
 
 # Create a toggle button to show/hide the league table
-show_table = st.checkbox("Show 🏆 League Table", value=False)
+if st.button("🏆 Show League Table"):
+    st.write("The league table will be displayed here!")
 
-if show_table:
-    st.markdown(styled_table_html, unsafe_allow_html=True)  # Render the styled HTML table
