@@ -407,14 +407,6 @@ if st.button("🎯 Predict Attendance"):
         attendance_30th = team_info["attendance_30th_percentile"]
         attendance_70th = team_info["attendance_70th_percentile"]
 
-
-
-
-
-
-
-
-
         # Determine attendance status based on thresholds
         if predicted_attendance < attendance_30th:
             attendance_status = "Low attendance 🚶‍♂️"
@@ -425,13 +417,6 @@ if st.button("🎯 Predict Attendance"):
 
         # Display attendance status in Streamlit
         st.success(f"Attendance Status: {attendance_status}")
-
-
-
-
-
-
-
 
         # Create a horizontal bar chart to visualize attendance prediction
         fig, ax = plt.subplots(figsize=(12, 3))
@@ -486,17 +471,13 @@ if st.button("🎯 Predict Attendance"):
     st.info(weather_status)
 
 
+################### Additional Information: League Table #################################
 
-
-
-
-    ################### zusätzliche Infos #################################
-
-
-
-# Funktion, um Ergebnisse mit Icons darzustellen
+# Function to generate icons for game results
 def game_result_icons(row):
+    # Map result to an emoji
     result_mapping = {"Win": "✅", "Lose": "❌", "Tie": "➖"}
+    # Create a string of icons for the last 5 game results
     return "".join(result_mapping.get(row[col], "❓") for col in [
         "Last_1_Game_Result",
         "Last_2_Game_Result",
@@ -505,19 +486,20 @@ def game_result_icons(row):
         "Last_5_Game_Result"
     ])
 
+# Add a column with icons for the last 5 games
 league_data["Last_5_Games_Icons"] = league_data.apply(game_result_icons, axis=1)
 
-# Ligatabelle erstellen
+# Create a filtered league table with selected columns
 league_table = league_data[[
     "Ranking", "Team", "Points", "Games_Played", 
     "Total_Goals_Scored", "Total_Goals_Conceded", 
     "Last_5_Games_Icons"
 ]]
 
-# Sortiere die Tabelle nach Ranking
+# Sort the league table by ranking (ascending order)
 league_table = league_table.sort_values(by="Ranking", ascending=True)
 
-# Spaltennamen umbenennen
+# Rename columns to include emojis for better readability
 league_table = league_table.rename(columns={
     "Ranking": "🏅 Ranking",
     "Team": "🏟️ Team",
@@ -529,8 +511,9 @@ league_table = league_table.rename(columns={
 })
 
 
+################### Styling and HTML for League Table #################################
 
-# CSS für die Tabelle
+# Define CSS for styling the table
 table_css = """
 <style>
     table {
@@ -576,7 +559,7 @@ table_css = """
 </style>
 """
 
-# Funktion zum Hervorheben der Teams mit CSS-Klassen
+# Function to add a CSS class to highlight rows for home or away teams
 def highlight_teams_html(row):
     if row["🏟️ Team"] == home_team:
         return '<tr class="highlight-home">'
@@ -584,19 +567,19 @@ def highlight_teams_html(row):
         return '<tr class="highlight-away">'
     return "<tr>"
 
-# HTML-Tabelle mit Highlighting generieren
+# Generate HTML table with CSS styling and highlighted rows
 table_html = '<table>'
 table_html += '<thead><tr>' + ''.join(f'<th>{col}</th>' for col in league_table.columns) + '</tr></thead>'
 table_html += '<tbody>'
 for _, row in league_table.iterrows():
-    table_html += highlight_teams_html(row)  # Highlight-Team-Funktion
+    table_html += highlight_teams_html(row)  # Add highlight classes for home/away teams
     table_html += ''.join(f'<td>{row[col]}</td>' for col in league_table.columns)
     table_html += '</tr>'
 table_html += '</tbody></table>'
 
-# Kombiniere CSS und HTML
+# Combine CSS and HTML
 styled_table_html = table_css + table_html
 
-# Tabelle in Streamlit anzeigen
-st.markdown("### 🏆 League Table")
-st.markdown(styled_table_html, unsafe_allow_html=True)
+# Display the league table in Streamlit
+st.markdown("### 🏆 League Table")  # Section header
+st.markdown(styled_table_html, unsafe_allow_html=True)  # Render the styled HTML table
