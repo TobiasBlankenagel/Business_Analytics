@@ -468,30 +468,20 @@ if st.button("🎯 Predict Attendance"):
         buf.seek(0)
         encoded_image = base64.b64encode(buf.read()).decode("utf-8")
 
-        # Generate the bar dynamically using Streamlit's markdown and progress bar components
-        bar_html = f"""
-        <div style="background-color: #f9f9f9; padding: 20px; border-radius: 10px; border: 1px solid #ddd; 
-                    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
-            <h3 style="text-align: center; color: #003366;">Attendance Prediction Details</h3>
-            <div style="position: relative; height: 30px; width: 100%; border: 1px solid #ddd; background-color: #e0e0e0; border-radius: 15px;">
-                <div style="height: 100%; width: {predicted_attendance / max_capacity * 100:.2f}%; background-color: #28a745; border-radius: 15px; transition: width 2s;"></div>
+        # Embed the chart into the Streamlit app
+        st.markdown(
+            f"""
+            <div style="background-color: #f9f9fa; padding: 20px; border-radius: 10px; border: 1px solid #ddd; 
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+                <h3 style="text-align: center; color: #003366;">Attendance Prediction Details</h3>
+                <img src="data:image/png;base64,{encoded_image}" style="display: block; margin: auto;"/>
             </div>
-            <p style="text-align: center; margin-top: 10px; font-size: 14px; color: #555;">
-                Predicted Attendance: {predicted_attendance:.0f} of {max_capacity} ({prediction:.2f}%)
-            </p>
-            <div style="text-align: center; margin-top: 5px;">
-                <span style="font-size: 12px; color: red;">30th Percentile</span> |
-                <span style="font-size: 12px; color: blue;">70th Percentile</span>
-            </div>
-        </div>
-        """
-
-# Embed the HTML/CSS bar into the Streamlit app
-st.markdown(bar_html, unsafe_allow_html=True)
+            """,
+            unsafe_allow_html=True
+        )
 
 
-
-st.info(weather_status)
+    st.info(weather_status)
 
 
 ################### Additional Information: League Table #################################
