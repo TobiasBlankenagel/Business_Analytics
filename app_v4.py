@@ -436,14 +436,14 @@ if st.button("🎯 Predict Attendance"):
         # Customize the chart background and frame
         fig.patch.set_facecolor("#f8f9fa")  # Match Streamlit's light gray background
         ax.set_facecolor("#ffffff")  # Set chart background to white
-        ax.spines['top'].set_visible(False)  # Remove the top spine for a cleaner look
-        ax.spines['right'].set_visible(False)  # Remove the right spine for a cleaner look
+        ax.spines['top'].set_visible(False)  
+        ax.spines['right'].set_visible(False) 
 
         # Configure axis limits and labels
-        ax.set_xlim(0, 1)  # Ensure the bar spans from 0% to 100%
+        ax.set_xlim(0, 1) 
         ax.set_xticks([0, 0.25, 0.5, 0.75, 1])  # Define tick positions
-        ax.set_xticklabels(["0%", "25%", "50%", "75%", "100%"], fontsize=12)  # Adjust font size
-        ax.set_yticks([])  # Remove y-axis ticks
+        ax.set_xticklabels(["0%", "25%", "50%", "75%", "100%"], fontsize=12) 
+        ax.set_yticks([])
 
         # Add a legend and adjust its position
         ax.legend(
@@ -451,20 +451,20 @@ if st.button("🎯 Predict Attendance"):
             bbox_to_anchor=(0.5, -0.4),  # Move the legend below the chart
             ncol=2, 
             fontsize=12,
-            frameon=False  # Remove legend frame for minimalism
+            frameon=False 
         )
 
         # Add a clear title for the chart
         ax.set_title(
             f"Predicted Attendance: {predicted_attendance:.0f} of {max_capacity} ({prediction:.2f}%)", 
             fontsize=14,
-            pad=15,  # Adjust title padding for better spacing
-            color="#333333"  # Use a dark gray color for the title
+            pad=15,
+            color="#333333" 
         )
 
         # Save the chart to a buffer for embedding
         buf = io.BytesIO()
-        fig.savefig(buf, format="png", bbox_inches="tight", dpi=150)  # Use higher DPI for crisp output
+        fig.savefig(buf, format="png", bbox_inches="tight", dpi=100) 
         buf.seek(0)
         encoded_image = base64.b64encode(buf.read()).decode("utf-8")
 
