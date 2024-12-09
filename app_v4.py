@@ -346,6 +346,7 @@ input_df = pd.get_dummies(pd.DataFrame([input_features]), columns=categorical_co
 for col in expected_columns:
     if col not in input_df.columns:
         input_df[col] = 0
+        st.write("added")
 
 # Aufbau abgleichen
 input_df = input_df[expected_columns]
