@@ -146,13 +146,9 @@ with col4:
     weekday = match_date.strftime("%A")  # Get the weekday name for the selected date
 
 
+############################## WEATHER DATA ##############################
 
-
-
-
-
-################### Wetterdaten laden #################################
-
+# Function to fetch weather data from an API
 def get_weather_data(latitude, longitude, match_date, match_hour):
     api_url = (
         f"https://api.open-meteo.com/v1/forecast?"
@@ -160,7 +156,6 @@ def get_weather_data(latitude, longitude, match_date, match_hour):
         f"&hourly=temperature_2m,weathercode"
         f"&timezone=auto"
     )
-
     try:
         response = requests.get(api_url)
         response.raise_for_status()
@@ -168,7 +163,7 @@ def get_weather_data(latitude, longitude, match_date, match_hour):
         hourly_data = weather_data['hourly']
         temperature_at_match = hourly_data['temperature_2m'][match_hour]
         weather_code_at_match = hourly_data['weathercode'][match_hour]
-
+        # Map weather codes to human-readable conditions
         if weather_code_at_match in [0]:
             weather_condition = "Clear or mostly clear"
         elif weather_code_at_match in [1, 2, 3]:
@@ -186,6 +181,7 @@ def get_weather_data(latitude, longitude, match_date, match_hour):
     except:
         return None, None
 
+# Define stadium coordinates
 stadium_coordinates = {
     'FC Sion': {'latitude': 46.233333, 'longitude': 7.376389},
     'FC St. Gallen': {'latitude': 47.408333, 'longitude': 9.310278},
@@ -201,52 +197,53 @@ stadium_coordinates = {
     'Yverdon Sport': {'latitude': 46.778056, 'longitude': 6.641111}
 }
 
+# Fetch weather data based on home team and match information
 if home_team and match_date and match_time:
     coordinates = stadium_coordinates[home_team]
     latitude = coordinates['latitude']
     longitude = coordinates['longitude']
     temperature_at_match, weather_condition = get_weather_data(latitude, longitude, match_date, match_hour)
 
-    def get_weather_emoji(weather_condition):
-        weather_emoji = {
-            "Clear or mostly clear": "☀️",  # Sonne
-            "Partly cloudy": "⛅",  # Teilweise Wolken
-            "Rainy": "🌧️",  # Regen
-            "Drizzle": "🌦️",  # Nieselregen
-            "Snowy": "❄️",  # Schnee
-            "Unknown": "🌫️",  # Unklar
-        }
-        return weather_emoji.get(weather_condition, "🌫️")  # Default-Emoji für unbekanntes Wetter
+def get_weather_emoji(weather_condition):
+    weather_emoji = {
+        "Clear or mostly clear": "☀️",  # Sonne
+        "Partly cloudy": "⛅",  # Teilweise Wolken
+        "Rainy": "🌧️",  # Regen
+        "Drizzle": "🌦️",  # Nieselregen
+        "Snowy": "❄️",  # Schnee
+        "Unknown": "🌫️",  # Unklar
+    }
+    return weather_emoji.get(weather_condition, "🌫️")
 
-    if temperature_at_match is not None and weather_condition is not None and weather_condition != "Unknown":
-        weather_emoji = get_weather_emoji(weather_condition)
-        st.markdown(f"""
-            <div style="background-color: #f8f9fa; padding: 20px; border-radius: 10px; border: 1px solid #ddd; margin-bottom:25px; margin-top:10px">
-                <h3 style="color: #003366;">Weather at the Match</h3>
-                <p style="font-size: 18px; color: #333333;">
-                    The weather at the match will be <strong style="color: #007bff;">{weather_condition} {weather_emoji}</strong> 
-                    with a temperature of <strong style="color: #007bff;">{temperature_at_match}°C</strong> 🌡.
-                </p>
-            </div>
-        """, unsafe_allow_html=True)
-    elif temperature_at_match is not None:
-        st.markdown(f"""
-            <div style="background-color: #f8f9fa; padding: 20px; border-radius: 10px; border: 1px solid #ddd; margin-bottom:25px; margin-top:10px">
-                <h3 style="color: #003366;">Weather at the Match</h3>
-                <p style="font-size: 18px; color: #333333;">
-                    The temperature at the match will be <strong style="color: #007bff;">{temperature_at_match}°C</strong> 🌡.
-                </p>
-            </div>
-        """, unsafe_allow_html=True)
-    else:
-        st.markdown("""
-            <div style="background-color: #f8f9fa; padding: 20px; border-radius: 10px; border: 1px solid #ddd; margin-bottom:25px; margin-top:10px">
-                <h3 style="color: #003366;">Weather at the Match</h3>
-                <p style="font-size: 18px; color: #333333;">
-                    Unfortunately, the weather data is unavailable at the moment. 😞
-                </p>
-            </div>
-        """, unsafe_allow_html=True)
+if temperature_at_match is not None and weather_condition is not None and weather_condition != "Unknown":
+    weather_emoji = get_weather_emoji(weather_condition)
+    st.markdown(f"""
+        <div style="background-color: #f8f9fa; padding: 20px; border-radius: 10px; border: 1px solid #ddd; margin-bottom:25px; margin-top:10px">
+            <h3 style="color: #003366;">Weather at the Match</h3>
+            <p style="font-size: 18px; color: #333333;">
+                The weather at the match will be <strong style="color: #007bff;">{weather_condition} {weather_emoji}</strong> 
+                with a temperature of <strong style="color: #007bff;">{temperature_at_match}°C</strong> 🌡.
+            </p>
+        </div>
+    """, unsafe_allow_html=True)
+elif temperature_at_match is not None:
+    st.markdown(f"""
+        <div style="background-color: #f8f9fa; padding: 20px; border-radius: 10px; border: 1px solid #ddd; margin-bottom:25px; margin-top:10px">
+            <h3 style="color: #003366;">Weather at the Match</h3>
+            <p style="font-size: 18px; color: #333333;">
+                The temperature at the match will be <strong style="color: #007bff;">{temperature_at_match}°C</strong> 🌡.
+            </p>
+        </div>
+    """, unsafe_allow_html=True)
+else:
+    st.markdown("""
+        <div style="background-color: #f8f9fa; padding: 20px; border-radius: 10px; border: 1px solid #ddd; margin-bottom:25px; margin-top:10px">
+            <h3 style="color: #003366;">Weather at the Match</h3>
+            <p style="font-size: 18px; color: #333333;">
+                Unfortunately, the weather data is unavailable at the moment. 😞
+            </p>
+        </div>
+    """, unsafe_allow_html=True)
 
 
 
