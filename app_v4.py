@@ -418,70 +418,30 @@ if st.button("🎯 Predict Attendance"):
         # Display attendance status in Streamlit
         st.success(f"Attendance Status: {attendance_status}")
 
-        # Create a horizontal bar chart to visualize attendance prediction
-        fig, ax = plt.subplots(figsize=(10, 2.5))  # Adjust figure size for better integration
-        ax.barh(
-            y=[0], 
-            width=[predicted_attendance / max_capacity], 
-            height=0.5,  # Slightly thinner bar for a sleek look
-            color="#28a745", 
-            edgecolor="black",
-            alpha=0.8  # Add transparency for softer appearance
-        )
-
-        # Add vertical lines for attendance thresholds
-        ax.axvline(x=attendance_30th / max_capacity, color="red", linestyle="--", label="30th Percentile", linewidth=1.2)
-        ax.axvline(x=attendance_70th / max_capacity, color="blue", linestyle="--", label="70th Percentile", linewidth=1.2)
-
-        # Customize the chart background and frame
-        fig.patch.set_facecolor("#f8f9fa")  # Match Streamlit's light gray background
-        ax.set_facecolor("#ffffff")  # Set chart background to white
-        ax.spines['top'].set_visible(False)  
-        ax.spines['right'].set_visible(False) 
-
-        # Configure axis limits and labels
-        ax.set_xlim(0, 1) 
-        ax.set_xticks([0, 0.25, 0.5, 0.75, 1])  # Define tick positions
-        ax.set_xticklabels(["0%", "25%", "50%", "75%", "100%"], fontsize=12) 
-        ax.set_yticks([])
-
-        # Add a legend and adjust its position
-        ax.legend(
-            loc="lower center", 
-            bbox_to_anchor=(0.5, -0.4),  # Move the legend below the chart
-            ncol=2, 
-            fontsize=12,
-            frameon=False 
-        )
-
-        # Add a clear title for the chart
-        ax.set_title(
-            f"Predicted Attendance: {predicted_attendance:.0f} of {max_capacity} ({prediction:.2f}%)", 
-            fontsize=14,
-            pad=15,
-            color="#333333" 
-        )
-
-        # Save the chart to a buffer for embedding
-        buf = io.BytesIO()
-        fig.savefig(buf, format="png", bbox_inches="tight", dpi=100) 
-        buf.seek(0)
-        encoded_image = base64.b64encode(buf.read()).decode("utf-8")
-
-        # Embed the chart into the Streamlit app
-        st.markdown(
-            f"""
-            <div style="background-color: #f9f9fa; padding: 20px; border-radius: 10px; border: 1px solid #ddd; 
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
-                <h3 style="text-align: center; color: #003366;">Attendance Prediction Details</h3>
-                <img src="data:image/png;base64,{encoded_image}" style="display: block; margin: auto;"/>
+        # HTML-based dynamic bar chart for Attendance Prediction
+        bar_html = f"""
+        <div style="background-color: #f9f9fa; padding: 20px; border-radius: 10px; border: 1px solid #ddd; 
+                    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+            <h3 style="text-align: center; color: #003366;">Attendance Prediction Details</h3>
+            <div style="position: relative; height: 40px; width: 100%; border: 1px solid #ddd; background-color: #e0e0e0; border-radius: 20px; overflow: hidden;">
+                <div style="height: 100%; width: {predicted_attendance / max_capacity * 100:.2f}%; background-color: #28a745; border-radius: 20px; transition: width 2s;"></div>
             </div>
-            """,
-            unsafe_allow_html=True
-        )
+            <p style="text-align: center; margin-top: 10px; font-size: 16px; color: #555;">
+                Predicted Attendance: {predicted_attendance:.0f} of {max_capacity} ({prediction:.2f}%)
+            </p>
+            <div style="text-align: center; margin-top: 5px; font-size: 14px;">
+                <span style="color: red;">30th Percentile: {attendance_30th:.0f}</span> |
+                <span style="color: blue;">70th Percentile: {attendance_70th:.0f}</span>
+            </div>
+        </div>
+        """
 
+        # Display the HTML bar chart directly in Streamlit
+        st.markdown(bar_html, unsafe_allow_html=True)
 
-    st.info(weather_status)
+        # Display weather status as additional information
+        st.info(weather_status)
+
 
 
 ################### Additional Information: League Table #################################
