@@ -419,47 +419,59 @@ if st.button("🎯 Predict Attendance"):
         st.success(f"Attendance Status: {attendance_status}")
 
         # Create a horizontal bar chart to visualize attendance prediction
-        fig, ax = plt.subplots(figsize=(12, 3))
+        fig, ax = plt.subplots(figsize=(10, 2.5))  # Adjust figure size for better integration
         ax.barh(
             y=[0], 
             width=[predicted_attendance / max_capacity], 
-            height=0.6,
+            height=0.5,  # Slightly thinner bar for a sleek look
             color="#28a745", 
-            edgecolor="black"
+            edgecolor="black",
+            alpha=0.8  # Add transparency for softer appearance
         )
-        ax.axvline(x=attendance_30th / max_capacity, color="red", linestyle="--", label="30th Percentile")
-        ax.axvline(x=attendance_70th / max_capacity, color="blue", linestyle="--", label="70th Percentile")
 
-        # Customize the chart appearance
-        fig.patch.set_facecolor("#f9f9f9")
-        ax.set_facecolor("#f9f9f9")
-        ax.set_xlim(0, 1)
-        ax.set_xticks([0, 0.25, 0.5, 0.75, 1])
-        ax.set_xticklabels(["0%", "25%", "50%", "75%", "100%"], fontsize=14)
-        ax.set_yticks([])
+        # Add vertical lines for attendance thresholds
+        ax.axvline(x=attendance_30th / max_capacity, color="red", linestyle="--", label="30th Percentile", linewidth=1.2)
+        ax.axvline(x=attendance_70th / max_capacity, color="blue", linestyle="--", label="70th Percentile", linewidth=1.2)
+
+        # Customize the chart background and frame
+        fig.patch.set_facecolor("#f8f9fa")  # Match Streamlit's light gray background
+        ax.set_facecolor("#ffffff")  # Set chart background to white
+        ax.spines['top'].set_visible(False)  # Remove the top spine for a cleaner look
+        ax.spines['right'].set_visible(False)  # Remove the right spine for a cleaner look
+
+        # Configure axis limits and labels
+        ax.set_xlim(0, 1)  # Ensure the bar spans from 0% to 100%
+        ax.set_xticks([0, 0.25, 0.5, 0.75, 1])  # Define tick positions
+        ax.set_xticklabels(["0%", "25%", "50%", "75%", "100%"], fontsize=12)  # Adjust font size
+        ax.set_yticks([])  # Remove y-axis ticks
+
+        # Add a legend and adjust its position
         ax.legend(
-            loc="upper center", 
-            bbox_to_anchor=(0.5, -0.3), 
-            ncol=2,                  
-            fontsize=14,       
-            frameon=False
+            loc="lower center", 
+            bbox_to_anchor=(0.5, -0.4),  # Move the legend below the chart
+            ncol=2, 
+            fontsize=12,
+            frameon=False  # Remove legend frame for minimalism
         )
+
+        # Add a clear title for the chart
         ax.set_title(
             f"Predicted Attendance: {predicted_attendance:.0f} of {max_capacity} ({prediction:.2f}%)", 
-            fontsize=14,                 # Größere Schriftgröße für den Titel
-            pad=20                       # Abstand des Titels von der Grafik vergrößert
+            fontsize=14,
+            pad=15,  # Adjust title padding for better spacing
+            color="#333333"  # Use a dark gray color for the title
         )
 
-        # Save the chart to a buffer for embedding        
+        # Save the chart to a buffer for embedding
         buf = io.BytesIO()
-        fig.savefig(buf, format="png", bbox_inches="tight")
+        fig.savefig(buf, format="png", bbox_inches="tight", dpi=150)  # Use higher DPI for crisp output
         buf.seek(0)
         encoded_image = base64.b64encode(buf.read()).decode("utf-8")
 
         # Embed the chart into the Streamlit app
         st.markdown(
             f"""
-            <div style="background-color: #f9f9f9; padding: 20px; border-radius: 10px; border: 1px solid #ddd; 
+            <div style="background-color: #f9f9fa; padding: 20px; border-radius: 10px; border: 1px solid #ddd; 
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
                 <h3 style="text-align: center; color: #003366;">Attendance Prediction Details</h3>
                 <img src="data:image/png;base64,{encoded_image}" style="display: block; margin: auto;"/>
@@ -467,6 +479,7 @@ if st.button("🎯 Predict Attendance"):
             """,
             unsafe_allow_html=True
         )
+
 
     st.info(weather_status)
 
